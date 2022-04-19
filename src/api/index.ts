@@ -1,3 +1,5 @@
 import userApi from "./userApi";
+import parkingLotApi from "./parkingLotApi";
+import blockApi from "./blockApi";
 
-export { userApi };
+export { userApi, parkingLotApi, blockApi };
