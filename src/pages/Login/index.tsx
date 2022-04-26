@@ -1,18 +1,32 @@
 import { LockTwoTone, UserOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Form, Input, Row } from "antd";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import styles from "./index.module.less";
 import logo from "@/assets/images/logo.png";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { login } from "@/store/actions/authAction";
+import { authState$ } from "@/store/selectors";
+import { useEffect } from "react";
 
 const Login = () => {
   const [form] = Form.useForm();
+  const dispatch = useAppDispatch();
+  const authState = useAppSelector(authState$);
+  const navigate = useNavigate();
 
-  const handleLogin = () => {};
+  const handleLogin = () => {
+    const { email, password } = form.getFieldsValue();
+    dispatch(login({ email, password }));
+  };
+
+  if (authState.auth) {
+    return <Navigate to="/" replace />;
+  }
   return (
     <div className={styles.content}>
       <div className={styles.container}>
         <Row justify="center">
-          <Col xs={20} sm={20} md={12} lg={12}>
+          <Col xs={20} sm={12}>
             <Card>
               <div style={{ margin: "1.5rem 0" }}>
                 <div style={{ textAlign: "center" }}>
@@ -25,18 +39,18 @@ const Login = () => {
                     <Form
                       form={form}
                       layout="vertical"
-                      // onFinish={login}
+                      onFinish={handleLogin}
                       // onFinishFailed={noticeFailed}
                       initialValues={{
                         remember: true,
                       }}>
                       <Form.Item
-                        label="Username"
-                        name="username"
-                        rules={[{ required: true, message: "Please input your username!" }]}>
+                        label="Email"
+                        name="email"
+                        rules={[{ required: true, message: "Please input your email!" }]}>
                         <Input
                           size="large"
-                          placeholder="Username"
+                          placeholder="Email"
                           prefix={<UserOutlined style={{ color: "#3e79f7" }} />}></Input>
                       </Form.Item>
                       <Form.Item

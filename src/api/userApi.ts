@@ -1,6 +1,7 @@
 import axiosClient from "./axiosClient";
 
 const url = "/users";
+
 const userApi = {
   getAllUsers: async () => {
     return await axiosClient.get(`${url}`);

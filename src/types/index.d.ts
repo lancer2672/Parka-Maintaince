@@ -17,4 +17,11 @@ type Block = {
   isFull: boolean;
 };
 
-export type { ParkingLot, Block };
+type Company = {
+  idCompany: string;
+  companyName: string;
+  phoneNumber: string;
+  email: string;
+};
+
+export type { ParkingLot, Block, Company };
