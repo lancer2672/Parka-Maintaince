@@ -1,10 +1,9 @@
 import logoImage from "@/assets/images/Logo.png";
 import RightContent from "@/components/Layout/RightContent";
-import { MerchantRoutes, MenuItems } from "@/config";
-import ParkingLots from "@/pages/ParkingLots";
+import { MenuItems } from "@/config";
 import ProLayout from "@ant-design/pro-layout";
 import { useState } from "react";
-import { Link, NavLink, Outlet, Route, Routes, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import AppFooter from "./Footer";
 
 const MainLayout = () => {

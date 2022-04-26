@@ -5,6 +5,9 @@ import styles from "./index.module.less";
 import logo from "@/assets/images/logo.png";
 
 const Login = () => {
+  const [form] = Form.useForm();
+
+  const handleLogin = () => {};
   return (
     <div className={styles.content}>
       <div className={styles.container}>
@@ -20,11 +23,10 @@ const Login = () => {
                   <Col span={24}></Col>
                   <Col xs={24} sm={24} md={20} lg={20}>
                     <Form
-                      id="login-form"
+                      form={form}
                       layout="vertical"
                       // onFinish={login}
                       // onFinishFailed={noticeFailed}
-                      // form={form}
                       initialValues={{
                         remember: true,
                       }}>

@@ -3,8 +3,8 @@ import axiosClient from "./axiosClient";
 const url: string = "/lots";
 
 const parkingLotApi = {
-  getAll: () => {
-    return axiosClient.get(url);
+  getAll: (id: any) => {
+    return axiosClient.get(`${url}/${id}`);
   },
 
   create: async (data: any) => {

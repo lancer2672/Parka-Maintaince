@@ -1,5 +1,6 @@
 import { parkingLotApi } from "@/api";
 import AddParkingLotsForm from "@/components/ParkingLots/AddParkingLotsForm";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ParkingLot } from "@/types";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Modal, Popconfirm, Row, Table, Tag, Tooltip } from "antd";
@@ -7,35 +8,21 @@ import { ColumnsType } from "antd/es/table";
 import Search from "antd/lib/input/Search";
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "@/store";
+import { deleteParkingLot, getAllParkingLots } from "@/store/actions/parkingLotActions";
+import { parkingLotState$ } from "@/store/selectors";
 
 const ParkingLots: FC = () => {
   const navigate = useNavigate();
-  const [dataSource, setDataSource] = useState<Array<ParkingLot>>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isTrigger, setIsTrigger] = useState<boolean>(true);
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [editData, setEditData] = useState<ParkingLot>();
+  const [dataSource, setDataSource] = useState<Array<ParkingLot>>();
 
-  useEffect(() => {
-    if (isTrigger) {
-      setIsLoading(true);
-      setEditData(undefined);
-      parkingLotApi
-        .getAll()
-        .then((res) => {
-          setDataSource(res.data.data);
-          setIsLoading(false);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [isTrigger]);
+  const dispatch = useAppDispatch();
+  const parkingLotState = useAppSelector(parkingLotState$);
+
   const columns: ColumnsType<ParkingLot> = [
     {
-      title: "ID",
-      dataIndex: "idParkingLot",
-    },
-    {
-      title: "Name",
+      title: "Parking lot name",
       dataIndex: "name",
     },
     {
@@ -54,9 +41,10 @@ const ParkingLots: FC = () => {
       title: "",
       dataIndex: "idParkingLot",
       align: "center",
+      width: "10%",
       render: (idParkingLot: string, parkingLot) => {
         return (
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: "10px" }}>
+          <div className="flex gap-2.5 justify-start flex-col md:flex-row">
             <Tooltip title="View details">
               <Button
                 type="primary"
@@ -90,21 +78,28 @@ const ParkingLots: FC = () => {
   ];
 
   const handleDelete = (id: string) => {
-    parkingLotApi
-      .delete(id)
-      .then((res) => {
-        const deleted: ParkingLot = res.data.data[0];
-        const tmp = dataSource?.map((e) => (e.idParkingLot == deleted.idParkingLot ? deleted : e));
-        setDataSource(tmp);
-      })
-      .catch((err) => console.log(err));
+    dispatch(deleteParkingLot(id));
   };
 
-  const onClickEdit = (data: ParkingLot) => {
-    setIsVisible(true);
-    setEditData(data);
-    setIsTrigger(false);
+  const handleSearch = (value: string) => {
+    if (value) {
+      const tmp = parkingLotState.parkingLots.filter(
+        (e) => e.name.toLowerCase().search(value.toLowerCase()) >= 0,
+      );
+      setDataSource(tmp);
+    } else {
+      setDataSource(parkingLotState.parkingLots);
+    }
   };
+
+  useEffect(() => {
+    dispatch(getAllParkingLots("93471ac5-0cc1-4c77-8f0f-a9af3b1a7655"));
+  }, [dispatch]);
+
+  useEffect(() => {
+    setDataSource(parkingLotState.parkingLots);
+  }, [parkingLotState.parkingLots]);
+
   return (
     <div>
       <h1>Parking lots</h1>
@@ -117,7 +112,7 @@ const ParkingLots: FC = () => {
               placeholder="Search"
               allowClear
               enterButton
-              // onSearch={(e) => handleSearch(e)}
+              onSearch={(e) => handleSearch(e)}
             />
           </Col>
           <Col flex="auto" />
@@ -128,8 +123,6 @@ const ParkingLots: FC = () => {
               block
               onClick={() => {
                 setIsVisible(true);
-                setIsTrigger(false);
-                setEditData(undefined);
               }}>
               Add
             </Button>
@@ -139,24 +132,14 @@ const ParkingLots: FC = () => {
               bordered
               dataSource={dataSource}
               columns={columns}
-              loading={isLoading}
+              loading={parkingLotState.loading}
               rowKey={(row) => row.idParkingLot}
             />
           </Col>
         </Row>
       </Card>
-      <Modal
-        centered
-        closable
-        visible={isVisible}
-        title="Add parking lot"
-        footer={null}
-        afterClose={() => setEditData(undefined)}>
-        <AddParkingLotsForm
-          changeVisible={setIsVisible}
-          trigger={setIsTrigger}
-          editData={editData}
-        />
+      <Modal centered closable visible={isVisible} title="Add parking lot" footer={null}>
+        <AddParkingLotsForm changeVisible={setIsVisible} />
       </Modal>
     </div>
   );

@@ -6,8 +6,6 @@ const { TextArea } = Input;
 
 interface Props {
   changeVisible: Function;
-  trigger: Function;
-  editData: ParkingLot | undefined;
 }
 
 const AddParkingLotsForm = (props: Props) => {
@@ -21,7 +19,6 @@ const AddParkingLotsForm = (props: Props) => {
         .update(data.idParkingLot, tmp)
         .then((res) => {
           props.changeVisible(false);
-          props.trigger(true);
         })
         .catch((err) => console.log(err));
     } else {
@@ -30,28 +27,27 @@ const AddParkingLotsForm = (props: Props) => {
         .create(tmp)
         .then((res) => {
           props.changeVisible(false);
-          props.trigger(true);
         })
         .catch((err) => console.log(err));
     }
     form.resetFields();
   };
 
-  useEffect(() => {
-    const tmp = props.editData;
-    if (tmp) {
-      setData(tmp);
-      form.setFieldsValue({
-        name: tmp.name,
-        address: tmp.address,
-        lat: tmp.lat,
-        long: tmp.long,
-        description: tmp.description,
-      });
-    } else {
-      form.resetFields();
-    }
-  }, [props.editData]);
+  // useEffect(() => {
+  //   const tmp = props.editData;
+  //   if (tmp) {
+  //     setData(tmp);
+  //     form.setFieldsValue({
+  //       name: tmp.name,
+  //       address: tmp.address,
+  //       lat: tmp.lat,
+  //       long: tmp.long,
+  //       description: tmp.description,
+  //     });
+  //   } else {
+  //     form.resetFields();
+  //   }
+  // }, [props.editData]);
   return (
     <Form form={form} layout="vertical" onFinish={handleSubmit}>
       <Form.Item

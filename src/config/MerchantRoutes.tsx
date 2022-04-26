@@ -1,7 +1,7 @@
 import AboutPage from "@/pages/AboutPage";
 import Dashboard from "@/pages/Dashboard";
 import ParkingLots from "@/pages/ParkingLots";
-import ParkingLotDetails from "@/pages/ParkingLots/[id]";
+import ParkingLotDetails from "@/pages/ParkingLots/ParkingLotDetails";
 
 interface IRoute {
   path: string;

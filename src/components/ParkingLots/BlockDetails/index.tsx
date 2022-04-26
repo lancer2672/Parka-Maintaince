@@ -110,19 +110,27 @@ const BlockDetails = () => {
           </Form.Item>
           <h4>Slot numbers</h4>
           <Row gutter={[20, 20]}>
-            <Col span={12}>
+            <Col span={8}>
               <Form.Item
                 label="From"
                 name="from"
-                rules={[{ required: true, message: "Please input block code!" }]}>
+                rules={[{ required: true, message: "Please input slot number!" }]}>
                 <InputNumber min={0} />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col span={8}>
               <Form.Item
                 label="To"
                 name="to"
-                rules={[{ required: true, message: "Please input block code!" }]}>
+                rules={[{ required: true, message: "Please input slot number!" }]}>
+                <InputNumber min={0} />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Step"
+                name="step"
+                rules={[{ required: true, message: "Please input slot number step!" }]}>
                 <InputNumber min={0} />
               </Form.Item>
             </Col>
