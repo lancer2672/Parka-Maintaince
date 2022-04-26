@@ -1,18 +1,16 @@
+import logo from "@/assets/images/logo.png";
+import { login } from "@/store/actions/authAction";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { authState$ } from "@/store/selectors";
 import { LockTwoTone, UserOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Form, Input, Row } from "antd";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import styles from "./index.module.less";
-import logo from "@/assets/images/logo.png";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { login } from "@/store/actions/authAction";
-import { authState$ } from "@/store/selectors";
-import { useEffect } from "react";
 
 const Login = () => {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
   const authState = useAppSelector(authState$);
-  const navigate = useNavigate();
 
   const handleLogin = () => {
     const { email, password } = form.getFieldsValue();

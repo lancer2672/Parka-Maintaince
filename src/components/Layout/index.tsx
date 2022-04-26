@@ -1,4 +1,4 @@
-import logoImage from "@/assets/images/Logo.png";
+import logoImage from "@/assets/images/logo.png";
 import RightContent from "@/components/Layout/RightContent";
 import { MenuItems } from "@/config";
 import ProLayout from "@ant-design/pro-layout";
