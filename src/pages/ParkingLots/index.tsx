@@ -10,7 +10,7 @@ import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "@/store";
 import { deleteParkingLot, getAllParkingLots } from "@/store/actions/parkingLotActions";
-import { parkingLotState$ } from "@/store/selectors";
+import { selectParkingLot } from "@/store/selectors";
 
 const ParkingLots: FC = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const ParkingLots: FC = () => {
   const [dataSource, setDataSource] = useState<Array<ParkingLot>>();
 
   const dispatch = useAppDispatch();
-  const parkingLotState = useAppSelector(parkingLotState$);
+  const parkingLotState = useAppSelector(selectParkingLot);
 
   const columns: ColumnsType<ParkingLot> = [
     {

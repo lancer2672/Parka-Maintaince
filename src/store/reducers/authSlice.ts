@@ -1,5 +1,5 @@
 import { Company } from "@/types";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { login } from "../actions/authAction";
 
 export type AuthState = Partial<{

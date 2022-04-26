@@ -9,12 +9,12 @@ import { MerchantRoutes } from "@/config";
 import Login from "@/pages/Login";
 import { store } from "@/store";
 import { useAppSelector } from "@/store/hooks";
-import { authState$ } from "@/store/selectors";
+import { selectAuth } from "@/store/selectors";
 import { useEffect, useState } from "react";
 import AuthWrapper from "./pages/AuthWrapper";
 
 export default function App() {
-  const authState = useAppSelector(authState$);
+  const authState = useAppSelector(selectAuth);
   const [isAuth, setIsAuth] = useState<boolean>(false);
 
   // const render = () => {

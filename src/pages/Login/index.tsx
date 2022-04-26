@@ -1,7 +1,7 @@
 import logo from "@/assets/images/logo.png";
 import { login } from "@/store/actions/authAction";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { authState$ } from "@/store/selectors";
+import { selectAuth } from "@/store/selectors";
 import { LockTwoTone, UserOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Form, Input, Row } from "antd";
 import { Link, Navigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import styles from "./index.module.less";
 const Login = () => {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
-  const authState = useAppSelector(authState$);
+  const authState = useAppSelector(selectAuth);
 
   const handleLogin = () => {
     const { email, password } = form.getFieldsValue();
@@ -71,7 +71,12 @@ const Login = () => {
                         </Link>
                       </Form.Item>
                       <Form.Item>
-                        <Button size="large" type="primary" block htmlType="submit">
+                        <Button
+                          size="large"
+                          type="primary"
+                          block
+                          htmlType="submit"
+                          loading={authState.loading}>
                           Login
                         </Button>
                       </Form.Item>
