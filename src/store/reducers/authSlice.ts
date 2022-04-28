@@ -1,6 +1,6 @@
 import { Company } from "@/types";
 import { createSlice } from "@reduxjs/toolkit";
-import { login } from "../actions/authAction";
+import { login, verifyToken } from "../actions/authAction";
 
 export type AuthState = Partial<{
   auth: Company;
@@ -36,6 +36,9 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, { payload }) => {
         state.loading = false;
         state.error = payload;
+      })
+      .addCase(verifyToken.fulfilled, (state, { payload }) => {
+        state.auth = payload.data;
       });
   },
 });

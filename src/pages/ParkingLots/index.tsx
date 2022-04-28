@@ -10,15 +10,15 @@ import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "@/store";
 import { deleteParkingLot, getAllParkingLots } from "@/store/actions/parkingLotActions";
-import { selectParkingLot } from "@/store/selectors";
+import { selectAuth, selectParkingLot } from "@/store/selectors";
 
 const ParkingLots: FC = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<Array<ParkingLot>>();
-
   const dispatch = useAppDispatch();
   const parkingLotState = useAppSelector(selectParkingLot);
+  const authState = useAppSelector(selectAuth);
 
   const columns: ColumnsType<ParkingLot> = [
     {
@@ -93,7 +93,8 @@ const ParkingLots: FC = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllParkingLots("93471ac5-0cc1-4c77-8f0f-a9af3b1a7655"));
+    const idCompany = authState.auth?.idCompany;
+    dispatch(getAllParkingLots(idCompany));
   }, [dispatch]);
 
   useEffect(() => {

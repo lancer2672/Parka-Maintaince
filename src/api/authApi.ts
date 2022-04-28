@@ -5,5 +5,9 @@ const authApi = {
     const url = `/auth/login`;
     return axiosClient.post(url, { email, password });
   },
+  verify: (accessToken: any) => {
+    const url = "/auth/verify";
+    return axiosClient.post(url, { accessToken });
+  },
 };
 export default authApi;

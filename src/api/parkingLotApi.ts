@@ -4,7 +4,7 @@ const url: string = "/lots";
 
 const parkingLotApi = {
   getAll: (id: any) => {
-    return axiosClient.get(`${url}/${id}`);
+    return axiosClient.get(`${url}/company/${id}`);
   },
 
   create: async (data: any) => {

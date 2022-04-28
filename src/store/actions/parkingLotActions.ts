@@ -4,7 +4,7 @@ import axios from "axios";
 
 const getAllParkingLots = createAsyncThunk(
   "parkingLots/getAll",
-  async (idCompany: string, { rejectWithValue }) => {
+  async (idCompany: any, { rejectWithValue }) => {
     try {
       const res = await parkingLotApi.getAll(idCompany);
       return res.data.data;
