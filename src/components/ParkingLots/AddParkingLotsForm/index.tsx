@@ -1,53 +1,52 @@
-import { parkingLotApi } from "@/api";
+import { createParkingLot, updateParkingLot } from "@/store/actions/parkingLotActions";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { selectAuth, selectParkingLot } from "@/store/selectors";
 import { ParkingLot } from "@/types";
-import { Button, Col, Form, Input, Row } from "antd";
-import { useEffect, useState } from "react";
+import { Button, Col, Form, Input, message, Row } from "antd";
+import { useEffect } from "react";
 const { TextArea } = Input;
 
-interface Props {
+interface IProps {
   changeVisible: Function;
+  editData: ParkingLot | undefined;
 }
 
-const AddParkingLotsForm = (props: Props) => {
+const AddParkingLotsForm = (props: IProps) => {
   const [form] = Form.useForm();
-  const [data, setData] = useState<ParkingLot>();
+  const authState = useAppSelector(selectAuth);
+  const dispatch = useAppDispatch();
+  const parkingLotState = useAppSelector(selectParkingLot);
+
   const handleSubmit = () => {
-    const tmp = { ...form.getFieldsValue(), idCompany: "93471ac5-0cc1-4c77-8f0f-a9af3b1a7655" };
-    if (data) {
-      console.log({ data });
-      parkingLotApi
-        .update(data.idParkingLot, tmp)
-        .then((res) => {
-          props.changeVisible(false);
-        })
-        .catch((err) => console.log(err));
+    const formValues = { ...form.getFieldsValue(), idCompany: authState.auth?.idCompany };
+    if (props.editData) {
+      const edited = { ...formValues, idParkingLot: props.editData.idParkingLot };
+      dispatch(updateParkingLot(edited));
     } else {
-      console.log({ data });
-      parkingLotApi
-        .create(tmp)
-        .then((res) => {
-          props.changeVisible(false);
-        })
-        .catch((err) => console.log(err));
+      dispatch(createParkingLot(formValues));
     }
+    props.changeVisible(false);
     form.resetFields();
   };
 
-  // useEffect(() => {
-  //   const tmp = props.editData;
-  //   if (tmp) {
-  //     setData(tmp);
-  //     form.setFieldsValue({
-  //       name: tmp.name,
-  //       address: tmp.address,
-  //       lat: tmp.lat,
-  //       long: tmp.long,
-  //       description: tmp.description,
-  //     });
-  //   } else {
-  //     form.resetFields();
-  //   }
-  // }, [props.editData]);
+  useEffect(() => {
+    message.error(parkingLotState.error);
+  }, [parkingLotState.error]);
+
+  useEffect(() => {
+    const tmp = props.editData;
+    if (tmp) {
+      form.setFieldsValue({
+        name: tmp.name,
+        address: tmp.address,
+        lat: tmp.lat,
+        long: tmp.long,
+        description: tmp.description,
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [props.editData]);
   return (
     <Form form={form} layout="vertical" onFinish={handleSubmit}>
       <Form.Item
@@ -83,20 +82,11 @@ const AddParkingLotsForm = (props: Props) => {
       <Form.Item label="Description" name="description">
         <TextArea rows={2} />
       </Form.Item>
-      <Row gutter={[20, 0]}>
-        <Col span={6}>
-          <Button block size="large" type="default" onClick={() => props.changeVisible(false)}>
-            Cancel
-          </Button>
-        </Col>
-        <Col span={18}>
-          <Form.Item>
-            <Button block size="large" type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-        </Col>
-      </Row>
+      <Form.Item>
+        <Button block size="large" type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
     </Form>
   );
 };

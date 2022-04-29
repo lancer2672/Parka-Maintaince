@@ -1,4 +1,6 @@
+import { blockApi } from "@/api";
 import { Block } from "@/types";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
@@ -12,10 +14,8 @@ import {
   Table,
   Tooltip,
 } from "antd";
-import { useEffect, useState } from "react";
 import { ColumnsType } from "antd/es/table";
-import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { blockApi } from "@/api";
+import { useEffect, useState } from "react";
 
 const BlockDetails = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);

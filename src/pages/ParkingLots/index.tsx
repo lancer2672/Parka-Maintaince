@@ -1,6 +1,7 @@
-import { parkingLotApi } from "@/api";
 import AddParkingLotsForm from "@/components/ParkingLots/AddParkingLotsForm";
+import { deleteParkingLot, getAllParkingLots } from "@/store/actions/parkingLotActions";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { selectAuth, selectParkingLot } from "@/store/selectors";
 import { ParkingLot } from "@/types";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Modal, Popconfirm, Row, Table, Tag, Tooltip } from "antd";
@@ -8,14 +9,12 @@ import { ColumnsType } from "antd/es/table";
 import Search from "antd/lib/input/Search";
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { RootState } from "@/store";
-import { deleteParkingLot, getAllParkingLots } from "@/store/actions/parkingLotActions";
-import { selectAuth, selectParkingLot } from "@/store/selectors";
 
 const ParkingLots: FC = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<Array<ParkingLot>>();
+  const [editData, setEditData] = useState<ParkingLot>();
   const dispatch = useAppDispatch();
   const parkingLotState = useAppSelector(selectParkingLot);
   const authState = useAppSelector(selectAuth);
@@ -57,7 +56,7 @@ const ParkingLots: FC = () => {
               <Button
                 type="default"
                 icon={<EditOutlined />}
-                // onClick={() => onClickEdit(parkingLot)}
+                onClick={() => handleEdit(parkingLot)}
               />
             </Tooltip>
             {parkingLot.isDeleted ? null : (
@@ -81,6 +80,11 @@ const ParkingLots: FC = () => {
     dispatch(deleteParkingLot(id));
   };
 
+  const handleEdit = (parkingLot: ParkingLot) => {
+    setIsVisible(true);
+    setEditData(parkingLot);
+  };
+
   const handleSearch = (value: string) => {
     if (value) {
       const tmp = parkingLotState.parkingLots.filter(
@@ -101,6 +105,11 @@ const ParkingLots: FC = () => {
     setDataSource(parkingLotState.parkingLots);
   }, [parkingLotState.parkingLots]);
 
+  useEffect(() => {
+    if (!isVisible) {
+      setEditData(undefined);
+    }
+  }, [isVisible]);
   return (
     <div>
       <h1>Parking lots</h1>
@@ -139,8 +148,14 @@ const ParkingLots: FC = () => {
           </Col>
         </Row>
       </Card>
-      <Modal centered closable visible={isVisible} title="Add parking lot" footer={null}>
-        <AddParkingLotsForm changeVisible={setIsVisible} />
+      <Modal
+        title="Add parking lot"
+        centered
+        closable
+        footer={null}
+        visible={isVisible}
+        onCancel={() => setIsVisible(false)}>
+        <AddParkingLotsForm changeVisible={setIsVisible} editData={editData} />
       </Modal>
     </div>
   );

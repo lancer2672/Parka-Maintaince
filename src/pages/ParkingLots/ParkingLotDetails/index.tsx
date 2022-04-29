@@ -1,15 +1,15 @@
 import { parkingLotApi } from "@/api";
 import BlockDetails from "@/components/ParkingLots/BlockDetails";
 import { ParkingLot } from "@/types";
-import { Button, Card, Col, Row } from "antd";
+import { Card, Col, Row } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-interface Props {
+interface IProps {
   title: string;
   content: string | undefined;
 }
-const DescriptionItem = (props: Props) => (
+const DescriptionItem = (props: IProps) => (
   <Row style={{ fontSize: 16 }}>
     <Col span={3}>
       <p style={{ fontWeight: 600 }}>{props.title}</p>
