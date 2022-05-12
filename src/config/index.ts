@@ -1,5 +1,5 @@
-import AdminRoutes from "./AdminRoutes";
+import MerchantRoutes from "./MerchantRoutes";
 import AppVariables from "./AppVariables";
 import MenuItems from "./MenuItems";
 
-export { MenuItems, AdminRoutes, AppVariables };
+export { MenuItems, MerchantRoutes, AppVariables };
