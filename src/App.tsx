@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import useCachedResources from "@src/hooks/useCachedResources";
 import useColorScheme from "@src/hooks/useColorScheme";
-import AppNavigation from "@src/navigation/AppNavigation";
+import AppNavigator from "@src/navigation/AppNavigator";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -13,7 +13,7 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <AppNavigation colorScheme={colorScheme} />
+        <AppNavigator colorScheme={colorScheme} />
         <StatusBar />
       </SafeAreaProvider>
     );

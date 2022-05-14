@@ -62,7 +62,7 @@ const OnboardingScreen = ({ navigation }: any) => {
   };
 
   const getStarted = () => {
-    navigation.navigate("Root");
+    navigation.navigate("App");
   };
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
