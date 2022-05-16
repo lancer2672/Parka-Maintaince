@@ -1,14 +1,14 @@
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RouteProp } from "@react-navigation/native";
+import authApi from "@src/api/authApi";
 import userApi from "@src/api/userApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
-import { getApp, initializeApp } from "firebase/app";
-import {
-  getAuth,
-  PhoneAuthProvider,
-  signInWithCredential,
-} from "firebase/auth";
+import { auth } from "@src/firebase";
+import { createUserAction } from "@src/store/actions/userAction";
+import { useAppDispatch } from "@src/store/hooks";
+import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -20,9 +20,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationScreenProp } from "react-navigation";
-
-const app = getApp();
-const auth = getAuth();
 
 type Props = {
   navigation: NavigationScreenProp<any, any>;
@@ -42,8 +39,48 @@ const Verification = (props: Props) => {
   const [pin4, setPin4] = useState("");
   const [pin5, setPin5] = useState("");
   const [pin6, setPin6] = useState("");
-  const [timerCount, setTimer] = useState(20);
+  const [timerCount, setTimer] = useState(60);
   const routeData = props.route.params;
+
+  const dispatch = useAppDispatch();
+
+  const handleVerification = async () => {
+    try {
+      const verificationCode = `${pin1}${pin2}${pin3}${pin4}${pin5}${pin6}`;
+      const credential = PhoneAuthProvider.credential(
+        routeData.verificationId,
+        verificationCode,
+      );
+      await signInWithCredential(auth, credential);
+      if (routeData.type === "SignUp") {
+        const res = await dispatch(createUserAction(routeData.user)).unwrap();
+        if (res.errorMessage) {
+          Alert.alert("Error: " + res.errorMessage);
+        }
+        if (res.data) {
+          Alert.alert("Successfully!");
+          props.navigation.navigate("App");
+        }
+      } else if (routeData.type === "ResetPassword") {
+        const resetPassword = await authApi.resetPassword(
+          "1",
+          routeData.phoneNumber,
+        );
+        if (resetPassword.data.status) {
+          const password = await AsyncStorage.getItem("password");
+          if (password) {
+            await AsyncStorage.setItem("password", "1");
+          }
+          Alert.alert("Your new password is '1'");
+        } else {
+          Alert.alert("Failed");
+        }
+        props.navigation.navigate("SignIn");
+      }
+    } catch (err: any) {
+      Alert.alert(`Error: ${err.message}`);
+    }
+  };
 
   useEffect(() => {
     let interval = setInterval(() => {
@@ -55,31 +92,6 @@ const Verification = (props: Props) => {
     //cleanup the interval on complete
     return () => clearInterval(interval);
   }, []);
-
-  const handleVerification = async () => {
-    try {
-      const verificationCode = `${pin1}${pin2}${pin3}${pin4}${pin5}${pin6}`;
-      const credential = PhoneAuthProvider.credential(
-        routeData.verificationId,
-        verificationCode,
-      );
-      await signInWithCredential(auth, credential);
-      if (routeData.type === "SignUp") {
-        const newUser = await userApi.createUser(routeData);
-        if (newUser) {
-          Alert.alert("Successfully!!!");
-          props.navigation.navigate("HomeScreen");
-        } else {
-          Alert.alert("Fail");
-        }
-      } else if (routeData.type === "ResetPassword") {
-        props.navigation.navigate("SignIn");
-      }
-    } catch (err: any) {
-      Alert.alert(`Error: ${err.message}`);
-    }
-  };
-
   return (
     <SafeAreaView>
       <View style={styles.container}>

@@ -8,9 +8,10 @@ import {
 import userApi from "@src/api/userApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
+import { app, auth } from "@src/firebase";
+import { useAppDispatch } from "@src/store/hooks";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import { getApp, initializeApp } from "firebase/app";
-import { getAuth, PhoneAuthProvider } from "firebase/auth";
+import { PhoneAuthProvider } from "firebase/auth";
 import { Formik } from "formik";
 import React, { useRef, useState } from "react";
 import {
@@ -27,9 +28,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationScreenProp } from "react-navigation";
 import * as Yup from "yup";
 
-const auth = getAuth();
-const app = getApp();
-
 type Props = {
   navigation: NavigationScreenProp<any, any>;
 };
@@ -42,7 +40,7 @@ const SignUp = (props: Props) => {
   const SignupSchema = Yup.object().shape({
     name: Yup.string().required("Please enter name!"),
     email: Yup.string().email("Invalid email").required("Please enter email!"),
-    phonenumber: Yup.string()
+    phoneNumber: Yup.string()
       .matches(new RegExp("^0"), "Invalid phone number")
       .required("Please enter phone number!")
       .length(10, "Phone number must include 10 numbers"),
@@ -53,9 +51,9 @@ const SignUp = (props: Props) => {
   //handle sign up
   const handleSignUp = async (values: any) => {
     try {
-      const isExist = await userApi.checkDuplicateEmail(values.email);
+      const isExist = await userApi.checkDuplicatePhone(values.phoneNumber);
       if (isExist) {
-        Alert.alert("Failed! Email is already in use! ");
+        Alert.alert("Failed! phoneNumber is already in use! ");
         return;
       }
       if (values.password !== values.passwordConfirm) {
@@ -63,16 +61,16 @@ const SignUp = (props: Props) => {
         return;
       }
       const phoneProvider = new PhoneAuthProvider(auth);
-      const phonenumber = `+84${values.phonenumber.slice(
+      const phoneNumber = `+84${values.phoneNumber.slice(
         1,
-        values.phonenumber.length,
+        values.phoneNumber.length,
       )}`;
       const verificationId = await phoneProvider.verifyPhoneNumber(
-        phonenumber,
+        phoneNumber,
         recaptchaVerifier.current,
       );
       props.navigation.navigate("Verification", {
-        ...values,
+        user: values,
         type: "SignUp",
         verificationId,
       });
@@ -101,7 +99,7 @@ const SignUp = (props: Props) => {
               initialValues={{
                 name: "",
                 email: "",
-                phonenumber: "",
+                phoneNumber: "",
                 password: "",
                 passwordConfirm: "",
               }}
@@ -154,17 +152,17 @@ const SignUp = (props: Props) => {
                     <View style={styles.groupInput}>
                       <Feather name="phone" size={24} style={styles.icon} />
                       <TextInput
-                        onChangeText={handleChange("phonenumber")}
+                        onChangeText={handleChange("phoneNumber")}
                         placeholder="Số điện thoại"
-                        value={values.phonenumber}
+                        value={values.phoneNumber}
                         style={styles.input}
                         maxLength={10}
                         keyboardType="numeric"
                       />
                     </View>
-                    {errors.phonenumber && touched.phonenumber ? (
+                    {errors.phoneNumber && touched.phoneNumber ? (
                       <Text style={styles.validateError}>
-                        * {errors.phonenumber}
+                        * {errors.phoneNumber}
                       </Text>
                     ) : null}
                     <View style={styles.groupInput}>

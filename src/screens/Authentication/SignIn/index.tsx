@@ -12,72 +12,77 @@ import {
 } from "react-native";
 import AppButton from "@src/components/common/AppButton";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  MaterialCommunityIcons,
-  MaterialIcons,
-  Octicons,
-} from "@expo/vector-icons";
+import { MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "@src/constants";
 import authApi from "@src/api/authApi";
 import { Formik, FormikProps, FormikValues } from "formik";
 import * as Yup from "yup";
 import { NavigationScreenProp } from "react-navigation";
+import { FacebookLoginButton } from "@src/components/Login/FacebookLoginButton";
+import GoogleLoginButton from "@src/components/Login/GoogleLoginButton";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { loginAction } from "@src/store/actions/userAction";
 
 type Props = {
   navigation: NavigationScreenProp<any, any>;
+};
+type LoginValue = {
+  phoneNumber: string;
+  password: string;
 };
 
 const SignIn = (props: Props) => {
   const [isRemember, setIsRemember] = useState(true);
   const [hidePassword, setHidePassword] = useState(true);
-  const formikRef = useRef<FormikProps<FormikValues>>();
+  const dispatch = useAppDispatch();
+  const formikRef = useRef<FormikProps<LoginValue>>();
+  const user = useAppSelector((state) => state.user);
 
-  const toggleSwitch = async () =>
-    setIsRemember((previousState) => !previousState);
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Required"),
+    phoneNumber: Yup.string().required("Required"),
     password: Yup.string().required("Required"),
   });
 
-  const login = async (values: any) => {
+  const toggleSwitch = async () =>
+    setIsRemember((previousState) => !previousState);
+
+  const login = async (values: LoginValue) => {
     try {
-      const user = await authApi.signInAccount(values.email, values.password);
-      if (user.data.email) {
-        await AsyncStorage.setItem(
-          "accessToken",
-          JSON.stringify(user.data.accessToken),
-        );
-        await AsyncStorage.setItem("idUser", JSON.stringify(user.data.idUser));
-        await AsyncStorage.setItem(
-          "displayname",
-          JSON.stringify(user.data.displayname),
-        );
-        if (isRemember) {
-          await AsyncStorage.setItem("username", values.email);
-          await AsyncStorage.setItem("password", values.password);
-        } else {
-          await AsyncStorage.removeItem("username");
-          await AsyncStorage.removeItem("password");
-        }
-        props.navigation.navigate("app");
-      } else {
-        Alert.alert("Incorrect email or password!");
+      const result = await dispatch(
+        loginAction({
+          username: values.phoneNumber,
+          password: values.password,
+        }),
+      ).unwrap();
+
+      if (result.errorMessage) {
+        Alert.alert("Error: " + result.errorMessage);
+        return;
       }
+      if (isRemember) {
+        await AsyncStorage.setItem("phoneNumber", values.phoneNumber);
+        await AsyncStorage.setItem("password", values.password);
+      } else {
+        await AsyncStorage.removeItem("phoneNumber");
+        await AsyncStorage.removeItem("password");
+      }
+      props.navigation.navigate("App");
     } catch (error: any) {
-      Alert.alert("Error: " + error.message);
+      Alert.alert("Error: " + error);
     }
   };
 
   useEffect(() => {
     const saveIntoAsyncStorage = async () => {
       if (formikRef.current) {
-        const username = await AsyncStorage.getItem("username");
+        const phoneNumber = await AsyncStorage.getItem("phoneNumber");
         const password = await AsyncStorage.getItem("password");
-        formikRef.current.setFieldValue("email", username);
+        formikRef.current.setFieldValue("phoneNumber", phoneNumber);
         formikRef.current.setFieldValue("password", password);
       }
     };
+    saveIntoAsyncStorage();
   }, [formikRef]);
 
   return (
@@ -88,9 +93,9 @@ const SignIn = (props: Props) => {
         </View>
         <Formik
           innerRef={formikRef}
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ phoneNumber: "", password: "" }}
           validationSchema={LoginSchema}
-          onSubmit={(values) => login(values)}>
+          onSubmit={(values: LoginValue) => login(values)}>
           {({
             handleChange,
             handleBlur,
@@ -102,16 +107,16 @@ const SignIn = (props: Props) => {
             <View style={styles.controller}>
               <View style={styles.containerInput}>
                 <View style={styles.groupInput}>
-                  <MaterialIcons
-                    name="mail-outline"
+                  <MaterialCommunityIcons
+                    name="account-outline"
                     size={22}
                     color={Colors.light.text}
                   />
                   <TextInput
-                    placeholder="parka@gmail.com"
-                    onChangeText={handleChange("email")}
-                    value={values.email}
-                    keyboardType="email-address"
+                    placeholder="0326089954"
+                    onChangeText={handleChange("phoneNumber")}
+                    value={values.phoneNumber}
+                    keyboardType="number-pad"
                     style={styles.input}
                   />
                   <View style={{ width: 22 }} />
@@ -196,14 +201,12 @@ const SignIn = (props: Props) => {
                   }}>
                   OR
                 </Text>
-                <AppButton
-                  title="Đăng nhập với Google"
-                  style={styles.btnOauth}
-                  textStyle={{ color: Colors.light.text }}></AppButton>
-                <AppButton
-                  title="Đăng nhập với Facebook"
-                  style={styles.btnOauth}
-                  textStyle={{ color: Colors.light.text }}></AppButton>
+                {/* <GoogleLoginButton
+                  handleLogin={() => props.navigation.navigate("App")}
+                />
+                <FacebookLoginButton
+                  handleLogin={() => props.navigation.navigate("App")}
+                /> */}
                 <View
                   style={{
                     display: "flex",

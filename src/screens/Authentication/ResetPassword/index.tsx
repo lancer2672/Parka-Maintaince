@@ -1,18 +1,17 @@
 import { AntDesign, Feather } from "@expo/vector-icons";
+import authApi from "@src/api/authApi";
+import userApi from "@src/api/userApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
+import { app, auth } from "@src/firebase";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import { getApp } from "firebase/app";
-import { getAuth, PhoneAuthProvider } from "firebase/auth";
+import { PhoneAuthProvider } from "firebase/auth";
 import { Formik } from "formik";
 import React, { useRef } from "react";
 import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationScreenProp } from "react-navigation";
 import * as Yup from "yup";
-
-const app = getApp();
-const auth = getAuth();
 
 type Props = {
   navigation: NavigationScreenProp<any, any>;
@@ -21,7 +20,7 @@ type Props = {
 const ResetPassword = (props: Props) => {
   const recaptchaVerifier = useRef(null);
   const PhoneNumberSchema = Yup.object().shape({
-    phonenumber: Yup.string()
+    phoneNumber: Yup.string()
       .matches(new RegExp("^0"), "Invalid phone number")
       .required("Please enter phone number!")
       .length(10, "Phone number must include 10 numbers"),
@@ -29,17 +28,23 @@ const ResetPassword = (props: Props) => {
 
   const next = async (values: any) => {
     try {
+      const isExist = await userApi.checkDuplicatePhone(values.phoneNumber);
+      if (!isExist) {
+        Alert.alert("Failed! phoneNumber doesn't exist! ");
+        return;
+      }
       const phoneProvider = new PhoneAuthProvider(auth);
-      const phonenumber = `+84${values.phonenumber.slice(
+      const phoneNumber = `+84${values.phoneNumber.slice(
         1,
-        values.phonenumber.length,
+        values.phoneNumber.length,
       )}`;
       const verificationId = await phoneProvider.verifyPhoneNumber(
-        phonenumber,
+        phoneNumber,
         recaptchaVerifier.current,
       );
       props.navigation.navigate("Verification", {
         type: "ResetPassword",
+        phoneNumber: values.phoneNumber,
         verificationId,
       });
     } catch (err: any) {
@@ -64,7 +69,7 @@ const ResetPassword = (props: Props) => {
           Please enter your phone number to request a password reset
         </Text>
         <Formik
-          initialValues={{ phonenumber: "" }}
+          initialValues={{ phoneNumber: "" }}
           onSubmit={(values) => next(values)}
           validationSchema={PhoneNumberSchema}>
           {({ handleSubmit, handleChange, values, errors, touched }) => (
@@ -74,16 +79,16 @@ const ResetPassword = (props: Props) => {
                   <Feather name="phone" size={22} />
                   <TextInput
                     placeholder="Phone number"
-                    onChangeText={handleChange("phonenumber")}
-                    value={values.phonenumber}
+                    onChangeText={handleChange("phoneNumber")}
+                    value={values.phoneNumber}
                     autoFocus
                     keyboardType="numeric"
                     style={styles.input}
                   />
                 </View>
-                {errors.phonenumber && touched.phonenumber ? (
+                {errors.phoneNumber && touched.phoneNumber ? (
                   <Text style={styles.validateError}>
-                    * {errors.phonenumber}
+                    * {errors.phoneNumber}
                   </Text>
                 ) : null}
               </View>

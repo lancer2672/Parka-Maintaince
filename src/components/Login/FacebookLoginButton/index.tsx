@@ -4,7 +4,7 @@ import * as Facebook from "expo-auth-session/providers/facebook";
 import * as WebBrowser from "expo-web-browser";
 import React, { useEffect } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { FacebookLogo } from "@src/utils/svg/FacebookLogo";
+import FacebookLogo from "@src/assets/svg/facebook.svg";
 import config from "@src/config";
 
 WebBrowser.maybeCompleteAuthSession();

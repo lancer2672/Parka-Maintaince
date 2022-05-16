@@ -38,7 +38,7 @@ axiosClient.interceptors.response.use(
           if (accessToken) {
             await AsyncStorage.setItem("accessToken", JSON.stringify(accessToken));
           }
-          window.location.href = "/";
+          // location.href = "/";
 
           return axiosClient(originalConfig);
         } catch (_error) {
@@ -49,7 +49,7 @@ axiosClient.interceptors.response.use(
       if (err.response.status === 403) {
         Alert.alert("Your session has been expired. Please log in again!");
         await AsyncStorage.clear();
-        window.location.href = "/login";
+        
       }
     }
 

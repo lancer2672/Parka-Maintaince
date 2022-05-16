@@ -5,24 +5,24 @@ const userApi = {
     const res = await axiosClient.get("/users");
     return res;
   },
-  getUserById: async id => {
+  getUserById: async (id) => {
     const res = await axiosClient.get(`/users/${JSON.parse(id)}`);
     return res;
   },
-  checkDuplicateEmail: async email => {
-    const res = await axiosClient.post("users/checkemail", { email });
+  checkDuplicatePhone: async (phoneNumber) => {
+    const res = await axiosClient.post("users/check-phone", { phoneNumber });
     return res.data;
   },
-  createUser: async user => {
+  createUser: async (user) => {
     const res = await axiosClient.post("/users", user);
     return res;
   },
 
-  updateUser: async updatedUser => {
+  updateUser: async (updatedUser) => {
     return await axiosClient.patch(`/users/${updatedUser.idUser}`, updatedUser);
   },
 
-  deleteUser: async id => {
+  deleteUser: async (id) => {
     const res = await axiosClient.delete(`/users/${id}`);
     return res;
   },

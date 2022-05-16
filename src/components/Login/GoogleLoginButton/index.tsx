@@ -5,7 +5,7 @@ import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import React, { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import GoogleLogo from "@src/utils/svg/GoogleLogo";
+import GoogleLogo from "@src/assets/svg/google.svg";
 
 WebBrowser.maybeCompleteAuthSession();
 const AUTH_STATE_KEY = "AuthKey";

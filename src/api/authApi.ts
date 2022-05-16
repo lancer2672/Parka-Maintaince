@@ -1,20 +1,18 @@
 import axiosClient from "./axiosClient";
 
 const authApi = {
-  signInAccount: async (email: string, password: string) => {
+  signInAccount: async (username: string, password: string) => {
     const res = await axiosClient.post("auths/signin", {
-      email,
+      username,
       password,
     });
     return res;
   },
-  resetEmail: async (username: string) => {
-    return await axiosClient.post("auth/send-mail", {
-      username,
+  resetPassword: async (newPassword: string, phoneNumber: string) => {
+    return await axiosClient.patch(`auths/reset-password`, {
+      newPassword,
+      phoneNumber
     });
-  },
-  updatePassword: (data: any) => {
-    return axiosClient.post("auth/reset-password", data);
   },
 };
 export default authApi;
