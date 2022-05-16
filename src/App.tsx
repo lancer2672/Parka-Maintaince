@@ -5,10 +5,12 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "react-native-gesture-handler";
 import "../thepatch";
+import { initialize } from "./firebase";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
+  initialize();
 
   if (!isLoadingComplete) {
     return null;
