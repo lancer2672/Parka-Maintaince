@@ -201,12 +201,16 @@ const SignIn = (props: Props) => {
                   }}>
                   OR
                 </Text>
-                {/* <GoogleLoginButton
-                  handleLogin={() => props.navigation.navigate("App")}
-                />
-                <FacebookLoginButton
-                  handleLogin={() => props.navigation.navigate("App")}
-                /> */}
+                <View style={{ marginBottom: 10 }}>
+                  <GoogleLoginButton
+                    handleLogin={() => props.navigation.navigate("App")}
+                  />
+                </View>
+                <View>
+                  <FacebookLoginButton
+                    handleLogin={() => props.navigation.navigate("App")}
+                  />
+                </View>
                 <View
                   style={{
                     display: "flex",
@@ -298,7 +302,7 @@ const styles = StyleSheet.create({
   },
   oauth: {
     width: "100%",
-    marginTop: 60,
+    marginTop: 50,
   },
   btnOauth: {
     backgroundColor: "#FFF",
