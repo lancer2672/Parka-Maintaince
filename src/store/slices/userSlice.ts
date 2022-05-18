@@ -19,7 +19,11 @@ const arrAction = [loginAction, createUserAction, checkDuplicatePhoneAction, che
 export const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    loginWithOauth: (state: UserState, action: any) => {
+      state.data = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     arrAction.forEach((thunk) => builder.addCase(thunk.pending, (state) => {
       state.isLoading = true;
@@ -36,3 +40,5 @@ export const userSlice = createSlice({
     }));
   },
 })
+
+export const {loginWithOauth} = userSlice.actions;

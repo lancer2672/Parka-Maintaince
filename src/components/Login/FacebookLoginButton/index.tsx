@@ -56,7 +56,7 @@ export const FacebookLoginButton = (props: Props) => {
               })
               .then((res) => {
                 const { user } = res.data;
-                props.handleLogin(user.displayName, user.email);
+                props.handleLogin(user);
               })
               .catch((err) => console.log({ err }));
           }

@@ -35,18 +35,17 @@ const GoogleLoginButton = (props: Props) => {
         .then((res) => {
           const { id, name, email } = res.data;
           props.handleLogin(name, email);
-
-          // axios
-          //   .post("http://localhost:8080/api/auth/loginoauth", {
-          //     displayname: name,
-          //     email: email,
-          //     idsocial: id,
-          //   })
-          //   .then(res => {
-          //     const { user } = res.data;
-          //     handleLogin(user.displayName, user.email);
-          //   })
-          //   .catch(err => console.log({ err }));
+          axios
+            .post("http://localhost:8080/api/auth/loginoauth", {
+              displayname: name,
+              email: email,
+              idsocial: id,
+            })
+            .then((res) => {
+              const { user } = res.data;
+              props.handleLogin(user);
+            })
+            .catch((err) => console.log({ err }));
         })
         .catch((err) => console.log(err));
     }

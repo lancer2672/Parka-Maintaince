@@ -54,7 +54,6 @@ const checkDuplicatePhoneAction = createAsyncThunk('user/check-phone-duplicate',
 const checkExistPhoneAction = createAsyncThunk('user/check-phone-exist', async (phoneNumber: string) => {
   try {
     const isExist = await userApi.checkDuplicatePhone(phoneNumber);
-    console.log(isExist)
     if (!isExist) {
       return {errorMessage: "Failed! PhoneNumber doesn't exist!"};
     }
@@ -73,7 +72,7 @@ const resetPasswordAction = createAsyncThunk('user/reset-password', async (param
             await AsyncStorage.setItem("password", params.newPassword);
           }
       Alert.alert(`Your new password is ${params.newPassword}`);
-      return;
+      return {};
     }
     return {errorMessage: "Failed!!"}
 

@@ -25,6 +25,8 @@ import GoogleLoginButton from "@src/components/Login/GoogleLoginButton";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { loginAction } from "@src/store/actions/userAction";
 import { RootState } from "@src/store";
+import { loginWithOauth } from "@src/store/slices/userSlice";
+import { User } from "@src/types";
 
 type Props = {
   navigation: NavigationScreenProp<any, any>;
@@ -78,6 +80,11 @@ const SignIn = (props: Props) => {
     } catch (error: any) {
       Alert.alert("Error: " + error);
     }
+  };
+
+  const handleLoginWithOauth = (newUser: User) => {
+    dispatch(loginWithOauth(newUser));
+    props.navigation.navigate("App");
   };
 
   useEffect(() => {
@@ -218,14 +225,10 @@ const SignIn = (props: Props) => {
                   OR
                 </Text>
                 <View style={{ marginBottom: 10 }}>
-                  <GoogleLoginButton
-                    handleLogin={() => props.navigation.navigate("App")}
-                  />
+                  <GoogleLoginButton handleLogin={handleLoginWithOauth} />
                 </View>
                 <View>
-                  <FacebookLoginButton
-                    handleLogin={() => props.navigation.navigate("App")}
-                  />
+                  <FacebookLoginButton handleLogin={handleLoginWithOauth} />
                 </View>
                 <View
                   style={{

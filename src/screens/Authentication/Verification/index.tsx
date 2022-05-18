@@ -73,6 +73,9 @@ const Verification = (props: Props) => {
         }
         if (res.data) {
           Alert.alert("Successfully!");
+          await AsyncStorage.setItem("password", res.data.password);
+          await AsyncStorage.setItem("phoneNumber", res.data.phoneNumber);
+
           props.navigation.navigate("App");
         }
       } else if (routeData.type === "ResetPassword") {
