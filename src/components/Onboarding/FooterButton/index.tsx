@@ -1,6 +1,6 @@
+import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-// import AntDesignIcons from 'react-native-vector-icons/AntDesign';
 
 // interface IProps {
 //   currentIndex: any;
@@ -13,7 +13,7 @@ const FooterButton = (props) => {
       {props.currentIndex == props.slides.length - 1 ? (
         <TouchableOpacity onPress={props.getStarted} style={styles.startBtn}>
           <Text style={styles.text}>Get started</Text>
-          {/* <AntDesignIcons name="arrowright" style={styles.icon} /> */}
+          <AntDesign name="arrowright" style={styles.icon} />
         </TouchableOpacity>
       ) : (
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -28,7 +28,7 @@ const FooterButton = (props) => {
             style={styles.nextBtn}
             activeOpacity={0.8}>
             <Text style={styles.text}>Next</Text>
-            {/* <AntDesignIcons name="arrowright" style={styles.icon} /> */}
+            <AntDesign name="arrowright" style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}

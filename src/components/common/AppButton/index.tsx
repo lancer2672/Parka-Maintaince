@@ -1,7 +1,46 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { TouchableOpacity, Text } from "react-native";
 import Colors from "@src/constants/Colors";
+
+interface ButtonProps {
+  width: string;
+  height: string;
+  backgroundColor: string;
+  onPress: any;
+  children: JSX.Element;
+  style: any;
+}
+
+const AppButton = ({
+  width,
+  height,
+  backgroundColor,
+  onPress,
+  children,
+  style,
+}: ButtonProps) => {
+  const w = width == "auto" ? "auto" : parseInt(width);
+  const h = height == "auto" ? "auto" : parseInt(height);
+  const btnStyle = [
+    styles.root,
+    { width: w, height: h, backgroundColor },
+    style,
+  ];
+  return (
+    <TouchableOpacity onPress={onPress} style={btnStyle}>
+      {children}
+    </TouchableOpacity>
+  );
+};
+
+AppButton.defaultProps = {
+  width: "auto",
+  height: 45,
+  backgroundColor: Colors.light.primary,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onPress: () => {},
+  style: {},
+};
 
 const styles = {
   root: {
@@ -16,57 +55,14 @@ const styles = {
     shadowOpacity: 0.25,
     shadowRadius: 10,
     minHeight: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#fff",
   },
   text: {
     textAlign: "center",
     fontSize: 16,
   },
-};
-
-const AppButton = ({
-  title,
-  width,
-  height,
-  color,
-  backgroundColor,
-  onPress,
-  children,
-  textStyle,
-  style,
-}: ButtonProps) => {
-  const btnStyle = [styles.root, { width, height, backgroundColor }, style];
-  const txtStyle = [styles.text, { color }, textStyle];
-  return (
-    <TouchableOpacity onPress={onPress} style={btnStyle}>
-      {title && <Text style={txtStyle}>{title}</Text>}
-      {children}
-    </TouchableOpacity>
-  );
-};
-
-type ButtonProps = {
-  title: string;
-  width: string;
-  height: string;
-  color: string;
-  backgroundColor: string;
-  onPress: any;
-  children: string;
-  textStyle: any;
-  style: any;
-};
-
-AppButton.defaultProps = {
-  title: null,
-  width: "auto",
-  height: "auto",
-  color: "white",
-  backgroundColor: Colors.light.primary,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onPress: () => {},
-  children: null,
-  textStyle: {},
-  style: {},
 };
 
 export default AppButton;

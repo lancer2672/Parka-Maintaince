@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "parka-app",
+    "name": "parka",
     "slug": "parka-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -17,16 +17,26 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./src/assets/images/branding/android-chrome-192x192.png"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/branding/android-chrome-192x192.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": ["CAMERA"]
     },
     "web": {
       "favicon": "./src/assets/images/branding/favicon.ico"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Parka to access your photos."
+        }
+      ]
+    ]
   }
 }

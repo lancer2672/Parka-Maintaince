@@ -5,6 +5,9 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "react-native-gesture-handler";
 import "../thepatch";
+import { LogBox } from "react-native";
+
+LogBox.ignoreAllLogs();
 
 export default function App() {
   const isLoadingComplete = useCachedResources();

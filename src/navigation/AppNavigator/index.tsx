@@ -34,11 +34,11 @@ const AppNavigator = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
       linking={LinkingConfiguration}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="OnboardingScreen"
           component={OnboardingScreen}
           options={{ headerShown: false }}
-        />
+        /> */}
         {/* Authentication
         <Stack.Group>
           <Stack.Screen></Stack.Screen>
