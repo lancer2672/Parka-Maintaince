@@ -1,34 +1,35 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@src/types";
-import { State } from "react-native-gesture-handler";
-import { createUserAction, loginAction } from "../actions/userAction";
+import { checkDuplicatePhoneAction, createUserAction, loginAction } from "../actions/userAction";
 
 interface UserState {
   data: User;
   errorMessage: string;
-  loading: boolean; 
+  isLoading: boolean; 
 }
 
 const initialState: UserState = {
   data: null,
   errorMessage: "",
-  loading: true
+  isLoading: false
 };
+
+const arrAction = [loginAction, createUserAction, checkDuplicatePhoneAction];
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    [loginAction, createUserAction].forEach((thunk) => builder.addCase(thunk.pending, (state) => {
-      state.loading = true;
+    arrAction.forEach((thunk) => builder.addCase(thunk.pending, (state) => {
+      state.isLoading = true;
     }));
-    [loginAction, createUserAction].forEach((thunk) => builder.addCase(thunk.fulfilled, (state, action) => {
+    arrAction.forEach((thunk) => builder.addCase(thunk.fulfilled, (state, action) => {
+      state.isLoading = false;
       state = {...state,...action.payload};
-      state.loading = false;
     }));
-    [loginAction, createUserAction].forEach((thunk) => builder.addCase(thunk.rejected, (state, action : any) => {
-      state.loading = false;
+    arrAction.forEach((thunk) => builder.addCase(thunk.rejected, (state, action : any) => {
+      state.isLoading = false;
       if (action.payload) {
         state.errorMessage = action.payload.errorMessage;
       } 

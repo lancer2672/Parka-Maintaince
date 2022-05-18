@@ -4,6 +4,8 @@ import userApi from "@src/api/userApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { app, auth } from "@src/firebase";
+import { checkDuplicatePhoneAction } from "@src/store/actions/userAction";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { PhoneAuthProvider } from "firebase/auth";
 import { Formik } from "formik";
@@ -19,6 +21,8 @@ type Props = {
 
 const ResetPassword = (props: Props) => {
   const recaptchaVerifier = useRef(null);
+  const isLoading = useAppSelector((state) => state.user.isLoading);
+  const dispatch = useAppDispatch();
   const PhoneNumberSchema = Yup.object().shape({
     phoneNumber: Yup.string()
       .matches(new RegExp("^0"), "Invalid phone number")
@@ -28,16 +32,18 @@ const ResetPassword = (props: Props) => {
 
   const next = async (values: any) => {
     try {
-      const isExist = await userApi.checkDuplicatePhone(values.phoneNumber);
-      if (!isExist) {
-        Alert.alert("Failed! phoneNumber doesn't exist! ");
+      const result = await dispatch(
+        checkDuplicatePhoneAction(values.phoneNumber),
+      ).unwrap();
+      if (result.errorMessage) {
+        Alert.alert("Error: " + result.errorMessage);
         return;
       }
-      const phoneProvider = new PhoneAuthProvider(auth);
       const phoneNumber = `+84${values.phoneNumber.slice(
         1,
         values.phoneNumber.length,
       )}`;
+      const phoneProvider = new PhoneAuthProvider(auth);
       const verificationId = await phoneProvider.verifyPhoneNumber(
         phoneNumber,
         recaptchaVerifier.current,
@@ -86,15 +92,17 @@ const ResetPassword = (props: Props) => {
                     style={styles.input}
                   />
                 </View>
-                {errors.phoneNumber && touched.phoneNumber ? (
+                {errors.phoneNumber && touched.phoneNumber && (
                   <Text style={styles.validateError}>
                     * {errors.phoneNumber}
                   </Text>
-                ) : null}
+                )}
               </View>
               <AppButton
                 title="Send"
                 style={styles.btnSend}
+                backgroundColor={isLoading ? "#A498ED" : Colors.light.primary}
+                isLoading={isLoading}
                 color="white"
                 textStyle={{ fontSize: 22, fontWeight: "600" }}
                 onPress={handleSubmit}
@@ -158,7 +166,7 @@ const styles = StyleSheet.create({
   },
   validateError: {
     color: "red",
-    fontSize: 16,
+    fontSize: 14,
     marginTop: 5,
     marginBottom: -10,
   },

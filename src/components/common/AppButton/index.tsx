@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import Colors from "@src/constants/Colors";
 
 const styles = {
@@ -16,6 +16,9 @@ const styles = {
     shadowOpacity: 0.25,
     shadowRadius: 10,
     minHeight: 40,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   text: {
     textAlign: "center",
@@ -33,11 +36,15 @@ const AppButton = ({
   children,
   textStyle,
   style,
+  isLoading,
 }: ButtonProps) => {
   const btnStyle = [styles.root, { width, height, backgroundColor }, style];
   const txtStyle = [styles.text, { color }, textStyle];
   return (
     <TouchableOpacity onPress={onPress} style={btnStyle}>
+      {isLoading && (
+        <ActivityIndicator style={{ marginRight: 20 }} color="white" />
+      )}
       {title && <Text style={txtStyle}>{title}</Text>}
       {children}
     </TouchableOpacity>
@@ -54,6 +61,7 @@ type ButtonProps = {
   children: string;
   textStyle: any;
   style: any;
+  isLoading: boolean;
 };
 
 AppButton.defaultProps = {
@@ -67,6 +75,7 @@ AppButton.defaultProps = {
   children: null,
   textStyle: {},
   style: {},
+  isLoading: false,
 };
 
 export default AppButton;

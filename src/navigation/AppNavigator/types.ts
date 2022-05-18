@@ -5,7 +5,7 @@ import {
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { User } from "@src/types";
-import { string } from "yup/lib/locale";
+import { Ref } from "react";
 
 interface ResetPasswordParams {
   verificationId: string;

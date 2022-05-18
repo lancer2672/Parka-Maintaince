@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import AppButton from "@src/components/common/AppButton";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,6 +24,7 @@ import { FacebookLoginButton } from "@src/components/Login/FacebookLoginButton";
 import GoogleLoginButton from "@src/components/Login/GoogleLoginButton";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { loginAction } from "@src/store/actions/userAction";
+import { RootState } from "@src/store";
 
 type Props = {
   navigation: NavigationScreenProp<any, any>;
@@ -38,16 +40,21 @@ const SignIn = (props: Props) => {
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikProps<LoginValue>>();
   const user = useAppSelector((state) => state.user);
+  const isLoading = useAppSelector((state: RootState) => state.user.isLoading);
 
   const LoginSchema = Yup.object().shape({
-    phoneNumber: Yup.string().required("Required"),
-    password: Yup.string().required("Required"),
+    phoneNumber: Yup.string()
+      .matches(new RegExp("^0"), "Invalid phone number")
+      .required("Please enter phone number!")
+      .length(10, "Phone number must include 10 numbers")
+      .nullable(),
+    password: Yup.string().required("Please enter password").nullable(),
   });
 
   const toggleSwitch = async () =>
     setIsRemember((previousState) => !previousState);
 
-  const login = async (values: LoginValue) => {
+  const login = async (values: any) => {
     try {
       const result = await dispatch(
         loginAction({
@@ -84,7 +91,6 @@ const SignIn = (props: Props) => {
     };
     saveIntoAsyncStorage();
   }, [formikRef]);
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView style={styles.container}>
@@ -95,7 +101,7 @@ const SignIn = (props: Props) => {
           innerRef={formikRef}
           initialValues={{ phoneNumber: "", password: "" }}
           validationSchema={LoginSchema}
-          onSubmit={(values: LoginValue) => login(values)}>
+          onSubmit={(values) => login(values)}>
           {({
             handleChange,
             handleBlur,
@@ -121,6 +127,11 @@ const SignIn = (props: Props) => {
                   />
                   <View style={{ width: 22 }} />
                 </View>
+                {errors.phoneNumber && touched.phoneNumber && (
+                  <Text style={styles.validateError}>
+                    * {errors.phoneNumber}
+                  </Text>
+                )}
                 <View style={styles.groupInput}>
                   <MaterialCommunityIcons
                     name="key-outline"
@@ -141,6 +152,9 @@ const SignIn = (props: Props) => {
                     onPress={() => setHidePassword(!hidePassword)}
                   />
                 </View>
+                {errors.password && touched.password && (
+                  <Text style={styles.validateError}>* {errors.password}</Text>
+                )}
               </View>
               <View
                 style={{
@@ -187,6 +201,8 @@ const SignIn = (props: Props) => {
                 title="Sign in"
                 style={styles.btnSignIn}
                 color="white"
+                backgroundColor={isLoading ? "#A498ED" : Colors.light.primary}
+                isLoading={isLoading}
                 textStyle={{ fontSize: 22, fontWeight: "600" }}
                 onPress={handleSubmit}
               />
@@ -293,12 +309,12 @@ const styles = StyleSheet.create({
     height: 50,
     width: "100%",
     justifyContent: "center",
-    backgroundColor: Colors.light.primary,
   },
   switch: {
     transform: [{ scaleX: 0.9 }, { scaleY: 0.8 }],
     paddingLeft: 0,
     marginLeft: 0,
+    marginTop: 5,
   },
   oauth: {
     width: "100%",
@@ -316,6 +332,12 @@ const styles = StyleSheet.create({
   },
   iconOauth: {
     marginRight: 10,
+  },
+  validateError: {
+    color: "red",
+    fontSize: 14,
+    marginTop: 2,
+    marginBottom: -12,
   },
 });
 export default SignIn;

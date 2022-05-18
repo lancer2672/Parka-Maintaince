@@ -9,7 +9,8 @@ import userApi from "@src/api/userApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { app, auth } from "@src/firebase";
-import { useAppDispatch } from "@src/store/hooks";
+import { checkDuplicatePhoneAction } from "@src/store/actions/userAction";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { PhoneAuthProvider } from "firebase/auth";
 import { Formik } from "formik";
@@ -35,6 +36,8 @@ type Props = {
 const SignUp = (props: Props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const recaptchaVerifier = useRef(null);
+  const isLoading = useAppSelector((state) => state.user.isLoading);
+  const dispatch = useAppDispatch();
 
   //validate
   const SignupSchema = Yup.object().shape({
@@ -51,9 +54,12 @@ const SignUp = (props: Props) => {
   //handle sign up
   const handleSignUp = async (values: any) => {
     try {
-      const isExist = await userApi.checkDuplicatePhone(values.phoneNumber);
-      if (isExist) {
-        Alert.alert("Failed! phoneNumber is already in use! ");
+      const result = await dispatch(
+        checkDuplicatePhoneAction(values.phoneNumber),
+      ).unwrap();
+
+      if (result.errorMessage) {
+        Alert.alert("Error: " + result.errorMessage);
         return;
       }
       if (values.password !== values.passwordConfirm) {
@@ -129,9 +135,9 @@ const SignUp = (props: Props) => {
                       />
                       <View style={{ width: 22 }} />
                     </View>
-                    {errors.name && touched.name ? (
+                    {errors.name && touched.name && (
                       <Text style={styles.validateError}>* {errors.name}</Text>
-                    ) : null}
+                    )}
                     <View style={styles.groupInput}>
                       <MaterialIcons
                         name="mail-outline"
@@ -146,9 +152,9 @@ const SignUp = (props: Props) => {
                         keyboardType="email-address"
                       />
                     </View>
-                    {errors.email && touched.email ? (
+                    {errors.email && touched.email && (
                       <Text style={styles.validateError}>* {errors.email}</Text>
-                    ) : null}
+                    )}
                     <View style={styles.groupInput}>
                       <Feather name="phone" size={24} style={styles.icon} />
                       <TextInput
@@ -160,11 +166,11 @@ const SignUp = (props: Props) => {
                         keyboardType="numeric"
                       />
                     </View>
-                    {errors.phoneNumber && touched.phoneNumber ? (
+                    {errors.phoneNumber && touched.phoneNumber && (
                       <Text style={styles.validateError}>
                         * {errors.phoneNumber}
                       </Text>
-                    ) : null}
+                    )}
                     <View style={styles.groupInput}>
                       <MaterialCommunityIcons
                         name="key-outline"
@@ -185,11 +191,11 @@ const SignUp = (props: Props) => {
                         onPress={() => setSecureTextEntry(!secureTextEntry)}
                       />
                     </View>
-                    {errors.password && touched.password ? (
+                    {errors.password && touched.password && (
                       <Text style={styles.validateError}>
                         * {errors.password}
                       </Text>
-                    ) : null}
+                    )}
                     <View style={styles.groupInput}>
                       <MaterialCommunityIcons
                         name="key-outline"
@@ -210,16 +216,20 @@ const SignUp = (props: Props) => {
                         onPress={() => setSecureTextEntry(!secureTextEntry)}
                       />
                     </View>
-                    {errors.passwordConfirm && touched.passwordConfirm ? (
+                    {errors.passwordConfirm && touched.passwordConfirm && (
                       <Text style={styles.validateError}>
                         * {errors.passwordConfirm}
                       </Text>
-                    ) : null}
+                    )}
                   </View>
                   <AppButton
                     title="Next"
                     style={styles.btnNext}
                     color="white"
+                    backgroundColor={
+                      isLoading ? "#A498ED" : Colors.light.primary
+                    }
+                    isLoading={isLoading}
                     textStyle={{ fontSize: 22, fontWeight: "600" }}
                     onPress={handleSubmit}
                   />
@@ -279,7 +289,7 @@ const styles = StyleSheet.create({
   },
   validateError: {
     color: "red",
-    fontSize: 16,
+    fontSize: 14,
     marginTop: 5,
     marginBottom: -10,
   },

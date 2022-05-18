@@ -1,4 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
+import { async } from "@firebase/util";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RouteProp } from "@react-navigation/native";
 import authApi from "@src/api/authApi";
@@ -6,9 +7,17 @@ import userApi from "@src/api/userApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { auth } from "@src/firebase";
-import { createUserAction } from "@src/store/actions/userAction";
-import { useAppDispatch } from "@src/store/hooks";
-import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
+import {
+  createUserAction,
+  resetPasswordAction,
+} from "@src/store/actions/userAction";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import {
+  PhoneAuthProvider,
+  RecaptchaVerifier,
+  signInWithCredential,
+  signInWithPhoneNumber,
+} from "firebase/auth";
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -16,6 +25,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -39,16 +49,20 @@ const Verification = (props: Props) => {
   const [pin4, setPin4] = useState("");
   const [pin5, setPin5] = useState("");
   const [pin6, setPin6] = useState("");
-  const [timerCount, setTimer] = useState(60);
+  const [timerCount, setTimer] = useState(5);
   const routeData = props.route.params;
-
+  const isLoading = useAppSelector((state) => state.user.isLoading);
   const dispatch = useAppDispatch();
+  const [verificationId, setVerificationId] = useState(
+    routeData.verificationId,
+  );
+  const phoneProvider = new PhoneAuthProvider(auth);
 
   const handleVerification = async () => {
     try {
       const verificationCode = `${pin1}${pin2}${pin3}${pin4}${pin5}${pin6}`;
       const credential = PhoneAuthProvider.credential(
-        routeData.verificationId,
+        verificationId,
         verificationCode,
       );
       await signInWithCredential(auth, credential);
@@ -62,18 +76,15 @@ const Verification = (props: Props) => {
           props.navigation.navigate("App");
         }
       } else if (routeData.type === "ResetPassword") {
-        const resetPassword = await authApi.resetPassword(
-          "1",
-          routeData.phoneNumber,
-        );
-        if (resetPassword.data.status) {
-          const password = await AsyncStorage.getItem("password");
-          if (password) {
-            await AsyncStorage.setItem("password", "1");
-          }
-          Alert.alert("Your new password is '1'");
-        } else {
-          Alert.alert("Failed");
+        const result = await dispatch(
+          resetPasswordAction({
+            newPassword: "1",
+            phoneNumber: routeData.phoneNumber,
+          }),
+        ).unwrap();
+        if (result.errorMessage) {
+          Alert.alert("Error: " + result.errorMessage);
+          return;
         }
         props.navigation.navigate("SignIn");
       }
@@ -82,7 +93,28 @@ const Verification = (props: Props) => {
     }
   };
 
-  useEffect(() => {
+  const handleResendOTP = async () => {
+    setTimer(60);
+    countDown();
+    // setTimer(5);
+    // const re = new RecaptchaVerifier("recaptcha-container", {}, auth);
+    // // const id = await re.render();
+    // signInWithPhoneNumber(auth, routeData.phoneNumber, re)
+    //   .then((confirmationResult) => {
+    //     // SMS sent. Prompt user to type the code from the message, then sign the
+    //     // user in with confirmationResult.confirm(code).
+    //     console.log(confirmationResult);
+    //     // ...
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     // Error; SMS not sent
+    //     // ...
+    //   });
+    // // setVerificationId(tmp);
+  };
+
+  const countDown = () => {
     let interval = setInterval(() => {
       setTimer((lastTimerCount) => {
         lastTimerCount <= 1 && clearInterval(interval);
@@ -91,10 +123,15 @@ const Verification = (props: Props) => {
     }, 1000); //each count lasts for a second
     //cleanup the interval on complete
     return () => clearInterval(interval);
+  };
+  useEffect(() => {
+    countDown();
   }, []);
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
+        <View></View>
         <KeyboardAvoidingView keyboardVerticalOffset={50} behavior={"padding"}>
           <AntDesign
             name="arrowleft"
@@ -188,23 +225,46 @@ const Verification = (props: Props) => {
             title="Continue"
             style={styles.btnContinue}
             color="white"
+            backgroundColor={isLoading ? "#A498ED" : Colors.light.primary}
+            isLoading={isLoading}
             textStyle={{ fontSize: 22, fontWeight: "600" }}
             onPress={() => handleVerification()}
           />
-          <View style={styles.resend}>
-            <Text style={{ fontSize: 16, fontWeight: "600" }}>
-              Re-send code in
-            </Text>
-            <Text
+          {timerCount > 0 && (
+            <View style={styles.resend}>
+              <Text style={{ fontSize: 16, fontWeight: "600" }}>
+                Re-send code in
+              </Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "600",
+                  color: Colors.light.primary,
+                  marginLeft: 5,
+                }}>
+                {timerCount} s
+              </Text>
+            </View>
+          )}
+          {timerCount == 0 && (
+            <TouchableOpacity
+              onPress={handleResendOTP}
               style={{
-                fontSize: 16,
-                fontWeight: "600",
-                color: Colors.light.primary,
-                marginLeft: 5,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                marginTop: 10,
               }}>
-              {timerCount} s
-            </Text>
-          </View>
+              <Text
+                style={{
+                  color: Colors.light.primary,
+                  fontSize: 16,
+                  fontWeight: "700",
+                }}>
+                Resend
+              </Text>
+            </TouchableOpacity>
+          )}
         </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
