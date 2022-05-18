@@ -40,13 +40,25 @@ const loginAction = createAsyncThunk('user/login', async (params : {username: st
   }
 })
 
-const checkDuplicatePhoneAction = createAsyncThunk('user/check-phone', async (phoneNumber: string) => {
+const checkDuplicatePhoneAction = createAsyncThunk('user/check-phone-duplicate', async (phoneNumber: string) => {
+  try {
+    const res = await userApi.checkDuplicatePhone(phoneNumber);
+    if(res)
+      return {errorMessage: "Failed! PhoneNumber is already in use"};
+    return {};
+  } catch (error: any) {
+    return {errorMessage: error.message};
+  }
+})
+
+const checkExistPhoneAction = createAsyncThunk('user/check-phone-exist', async (phoneNumber: string) => {
   try {
     const isExist = await userApi.checkDuplicatePhone(phoneNumber);
+    console.log(isExist)
     if (!isExist) {
-      return {errorMessage: "Failed! PhoneNumber doesn't exist!"}
+      return {errorMessage: "Failed! PhoneNumber doesn't exist!"};
     }
-    return {errorMessage: "Failed! PhoneNumber is already in use"}
+    return {};
   } catch (error: any) {
     return {errorMessage: error.message};
   }
@@ -70,4 +82,4 @@ const resetPasswordAction = createAsyncThunk('user/reset-password', async (param
   }
 })
 
-export {loginAction, createUserAction, checkDuplicatePhoneAction, resetPasswordAction}
+export {loginAction, createUserAction, checkDuplicatePhoneAction, resetPasswordAction, checkExistPhoneAction}

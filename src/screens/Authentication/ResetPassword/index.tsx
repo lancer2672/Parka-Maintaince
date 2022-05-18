@@ -1,10 +1,8 @@
 import { AntDesign, Feather } from "@expo/vector-icons";
-import authApi from "@src/api/authApi";
-import userApi from "@src/api/userApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { app, auth } from "@src/firebase";
-import { checkDuplicatePhoneAction } from "@src/store/actions/userAction";
+import { checkExistPhoneAction } from "@src/store/actions/userAction";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { PhoneAuthProvider } from "firebase/auth";
@@ -33,7 +31,7 @@ const ResetPassword = (props: Props) => {
   const next = async (values: any) => {
     try {
       const result = await dispatch(
-        checkDuplicatePhoneAction(values.phoneNumber),
+        checkExistPhoneAction(values.phoneNumber),
       ).unwrap();
       if (result.errorMessage) {
         Alert.alert("Error: " + result.errorMessage);

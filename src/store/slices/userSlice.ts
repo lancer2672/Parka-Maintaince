@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@src/types";
-import { checkDuplicatePhoneAction, createUserAction, loginAction } from "../actions/userAction";
+import { checkDuplicatePhoneAction, checkExistPhoneAction, createUserAction, loginAction } from "../actions/userAction";
 
 interface UserState {
   data: User;
@@ -14,7 +14,7 @@ const initialState: UserState = {
   isLoading: false
 };
 
-const arrAction = [loginAction, createUserAction, checkDuplicatePhoneAction];
+const arrAction = [loginAction, createUserAction, checkDuplicatePhoneAction, checkExistPhoneAction];
 
 export const userSlice = createSlice({
   name: "user",
