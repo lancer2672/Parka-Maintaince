@@ -8,11 +8,13 @@ import "../thepatch";
 import React from "react";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import { LogBox } from "react-native";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
+  LogBox.ignoreAllLogs();
   if (!isLoadingComplete) {
     return null;
   } else {
