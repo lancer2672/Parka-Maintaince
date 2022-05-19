@@ -12,6 +12,11 @@ import { ColorSchemeName } from "react-native";
 import { AppStackParams } from "./types";
 import AppTabNavigator from "../AppTabNavigator";
 import LinkingConfiguration from "../LinkingConfiguration";
+import SignIn from "@src/screens/Authentication/SignIn";
+import SignUp from "@src/screens/Authentication/SignUp";
+import ResetPassword from "@src/screens/Authentication/ResetPassword";
+import Verification from "@src/screens/Authentication/Verification";
+import ChangePassword from "@src/screens/Authentication/ChangePassword";
 
 const Stack = createNativeStackNavigator<AppStackParams>();
 
@@ -39,10 +44,34 @@ const AppNavigator = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
           component={OnboardingScreen}
           options={{ headerShown: false }}
         />
-        {/* Authentication
-        <Stack.Group>
-          <Stack.Screen></Stack.Screen>
-        </Stack.Group> */}
+
+        {/* Authentication */}
+        <Stack.Screen
+          name="SignIn"
+          component={SignIn}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPassword}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Verification"
+          component={Verification}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangePassword}
+          options={{ headerShown: false }}
+        />
+
         <Stack.Screen
           name="App"
           component={AppTabNavigator}
