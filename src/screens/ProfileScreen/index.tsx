@@ -2,13 +2,25 @@ import {
   AntDesign,
   FontAwesome,
   FontAwesome5,
+  Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import AppButton from "@src/components/common/AppButton";
 import ProfileAction from "@src/components/Profile/ProfileAction";
 import { Colors } from "@src/constants";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Image, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import {
+  Button,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { LogoutIcon } from "react-native-heroicons/outline";
 
 const actions = [
   {
@@ -64,6 +76,12 @@ const ProfileScreen = ({ navigation }: any) => {
             icon={action.icon}
           />
         ))}
+        <TouchableOpacity style={styles.button}>
+          <View style={styles.buttonContent}>
+            <Text style={styles.buttonText}>Log out</Text>
+            <LogoutIcon color={Colors.light.primary} size={22} />
+          </View>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -78,12 +96,9 @@ const styles = StyleSheet.create({
   },
   scroll: {
     padding: 20,
-    // backgroundColor: "#25AFF3",
-    // alignItems: "center",
   },
   heading: {
     alignSelf: "center",
-    // backgroundColor: "#333",
   },
   avatar: {
     alignSelf: "center",
@@ -91,5 +106,29 @@ const styles = StyleSheet.create({
     width: 100,
     borderRadius: 50,
     marginVertical: 20,
+  },
+  button: {
+    borderWidth: 1,
+    borderColor: "#D9DFE7",
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: Colors.light.background,
+    marginTop: 20,
+    // position: "absolute",
+    // bottom: 0,
+    // left: 0,
+    // right: 0,
+  },
+  buttonContent: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonText: {
+    color: Colors.light.primary,
+    fontSize: 18,
+    fontWeight: "600",
+    marginRight: 12,
   },
 });

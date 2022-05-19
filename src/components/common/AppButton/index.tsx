@@ -14,18 +14,13 @@ interface ButtonProps {
 const AppButton = ({
   width,
   height,
-  backgroundColor,
   onPress,
   children,
   style,
 }: ButtonProps) => {
   const w = width == "auto" ? "auto" : parseInt(width);
   const h = height == "auto" ? "auto" : parseInt(height);
-  const btnStyle = [
-    styles.root,
-    { width: w, height: h, backgroundColor },
-    style,
-  ];
+  const btnStyle = [styles.root, { width: w, height: h }, style];
   return (
     <TouchableOpacity onPress={onPress} style={btnStyle}>
       {children}
@@ -36,7 +31,6 @@ const AppButton = ({
 AppButton.defaultProps = {
   width: "auto",
   height: 45,
-  backgroundColor: Colors.light.primary,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onPress: () => {},
   style: {},
@@ -58,6 +52,7 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     color: "#fff",
+    backgroundColor: Colors.light.primary,
   },
   text: {
     textAlign: "center",

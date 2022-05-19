@@ -1,13 +1,23 @@
-import { StatusBar } from "expo-status-bar";
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabBarProps,
+} from "@react-navigation/material-top-tabs";
+import TabBarBooking from "@src/components/Booking/TabBarBooking";
 import React from "react";
-import { SafeAreaView, Text } from "react-native";
+import ActiveBookingScreen from "./ActiveBookingScreen";
+import HistoryBookingScreen from "./HistoryBookingScreen";
+import ScheduledBookingScreen from "./ScheduledBookingScreen";
+
+const Tab = createMaterialTopTabNavigator();
 
 const BookingHistoryScreen = () => {
   return (
-    <SafeAreaView>
-      <StatusBar style="light" />
-      <Text>Booking history screen</Text>
-    </SafeAreaView>
+    <Tab.Navigator
+      tabBar={(props: MaterialTopTabBarProps) => <TabBarBooking {...props} />}>
+      <Tab.Screen name="Scheduled" component={ScheduledBookingScreen} />
+      <Tab.Screen name="Active" component={ActiveBookingScreen} />
+      <Tab.Screen name="History" component={HistoryBookingScreen} />
+    </Tab.Navigator>
   );
 };
 

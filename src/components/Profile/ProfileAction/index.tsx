@@ -49,10 +49,11 @@ const styles = StyleSheet.create({
     backgroundColor: ColorHelper.hexToRgbA(Colors.light.primary, 0.1),
     paddingVertical: 6,
     paddingHorizontal: 8,
-    borderRadius: 4,
+    borderRadius: 6,
   },
   icon: {
     width: 20,
+    height: 20,
     alignItems: "center",
     justifyContent: "center",
   },
