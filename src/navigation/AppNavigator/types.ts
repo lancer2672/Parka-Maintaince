@@ -7,23 +7,28 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { User } from "@src/types";
 import { Ref } from "react";
 
-interface ResetPasswordParams {
+interface IResetPasswordParams {
   verificationId: string;
   type: string;
   phoneNumber: string;
 }
-interface SignUpParams {
+interface ISignUpParams {
   verificationId: string;
   type: string;
   user: User
 }
 
+interface IVerificationParams {
+  phoneNumber: string;
+}
+
 export type AppStackParams = {
   OnboardingScreen: undefined;
   SignIn: undefined;
-  SignUp: SignUpParams;
-  ResetPassword: ResetPasswordParams;
-  Verification: undefined;
+  SignUp: ISignUpParams;
+  ResetPassword: IResetPasswordParams;
+  Verification: IVerificationParams;
   App: undefined;
   NotFound: undefined;
+  ChangePassword: undefined;
 };

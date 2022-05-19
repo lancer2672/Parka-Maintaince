@@ -1,24 +1,14 @@
 import { AntDesign } from "@expo/vector-icons";
-import { async } from "@firebase/util";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RouteProp } from "@react-navigation/native";
 import authApi from "@src/api/authApi";
-import userApi from "@src/api/userApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { auth } from "@src/firebase";
-import {
-  createUserAction,
-  resetPasswordAction,
-} from "@src/store/actions/userAction";
-import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import {
-  PhoneAuthProvider,
-  RecaptchaVerifier,
-  signInWithCredential,
-  signInWithPhoneNumber,
-} from "firebase/auth";
-import React, { MutableRefObject, useEffect, useRef, useState } from "react";
+import { createUserAction } from "@src/store/actions/userAction";
+import { useAppDispatch } from "@src/store/hooks";
+import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -49,17 +39,17 @@ const Verification = (props: Props) => {
   const [pin4, setPin4] = useState("");
   const [pin5, setPin5] = useState("");
   const [pin6, setPin6] = useState("");
-  const [timerCount, setTimer] = useState(5);
+  const [timerCount, setTimer] = useState(60);
   const routeData = props.route.params;
-  const isLoading = useAppSelector((state) => state.user.isLoading);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
   const [verificationId, setVerificationId] = useState(
     routeData.verificationId,
   );
-  const phoneProvider = new PhoneAuthProvider(auth);
 
   const handleVerification = async () => {
     try {
+      setIsLoading(true);
       const verificationCode = `${pin1}${pin2}${pin3}${pin4}${pin5}${pin6}`;
       const credential = PhoneAuthProvider.credential(
         verificationId,
@@ -70,6 +60,8 @@ const Verification = (props: Props) => {
         const res = await dispatch(createUserAction(routeData.user)).unwrap();
         if (res.errorMessage) {
           Alert.alert("Error: " + res.errorMessage);
+          setIsLoading(false);
+          return;
         }
         if (res.data) {
           Alert.alert("Successfully!");
@@ -79,20 +71,14 @@ const Verification = (props: Props) => {
           props.navigation.navigate("App");
         }
       } else if (routeData.type === "ResetPassword") {
-        const result = await dispatch(
-          resetPasswordAction({
-            newPassword: "1",
-            phoneNumber: routeData.phoneNumber,
-          }),
-        ).unwrap();
-        if (result.errorMessage) {
-          Alert.alert("Error: " + result.errorMessage);
-          return;
-        }
-        props.navigation.navigate("SignIn");
+        props.navigation.navigate("ChangePassword", {
+          phoneNumber: routeData.phoneNumber,
+        });
       }
     } catch (err: any) {
       Alert.alert(`Error: ${err.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 

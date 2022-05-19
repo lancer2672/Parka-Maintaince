@@ -1,32 +1,29 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Switch,
-  TouchableWithoutFeedback,
-  Keyboard,
-  TouchableOpacity,
-  Alert,
-  TextInput,
-  ActivityIndicator,
-} from "react-native";
-import AppButton from "@src/components/common/AppButton";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Colors } from "@src/constants";
-import authApi from "@src/api/authApi";
-import { Formik, FormikProps, FormikValues } from "formik";
-import * as Yup from "yup";
-import { NavigationScreenProp } from "react-navigation";
+import AppButton from "@src/components/common/AppButton";
 import { FacebookLoginButton } from "@src/components/Login/FacebookLoginButton";
 import GoogleLoginButton from "@src/components/Login/GoogleLoginButton";
-import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { Colors } from "@src/constants";
 import { loginAction } from "@src/store/actions/userAction";
-import { RootState } from "@src/store";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { loginWithOauth } from "@src/store/slices/userSlice";
 import { User } from "@src/types";
+import { Formik, FormikProps } from "formik";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Alert,
+  Keyboard,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { NavigationScreenProp } from "react-navigation";
+import * as Yup from "yup";
 
 type Props = {
   navigation: NavigationScreenProp<any, any>;
@@ -42,7 +39,7 @@ const SignIn = (props: Props) => {
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikProps<LoginValue>>();
   const user = useAppSelector((state) => state.user);
-  const isLoading = useAppSelector((state: RootState) => state.user.isLoading);
+  const [isLoading, setIsLoading] = useState(false);
 
   const LoginSchema = Yup.object().shape({
     phoneNumber: Yup.string()
@@ -58,6 +55,7 @@ const SignIn = (props: Props) => {
 
   const login = async (values: any) => {
     try {
+      setIsLoading(true);
       const result = await dispatch(
         loginAction({
           username: values.phoneNumber,
@@ -67,6 +65,7 @@ const SignIn = (props: Props) => {
 
       if (result.errorMessage) {
         Alert.alert("Error: " + result.errorMessage);
+        setIsLoading(false);
         return;
       }
       if (isRemember) {
@@ -79,6 +78,8 @@ const SignIn = (props: Props) => {
       props.navigation.navigate("App");
     } catch (error: any) {
       Alert.alert("Error: " + error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -153,7 +154,7 @@ const SignIn = (props: Props) => {
                     secureTextEntry={hidePassword}
                   />
                   <Octicons
-                    name="eye-closed"
+                    name={hidePassword ? "eye-closed" : "eye"}
                     size={22}
                     color={Colors.light.text}
                     onPress={() => setHidePassword(!hidePassword)}

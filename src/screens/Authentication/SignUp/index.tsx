@@ -9,8 +9,7 @@ import userApi from "@src/api/userApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { app, auth } from "@src/firebase";
-import { checkDuplicatePhoneAction } from "@src/store/actions/userAction";
-import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { useAppDispatch } from "@src/store/hooks";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { PhoneAuthProvider } from "firebase/auth";
 import { Formik } from "formik";
@@ -36,7 +35,7 @@ type Props = {
 const SignUp = (props: Props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const recaptchaVerifier = useRef(null);
-  const isLoading = useAppSelector((state) => state.user.isLoading);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
 
   //validate
@@ -54,16 +53,16 @@ const SignUp = (props: Props) => {
   //handle sign up
   const handleSignUp = async (values: any) => {
     try {
-      const result = await dispatch(
-        checkDuplicatePhoneAction(values.phoneNumber),
-      ).unwrap();
-
-      if (result.errorMessage) {
-        Alert.alert("Error: " + result.errorMessage);
+      setIsLoading(true);
+      const isExist = await userApi.checkDuplicatePhone(values.phoneNumber);
+      if (isExist) {
+        Alert.alert("Failed! PhoneNumber is already in use");
+        setIsLoading(false);
         return;
       }
       if (values.password !== values.passwordConfirm) {
         Alert.alert("Failed! Password does not match! ");
+        setIsLoading(false);
         return;
       }
       const phoneProvider = new PhoneAuthProvider(auth);
@@ -82,6 +81,8 @@ const SignUp = (props: Props) => {
       });
     } catch (error: any) {
       Alert.alert(`Error: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -96,7 +97,7 @@ const SignUp = (props: Props) => {
             name="arrowleft"
             size={24}
             color="black"
-            onPress={() => props.navigation.navigate("SignIn")}
+            onPress={() => props.navigation.goBack()}
           />
 
           <Text style={styles.title}>Sign up</Text>

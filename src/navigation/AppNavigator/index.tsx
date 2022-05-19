@@ -16,6 +16,7 @@ import SignIn from "@src/screens/Authentication/SignIn";
 import SignUp from "@src/screens/Authentication/SignUp";
 import ResetPassword from "@src/screens/Authentication/ResetPassword";
 import Verification from "@src/screens/Authentication/Verification";
+import ChangePassword from "@src/screens/Authentication/ChangePassword";
 
 const Stack = createNativeStackNavigator<AppStackParams>();
 
@@ -65,6 +66,12 @@ const AppNavigator = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
           component={Verification}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangePassword}
+          options={{ headerShown: false }}
+        />
+
         <Stack.Screen
           name="App"
           component={AppTabNavigator}

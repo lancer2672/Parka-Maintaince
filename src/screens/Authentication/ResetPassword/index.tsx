@@ -1,13 +1,12 @@
 import { AntDesign, Feather } from "@expo/vector-icons";
+import userApi from "@src/api/userApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { app, auth } from "@src/firebase";
-import { checkExistPhoneAction } from "@src/store/actions/userAction";
-import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { PhoneAuthProvider } from "firebase/auth";
 import { Formik } from "formik";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationScreenProp } from "react-navigation";
@@ -19,8 +18,7 @@ type Props = {
 
 const ResetPassword = (props: Props) => {
   const recaptchaVerifier = useRef(null);
-  const isLoading = useAppSelector((state) => state.user.isLoading);
-  const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const PhoneNumberSchema = Yup.object().shape({
     phoneNumber: Yup.string()
       .matches(new RegExp("^0"), "Invalid phone number")
@@ -30,11 +28,11 @@ const ResetPassword = (props: Props) => {
 
   const next = async (values: any) => {
     try {
-      const result = await dispatch(
-        checkExistPhoneAction(values.phoneNumber),
-      ).unwrap();
-      if (result.errorMessage) {
-        Alert.alert("Error: " + result.errorMessage);
+      setIsLoading(true);
+      const isExist = await userApi.checkDuplicatePhone(values.phoneNumber);
+      if (!isExist) {
+        Alert.alert("Failed! PhoneNumber doesn't exist!");
+        setIsLoading(false);
         return;
       }
       const phoneNumber = `+84${values.phoneNumber.slice(
@@ -53,6 +51,8 @@ const ResetPassword = (props: Props) => {
       });
     } catch (err: any) {
       Alert.alert(`Error: ${err.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -66,7 +66,7 @@ const ResetPassword = (props: Props) => {
           name="arrowleft"
           size={24}
           color="black"
-          onPress={() => props.navigation.navigate("SignIn")}
+          onPress={() => props.navigation.goBack()}
         />
         <Text style={styles.title}>Reset Password</Text>
         <Text style={styles.description}>
