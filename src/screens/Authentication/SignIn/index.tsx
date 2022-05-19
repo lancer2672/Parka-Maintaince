@@ -63,9 +63,9 @@ const SignIn = (props: Props) => {
         }),
       ).unwrap();
 
+      setIsLoading(false);
       if (result.errorMessage) {
         Alert.alert("Error: " + result.errorMessage);
-        setIsLoading(false);
         return;
       }
       if (isRemember) {
@@ -77,9 +77,8 @@ const SignIn = (props: Props) => {
       }
       props.navigation.navigate("App");
     } catch (error: any) {
-      Alert.alert("Error: " + error);
-    } finally {
       setIsLoading(false);
+      Alert.alert("Error: " + error);
     }
   };
 

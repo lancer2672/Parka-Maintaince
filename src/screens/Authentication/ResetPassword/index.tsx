@@ -44,15 +44,15 @@ const ResetPassword = (props: Props) => {
         phoneNumber,
         recaptchaVerifier.current,
       );
+      setIsLoading(false);
       props.navigation.navigate("Verification", {
         type: "ResetPassword",
         phoneNumber: values.phoneNumber,
         verificationId,
       });
     } catch (err: any) {
-      Alert.alert(`Error: ${err.message}`);
-    } finally {
       setIsLoading(false);
+      Alert.alert(`Error: ${err.message}`);
     }
   };
   return (

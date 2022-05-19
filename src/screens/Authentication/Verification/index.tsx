@@ -58,16 +58,15 @@ const Verification = (props: Props) => {
       await signInWithCredential(auth, credential);
       if (routeData.type === "SignUp") {
         const res = await dispatch(createUserAction(routeData.user)).unwrap();
+        setIsLoading(false);
         if (res.errorMessage) {
           Alert.alert("Error: " + res.errorMessage);
-          setIsLoading(false);
           return;
         }
         if (res.data) {
           Alert.alert("Successfully!");
           await AsyncStorage.setItem("password", res.data.password);
           await AsyncStorage.setItem("phoneNumber", res.data.phoneNumber);
-
           props.navigation.navigate("App");
         }
       } else if (routeData.type === "ResetPassword") {
@@ -76,9 +75,8 @@ const Verification = (props: Props) => {
         });
       }
     } catch (err: any) {
-      Alert.alert(`Error: ${err.message}`);
-    } finally {
       setIsLoading(false);
+      Alert.alert(`Error: ${err.message}`);
     }
   };
 
@@ -114,7 +112,14 @@ const Verification = (props: Props) => {
     return () => clearInterval(interval);
   };
   useEffect(() => {
-    countDown();
+    let interval = setInterval(() => {
+      setTimer((lastTimerCount) => {
+        lastTimerCount <= 1 && clearInterval(interval);
+        return lastTimerCount - 1;
+      });
+    }, 1000); //each count lasts for a second
+    //cleanup the interval on complete
+    return () => clearInterval(interval);
   }, []);
 
   return (

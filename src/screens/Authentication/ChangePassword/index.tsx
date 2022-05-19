@@ -50,21 +50,19 @@ const ChangePassword = (props: Props) => {
         values.password,
         routeData.phoneNumber,
       );
+      setIsLoading(false);
       if (isSuccess.data.status) {
         const password = await AsyncStorage.getItem("password");
         if (password) {
           await AsyncStorage.setItem("password", values.password);
         }
+        props.navigation.navigate("SignIn");
         Alert.alert(`You have successfully changed password!`);
-        setIsLoading(false);
       } else {
         Alert.alert("Failed");
       }
-      props.navigation.navigate("SignIn");
     } catch (err: any) {
       Alert.alert(`Error: ${err.message}`);
-    } finally {
-      setIsLoading(false);
     }
   };
   return (
