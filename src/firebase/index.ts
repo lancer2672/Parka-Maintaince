@@ -1,8 +1,8 @@
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getApp, initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
-import { initializeApp } from "firebase/app";
 
-const firebaseConfig = {
+const firebaseApp = initializeApp({
   apiKey: "AIzaSyCH6XS5A7qDjGDe0vOQrxp9bbUmZLULxTw",
   authDomain: "parka-1d2a1.firebaseapp.com",
   projectId: "parka-1d2a1",
@@ -12,9 +12,10 @@ const firebaseConfig = {
   measurementId: "G-6PR2SY7NK2",
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
 
 export const storage = getStorage(firebaseApp);
 
 // export const auth = getAuth(firebaseApp);
 // export const googleProvider = new GoogleAuthProvider();
+export const auth = getAuth(firebaseApp);
+export const app = getApp();

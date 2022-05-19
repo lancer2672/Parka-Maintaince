@@ -4,6 +4,7 @@ import Indicator from "@src/components/Onboarding/Indicator";
 import SlideOnboarding from "@src/components/Onboarding/SlideOnboarding";
 import { Layout } from "@src/constants";
 import { StatusBar } from "expo-status-bar";
+import React from "react";
 import { useRef, useState } from "react";
 import { Animated, FlatList, StyleSheet, View } from "react-native";
 
@@ -62,7 +63,7 @@ const OnboardingScreen = ({ navigation }: any) => {
   };
 
   const getStarted = () => {
-    navigation.navigate("App");
+    navigation.navigate("SignIn");
   };
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
