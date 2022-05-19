@@ -10,8 +10,7 @@ const firebaseApp = initializeApp({
   messagingSenderId: "909808375393",
   appId: "1:909808375393:web:b0b17b373bef568d54fc20",
   measurementId: "G-6PR2SY7NK2",
-};
-
+});
 
 export const storage = getStorage(firebaseApp);
 
