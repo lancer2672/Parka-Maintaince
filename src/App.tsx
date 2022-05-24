@@ -5,6 +5,13 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "react-native-gesture-handler";
 import "../thepatch";
+import React from "react";
+import { Provider } from "react-redux";
+import { store } from "./store";
+import { LogBox } from "react-native";
+import { LoadingService } from "@nghinv/react-native-loading";
+
+LogBox.ignoreAllLogs();
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -14,10 +21,14 @@ export default function App() {
     return null;
   } else {
     return (
-      <SafeAreaProvider>
-        <AppNavigator colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
+      <LoadingService>
+        <Provider store={store}>
+          <SafeAreaProvider>
+            <AppNavigator colorScheme={colorScheme} />
+            <StatusBar />
+          </SafeAreaProvider>
+        </Provider>
+      </LoadingService>
     );
   }
 }

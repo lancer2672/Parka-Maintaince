@@ -1,7 +1,44 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { TouchableOpacity, Text } from "react-native";
 import Colors from "@src/constants/Colors";
+import React from "react";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
+
+interface ButtonProps {
+  width: string;
+  height: string;
+  backgroundColor: string;
+  onPress: any;
+  isLoading: boolean;
+  children: JSX.Element;
+  style: any;
+}
+
+const AppButton = ({
+  width,
+  height,
+  onPress,
+  isLoading,
+  children,
+  style,
+}: ButtonProps) => {
+  const w = width == "auto" ? "auto" : parseInt(width);
+  const h = height == "auto" ? "auto" : parseInt(height);
+  const btnStyle = [styles.root, { width: w, height: h }, style];
+  return (
+    <TouchableOpacity onPress={onPress} style={btnStyle}>
+      {isLoading && <ActivityIndicator style={{ marginRight: 12 }} />}
+      {children}
+    </TouchableOpacity>
+  );
+};
+
+AppButton.defaultProps = {
+  width: "auto",
+  height: 45,
+  isLoading: false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onPress: () => {},
+  style: {},
+};
 
 const styles = {
   root: {
@@ -16,6 +53,12 @@ const styles = {
     shadowOpacity: 0.25,
     shadowRadius: 10,
     minHeight: 40,
+    justifyContent: "center",
+    color: "#fff",
+    backgroundColor: Colors.light.primary,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   text: {
     textAlign: "center",
@@ -23,50 +66,56 @@ const styles = {
   },
 };
 
-const AppButton = ({
-  title,
-  width,
-  height,
-  color,
-  backgroundColor,
-  onPress,
-  children,
-  textStyle,
-  style,
-}: ButtonProps) => {
-  const btnStyle = [styles.root, { width, height, backgroundColor }, style];
-  const txtStyle = [styles.text, { color }, textStyle];
-  return (
-    <TouchableOpacity onPress={onPress} style={btnStyle}>
-      {title && <Text style={txtStyle}>{title}</Text>}
-      {children}
-    </TouchableOpacity>
-  );
-};
+// const AppButton = ({
+//   title,
+//   width,
+//   height,
+//   color,
+//   backgroundColor,
+//   onPress,
+//   children,
+//   textStyle,
+//   style,
+//   isLoading,
+// }: ButtonProps) => {
+//   const btnStyle = [styles.root, { width, height, backgroundColor }, style];
+//   const txtStyle = [styles.text, { color }, textStyle];
+//   return (
+//     <TouchableOpacity onPress={onPress} style={btnStyle}>
+//       {isLoading && (
+//         <ActivityIndicator style={{ marginRight: 20 }} color="white" />
+//       )}
+//       {title && <Text style={txtStyle}>{title}</Text>}
+//       {children}
+//     </TouchableOpacity>
+//   );
+// };
 
-type ButtonProps = {
-  title: string;
-  width: string;
-  height: string;
-  color: string;
-  backgroundColor: string;
-  onPress: any;
-  children: string;
-  textStyle: any;
-  style: any;
-};
+// type ButtonProps = {
+//   title: string;
+//   width: string;
+//   height: string;
+//   color: string;
+//   backgroundColor: string;
+//   onPress: any;
+//   children: string;
+//   textStyle: any;
+//   style: any;
+//   isLoading: boolean;
+// };
 
-AppButton.defaultProps = {
-  title: null,
-  width: "auto",
-  height: "auto",
-  color: "white",
-  backgroundColor: Colors.light.primary,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onPress: () => {},
-  children: null,
-  textStyle: {},
-  style: {},
-};
+// AppButton.defaultProps = {
+//   title: null,
+//   width: "auto",
+//   height: "auto",
+//   color: "white",
+//   backgroundColor: Colors.light.primary,
+//   // eslint-disable-next-line @typescript-eslint/no-empty-function
+//   onPress: () => {},
+//   children: null,
+//   textStyle: {},
+//   style: {},
+//   isLoading: false,
+// };
 
 export default AppButton;

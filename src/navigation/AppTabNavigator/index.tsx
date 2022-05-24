@@ -35,7 +35,7 @@ const AppTabNavigator = () => {
         name="Home"
         component={HomeStack}
         options={{
-          tabBarIcon: ({ color, focused }) =>
+          tabBarIcon: ({ color, focused }: any) =>
             focused ? (
               <HomeIconSolid color={color} />
             ) : (
@@ -47,7 +47,7 @@ const AppTabNavigator = () => {
         name="History"
         component={BookingHistoryStack}
         options={{
-          tabBarIcon: ({ color, focused }) =>
+          tabBarIcon: ({ color, focused }: any) =>
             focused ? (
               <TicketIconSolid color={color} />
             ) : (
@@ -59,7 +59,7 @@ const AppTabNavigator = () => {
         name="Profile"
         component={ProfileStack}
         options={{
-          tabBarIcon: ({ color, focused }) =>
+          tabBarIcon: ({ color, focused }: any) =>
             focused ? (
               <UserCircleIconSolid color={color} />
             ) : (

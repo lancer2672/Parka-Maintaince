@@ -2,7 +2,7 @@ import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Layout } from "@src/constants";
 
-const SlideOnboarding = ({ item }) => {
+const SlideOnboarding = ({ item }: any) => {
   return (
     <View style={styles.container}>
       <Image source={item.image} style={styles.image} />
