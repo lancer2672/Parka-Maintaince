@@ -4,6 +4,7 @@ type User = {
   email: string;
   phoneNumber: string;
   idSocial?: string;
-}
+  imageUrl: string;
+};
 
-export {User};
+export { User };

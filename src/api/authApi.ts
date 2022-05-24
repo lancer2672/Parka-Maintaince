@@ -9,9 +9,9 @@ const authApi = {
     return res;
   },
   resetPassword: async (newPassword: string, phoneNumber: string) => {
-    return await axiosClient.patch(`auth/reset-password`, {
+    return await axiosClient.patch("auth/reset-password", {
       newPassword,
-      phoneNumber
+      phoneNumber,
     });
   },
 };

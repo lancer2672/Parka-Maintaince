@@ -170,7 +170,7 @@ const SignIn = (props: Props) => {
                   width: "100%",
                   alignItems: "center",
                   marginTop: 10,
-                  marginBottom: 30,
+                  marginBottom: 20,
                 }}>
                 <Switch
                   trackColor={{
@@ -205,14 +205,15 @@ const SignIn = (props: Props) => {
                 </TouchableOpacity>
               </View>
               <AppButton
-                title="Sign in"
                 style={styles.btnSignIn}
-                color="white"
-                backgroundColor={isLoading ? "#A498ED" : Colors.light.primary}
                 isLoading={isLoading}
-                textStyle={{ fontSize: 22, fontWeight: "600" }}
                 onPress={handleSubmit}
-              />
+                backgroundColor={isLoading ? "#A498ED" : Colors.light.primary}>
+                <Text
+                  style={{ fontSize: 22, fontWeight: "600", color: "white" }}>
+                  Sign in
+                </Text>
+              </AppButton>
               <View style={styles.oauth}>
                 <Text
                   style={{
@@ -321,7 +322,7 @@ const styles = StyleSheet.create({
   },
   oauth: {
     width: "100%",
-    marginTop: 50,
+    marginTop: 20,
   },
   btnOauth: {
     backgroundColor: "#FFF",
