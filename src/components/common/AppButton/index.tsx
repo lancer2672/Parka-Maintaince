@@ -1,12 +1,13 @@
 import Colors from "@src/constants/Colors";
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 
 interface ButtonProps {
   width: string;
   height: string;
   backgroundColor: string;
   onPress: any;
+  isLoading: boolean;
   children: JSX.Element;
   style: any;
 }
@@ -15,6 +16,7 @@ const AppButton = ({
   width,
   height,
   onPress,
+  isLoading,
   children,
   style,
 }: ButtonProps) => {
@@ -23,6 +25,7 @@ const AppButton = ({
   const btnStyle = [styles.root, { width: w, height: h }, style];
   return (
     <TouchableOpacity onPress={onPress} style={btnStyle}>
+      {isLoading && <ActivityIndicator style={{ marginRight: 12 }} />}
       {children}
     </TouchableOpacity>
   );
@@ -31,6 +34,7 @@ const AppButton = ({
 AppButton.defaultProps = {
   width: "auto",
   height: 45,
+  isLoading: false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onPress: () => {},
   style: {},

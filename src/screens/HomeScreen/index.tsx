@@ -1,8 +1,25 @@
-import React, { useRef } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getUserAction } from "@src/store/actions/userAction";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { selectUser } from "@src/store/selectors";
+import React, { useEffect, useRef } from "react";
 import { Button, Text, View } from "react-native";
 import BottomSheet from "reanimated-bottom-sheet";
 
 const HomeScreen = () => {
+  const userState = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
+
+  const getUser = async () => {
+    const idUser = await AsyncStorage.getItem("idUser");
+    dispatch(getUserAction(idUser));
+  };
+
+  useEffect(() => {
+    if (!userState) {
+      getUser();
+    }
+  }, []);
   const renderContent = () => (
     <View
       style={{

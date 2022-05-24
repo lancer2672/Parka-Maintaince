@@ -6,21 +6,19 @@ interface IProps {
   placeholder: string;
   value: string;
   title: string;
-  type: string;
   icon: JSX.Element;
   maxLength: number;
+  onChangeText: any;
 }
 
 const ProfileInput = ({
   placeholder,
   value,
   title,
-  type,
   icon,
   maxLength,
+  onChangeText,
 }: IProps) => {
-  const [text, onChangeText] = useState(value);
-
   return (
     <View style={styles.container}>
       {icon}
@@ -29,9 +27,8 @@ const ProfileInput = ({
         <TextInput
           style={styles.input}
           onChangeText={onChangeText}
-          value={text}
+          value={value}
           placeholder={placeholder}
-          secureTextEntry={type == "password"}
           maxLength={maxLength}
         />
       </View>

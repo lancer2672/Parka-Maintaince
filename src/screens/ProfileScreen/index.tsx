@@ -2,16 +2,15 @@ import {
   AntDesign,
   FontAwesome,
   FontAwesome5,
-  Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import AppButton from "@src/components/common/AppButton";
 import ProfileAction from "@src/components/Profile/ProfileAction";
 import { Colors } from "@src/constants";
+import { useAppSelector } from "@src/store/hooks";
+import { selectUser } from "@src/store/selectors";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
-  Button,
   Image,
   SafeAreaView,
   ScrollView,
@@ -54,6 +53,8 @@ const actions = [
 ];
 
 const ProfileScreen = ({ navigation }: any) => {
+  const userState = useAppSelector(selectUser);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
@@ -64,7 +65,9 @@ const ProfileScreen = ({ navigation }: any) => {
         <Image
           style={styles.avatar}
           source={{
-            uri: "https://banner2.cleanpng.com/20180623/iqh/kisspng-computer-icons-avatar-social-media-blog-font-aweso-avatar-icon-5b2e99c40ce333.6524068515297806760528.jpg",
+            uri:
+              userState?.imageUrl ||
+              "https://ui-avatars.com/api/?background=random&color=random&font-size=0.33&name=user",
           }}
         />
         {actions.map((action) => (
@@ -108,16 +111,10 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   button: {
-    borderWidth: 1,
-    borderColor: "#D9DFE7",
     padding: 12,
     borderRadius: 8,
     backgroundColor: Colors.light.background,
     marginTop: 20,
-    // position: "absolute",
-    // bottom: 0,
-    // left: 0,
-    // right: 0,
   },
   buttonContent: {
     display: "flex",

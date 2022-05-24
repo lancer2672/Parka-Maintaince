@@ -3,6 +3,7 @@ import { UploadHelper } from "@src/utils";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -10,12 +11,9 @@ import {
 } from "react-native";
 import { PencilIcon } from "react-native-heroicons/solid";
 
-const AvatarUpload = () => {
-  const [imgURI, setImageURI] = useState(null);
-
+const AvatarUpload = ({ imageUrl, setImageUrl }: any) => {
+  const [imgURI, setImageURI] = useState(imageUrl);
   const [isUploading, setIsUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [remoteURL, setRemoteURL] = useState("");
 
   const handleLocalImageUpload = async () => {
     setIsUploading(true);
@@ -24,6 +22,7 @@ const AvatarUpload = () => {
     if (fileURI) {
       setImageURI(fileURI);
       setIsUploading(false);
+      handleCloudImageUpload(fileURI);
     }
   };
 
@@ -31,28 +30,23 @@ const AvatarUpload = () => {
     setIsUploading(true);
   };
 
-  const onProgress = (progress: React.SetStateAction<number>) => {
-    setProgress(progress);
-  };
   const onComplete = (fileUrl: React.SetStateAction<string>) => {
-    setRemoteURL(fileUrl);
+    setImageUrl(fileUrl);
     setIsUploading(false);
-    setImageURI(null);
   };
 
   const onFail = (error: any) => {
-    alert(error);
+    Alert.alert(error);
     setIsUploading(false);
   };
 
-  const handleCloudImageUpload = async () => {
-    if (!imgURI) return;
+  const handleCloudImageUpload = async (fileURI: string) => {
+    if (!fileURI) return;
 
-    const blob = await UploadHelper.getBlobFromUri(imgURI);
+    const blob = await UploadHelper.getBlobFromUri(fileURI);
 
     await UploadHelper.manageFileUpload(blob, {
       onStart,
-      onProgress,
       onComplete,
       onFail,
     });
@@ -63,7 +57,7 @@ const AvatarUpload = () => {
       return (
         <Image
           source={{ uri: imgURI }}
-          resizeMode="contain"
+          resizeMode="cover"
           style={styles.image}
         />
       );

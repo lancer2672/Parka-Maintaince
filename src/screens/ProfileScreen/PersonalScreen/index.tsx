@@ -2,7 +2,11 @@ import AppButton from "@src/components/common/AppButton";
 import AvatarUpload from "@src/components/Profile/AvatarUpload";
 import ProfileInput from "@src/components/Profile/ProfileInput";
 import { Colors, Layout } from "@src/constants";
-import React from "react";
+import { updateUserAction } from "@src/store/actions/userAction";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { selectUser } from "@src/store/selectors";
+import { Formik, FormikProps } from "formik";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Keyboard,
@@ -11,81 +15,118 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import {
-  LockClosedIcon,
-  MailIcon,
-  PhoneIcon,
-  UserIcon,
-} from "react-native-heroicons/outline";
+import { MailIcon, PhoneIcon, UserIcon } from "react-native-heroicons/outline";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {
+  Spinner,
+  LoadingService,
+  LoadingView,
+} from "@nghinv/react-native-loading";
 
 interface IProfileInputProps {
+  field: string;
   placeholder: string;
-  value: string;
   title: string;
-  type: string;
   maxLength: number;
   icon: JSX.Element;
 }
 
-const inputs: IProfileInputProps[] = [
-  {
-    placeholder: "Your name",
-    value: "Trung Huynh",
-    title: "NAME",
-    type: "input",
-    maxLength: 50,
-    icon: <UserIcon color={Colors.light.primary} size={26} />,
-  },
-  {
-    placeholder: "Your email",
-    value: "trunghuynh2304@gmail.com",
-    title: "EMAIL",
-    type: "input",
-    maxLength: 50,
-    icon: <MailIcon color={Colors.light.primary} size={26} />,
-  },
-  {
-    placeholder: "Your phone number",
-    value: "0123456789",
-    title: "PHONE NUMBER",
-    type: "input",
-    maxLength: 11,
-    icon: <PhoneIcon color={Colors.light.primary} size={26} />,
-  },
-  {
-    placeholder: "Your password",
-    value: "abcxyz",
-    title: "PASSWORD",
-    type: "password",
-    maxLength: 50,
-    icon: <LockClosedIcon color={Colors.light.primary} size={26} />,
-  },
-];
+type ProfileForm = {
+  displayName: string;
+  email: string;
+  phoneNumber: string;
+};
 
 const PersonalScreen = () => {
+  const userState = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
+  const formikRef = useRef<FormikProps<ProfileForm>>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [imageUrl, setImageUrl] = useState<string>(
+    userState?.imageUrl ||
+      "https://ui-avatars.com/api/?background=random&color=random&font-size=0.33&name=user",
+  );
+
+  const inputs: IProfileInputProps[] = [
+    {
+      field: "displayName",
+      placeholder: "Your name",
+      title: "NAME",
+      maxLength: 50,
+      icon: <UserIcon color={Colors.light.primary} size={26} />,
+    },
+    {
+      field: "email",
+      placeholder: "Your email",
+      title: "EMAIL",
+      maxLength: 50,
+      icon: <MailIcon color={Colors.light.primary} size={26} />,
+    },
+    {
+      field: "phoneNumber",
+      placeholder: "Your phone number",
+      title: "PHONE NUMBER",
+      maxLength: 11,
+      icon: <PhoneIcon color={Colors.light.primary} size={26} />,
+    },
+  ];
+
+  const handleUpdateProfile = (values: ProfileForm) => {
+    const user = { ...userState, ...values, imageUrl };
+    dispatch(updateUserAction(user));
+    setIsLoading(true);
+  };
+
+  useEffect(() => {
+    if (isLoading) Spinner.show();
+    else Spinner.hide();
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (!isLoading) return;
+    setIsLoading(false);
+    Alert.alert("Updated sucessfully!");
+  }, [userState]);
+
   return (
     <KeyboardAwareScrollView style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <AvatarUpload />
-          {inputs.map((input) => (
-            <ProfileInput
-              key={input.title}
-              placeholder={input.placeholder}
-              value={input.value}
-              title={input.title}
-              type={input.type}
-              icon={input.icon}
-              maxLength={input.maxLength}
-            />
-          ))}
-          <AppButton
-            height={"40"}
-            style={styles.button}
-            onPress={() => Alert.alert("Update profile")}>
-            <Text style={styles.textButton}>Update profile</Text>
-          </AppButton>
+          <AvatarUpload imageUrl={imageUrl} setImageUrl={setImageUrl} />
+          <Formik
+            innerRef={formikRef}
+            initialValues={{
+              displayName: userState?.displayName,
+              email: userState?.email,
+              phoneNumber: userState?.phoneNumber,
+            }}
+            onSubmit={(values) => handleUpdateProfile(values)}>
+            {({ handleChange, handleSubmit, values }) => {
+              type InputKey = keyof typeof values;
+              return (
+                <View style={{ flex: 1 }}>
+                  {inputs.map((input) => (
+                    <ProfileInput
+                      key={input.title}
+                      placeholder={input.placeholder}
+                      value={values[input.field as InputKey]}
+                      title={input.title}
+                      icon={input.icon}
+                      maxLength={input.maxLength}
+                      onChangeText={handleChange(input.field)}
+                    />
+                  ))}
+                  <AppButton
+                    height={"44"}
+                    style={styles.button}
+                    onPress={handleSubmit}
+                    backgroundColor={Colors.light.primary}>
+                    <Text style={styles.textButton}>Update profile</Text>
+                  </AppButton>
+                </View>
+              );
+            }}
+          </Formik>
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAwareScrollView>
@@ -107,7 +148,7 @@ const styles = StyleSheet.create({
     left: 16,
   },
   textButton: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
     color: "#fff",
   },
