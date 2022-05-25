@@ -7,7 +7,6 @@ import { Colors } from "@src/constants";
 import { loginAction } from "@src/store/actions/userAction";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { loginWithOauth } from "@src/store/slices/userSlice";
-import { User } from "@src/types";
 import { Formik, FormikProps } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -38,7 +37,6 @@ const SignIn = (props: Props) => {
   const [hidePassword, setHidePassword] = useState(true);
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikProps<LoginValue>>();
-  const user = useAppSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -109,14 +107,7 @@ const SignIn = (props: Props) => {
           initialValues={{ phoneNumber: "", password: "" }}
           validationSchema={LoginSchema}
           onSubmit={(values) => login(values)}>
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-          }) => (
+          {({ handleChange, handleSubmit, values, errors, touched }) => (
             <View style={styles.controller}>
               <View style={styles.containerInput}>
                 <View style={styles.groupInput}>

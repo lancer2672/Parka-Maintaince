@@ -12,7 +12,7 @@ const slides = [
   {
     id: "1",
     image: Images.LicensePlate,
-    title: "Register verhicle",
+    title: "Register vehicle",
     subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   },
   {

@@ -1,8 +1,9 @@
-import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Colors } from "@src/constants";
 import ProfileScreen from "@src/screens/ProfileScreen";
 import PersonalScreen from "@src/screens/ProfileScreen/PersonalScreen";
+import VehicleScreen from "@src/screens/VehicleScreen";
+import AddVehicleScreen from "@src/screens/VehicleScreen/AddVehicleScreen";
 import React from "react";
 import { ProfileStackParams } from "../types";
 
@@ -13,7 +14,7 @@ const ProfileStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerBackTitleVisible: false,
-        headerShadowVisible: true,
+        headerShadowVisible: false,
         headerTintColor: Colors.light.background,
       }}>
       <Stack.Screen
@@ -34,6 +35,32 @@ const ProfileStack = () => {
         component={PersonalScreen}
         options={{
           title: "Personal information",
+          headerStyle: {
+            backgroundColor: Colors.light.primary,
+          },
+          headerTitleStyle: {
+            color: Colors.light.background,
+          },
+        }}
+      />
+      <Stack.Screen
+        name="VehicleScreen"
+        component={VehicleScreen}
+        options={{
+          title: "Vehicles",
+          headerStyle: {
+            backgroundColor: Colors.light.primary,
+          },
+          headerTitleStyle: {
+            color: Colors.light.background,
+          },
+        }}
+      />
+      <Stack.Screen
+        name="AddVehicleScreen"
+        component={AddVehicleScreen}
+        options={{
+          title: "Add a vehicle",
           headerStyle: {
             backgroundColor: Colors.light.primary,
           },

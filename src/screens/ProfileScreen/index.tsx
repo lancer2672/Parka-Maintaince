@@ -2,10 +2,11 @@ import {
   AntDesign,
   FontAwesome,
   FontAwesome5,
+  Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import ProfileAction from "@src/components/Profile/ProfileAction";
-import { Colors } from "@src/constants";
+import { Colors, Layout } from "@src/constants";
 import { useAppSelector } from "@src/store/hooks";
 import { selectUser } from "@src/store/selectors";
 import { StatusBar } from "expo-status-bar";
@@ -25,7 +26,7 @@ const actions = [
   {
     text: "Personal information",
     screen: "PersonalScreen",
-    icon: <FontAwesome5 name="user" size={20} color={Colors.light.primary} />,
+    icon: <FontAwesome5 name="user" size={19} color={Colors.light.primary} />,
   },
   {
     text: "Payment",
@@ -38,6 +39,13 @@ const actions = [
     text: "Favorite",
     screen: "HomeScreen",
     icon: <FontAwesome name="heart-o" size={20} color={Colors.light.primary} />,
+  },
+  {
+    text: "Vehicles",
+    screen: "VehicleScreen",
+    icon: (
+      <Ionicons name="ios-car-outline" size={22} color={Colors.light.primary} />
+    ),
   },
   {
     text: "Setting",
@@ -62,29 +70,31 @@ const ProfileScreen = ({ navigation }: any) => {
         style={styles.scroll}
         bounces={true}
         showsVerticalScrollIndicator={false}>
-        <Image
-          style={styles.avatar}
-          source={{
-            uri:
-              userState?.imageUrl ||
-              "https://ui-avatars.com/api/?background=random&color=random&font-size=0.33&name=user",
-          }}
-        />
-        {actions.map((action) => (
-          <ProfileAction
-            key={action.text}
-            navigation={navigation}
-            text={action.text}
-            screen={action.screen}
-            icon={action.icon}
+        <View style={{ marginBottom: 40 }}>
+          <Image
+            style={styles.avatar}
+            source={{
+              uri:
+                userState?.imageUrl ||
+                "https://ui-avatars.com/api/?background=random&color=random&font-size=0.33&name=user",
+            }}
           />
-        ))}
-        <TouchableOpacity style={styles.button}>
-          <View style={styles.buttonContent}>
-            <Text style={styles.buttonText}>Log out</Text>
-            <LogoutIcon color={Colors.light.primary} size={22} />
-          </View>
-        </TouchableOpacity>
+          {actions.map((action) => (
+            <ProfileAction
+              key={action.text}
+              navigation={navigation}
+              text={action.text}
+              screen={action.screen}
+              icon={action.icon}
+            />
+          ))}
+          <TouchableOpacity style={styles.button}>
+            <View style={styles.buttonContent}>
+              <Text style={styles.buttonText}>Log out</Text>
+              <LogoutIcon color={Colors.light.primary} size={22} />
+            </View>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

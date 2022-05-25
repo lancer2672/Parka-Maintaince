@@ -44,7 +44,7 @@ const styles = {
   root: {
     paddingVertical: "auto",
     paddingHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: 8,
     shadowColor: "#6F7EC9",
     shadowOffset: {
       width: 0,
