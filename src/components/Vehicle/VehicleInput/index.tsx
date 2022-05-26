@@ -34,7 +34,7 @@ const VehicleInput = ({
           <RNPickerSelect
             placeholder={{
               label: placeholder,
-              value: "motorbike",
+              value: "default",
             }}
             value={value}
             onValueChange={onChangeText}

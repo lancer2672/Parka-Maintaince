@@ -47,7 +47,7 @@ const ProfileStack = () => {
         name="VehicleScreen"
         component={VehicleScreen}
         options={{
-          title: "Vehicles",
+          title: "My vehicles",
           headerStyle: {
             backgroundColor: Colors.light.primary,
           },

@@ -6,7 +6,7 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import ProfileAction from "@src/components/Profile/ProfileAction";
-import { Colors, Layout } from "@src/constants";
+import { Colors } from "@src/constants";
 import { useAppSelector } from "@src/store/hooks";
 import { selectUser } from "@src/store/selectors";
 import { StatusBar } from "expo-status-bar";

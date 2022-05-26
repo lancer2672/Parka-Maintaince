@@ -1,14 +1,19 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Spinner } from "@nghinv/react-native-loading";
 import { Images } from "@src/assets";
 import AppButton from "@src/components/common/AppButton";
 import VehicleInput from "@src/components/Vehicle/VehicleInput";
 import { Colors, Layout } from "@src/constants";
-import { createVehicleAction } from "@src/store/actions/vehicleAction";
+import {
+  createVehicleAction,
+  updateVehicleAction,
+} from "@src/store/actions/vehicleAction";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import { selectUser, selectVehicles } from "@src/store/selectors";
+import { selectUser } from "@src/store/selectors";
 import { Formik, FormikProps } from "formik";
 import React, { useRef } from "react";
 import {
+  Alert,
   Image,
   Keyboard,
   StyleSheet,
@@ -27,14 +32,15 @@ type VehicleFormProps = {
 
 const VehicleSchema = Yup.object().shape({
   type: Yup.mixed()
-    .oneOf(["motorbike", "car", "pickuptruck"])
-    .required("Please select car type!"),
+    .oneOf(["motorbike", "car", "pickuptruck"], "Please select car type!")
+    .required("Please select car type!")
+    .nullable(),
   number: Yup.string().max(50).required("Please enter license plate!"),
   name: Yup.string().max(255).required("Please enter car model!"),
 });
 
-const AddVehicleScreen = () => {
-  // const vehicleState = useAppSelector(selectVehicles);
+const AddVehicleScreen = ({ route, navigation }: any) => {
+  const editData: Vehicle = route.params;
   const userState = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikProps<VehicleFormProps>>();
@@ -78,7 +84,43 @@ const AddVehicleScreen = () => {
     },
   ];
 
-  const handleAddVehicle = (values: VehicleFormProps) => {
+  const handleSubmit = (values: VehicleFormProps) => {
+    Spinner.show();
+    try {
+      if (editData) {
+        handleEdit(values);
+      } else {
+        handleAdd(values);
+      }
+    } catch (err: any) {
+      Alert.alert(err);
+      Spinner.hide();
+    } finally {
+      Alert.alert(
+        "Successfully",
+        `${editData ? "Edit" : "Add"} vehicle successfully`,
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
+    }
+  };
+
+  const handleEdit = (values: VehicleFormProps) => {
+    const vehicle: Vehicle = {
+      idVehicle: editData.idVehicle,
+      idUser: editData.idUser,
+      name: values.name,
+      number: values.number,
+      type: values.type,
+    };
+    dispatch(updateVehicleAction(vehicle));
+  };
+
+  const handleAdd = (values: VehicleFormProps) => {
     const vehicle: Vehicle = {
       idVehicle: "",
       idUser: userState?.idUser,
@@ -97,24 +139,27 @@ const AddVehicleScreen = () => {
             <Image source={Images.Car} style={styles.image} />
           </View>
           <Text style={styles.title}>Vehicle details</Text>
-          <Text style={styles.subtitle}>Add your vehicle details below</Text>
+          <Text style={styles.subtitle}>
+            {editData ? "Edit" : "Add"} your vehicle details below
+          </Text>
           <Formik
             innerRef={formikRef}
-            initialValues={{
-              type: "",
-              number: "",
-              name: "",
-            }}
+            initialValues={
+              editData || {
+                type: "",
+                number: "",
+                name: "",
+              }
+            }
             validationSchema={VehicleSchema}
-            onSubmit={(values) => handleAddVehicle(values)}>
+            onSubmit={(values) => handleSubmit(values)}>
             {({ handleChange, handleSubmit, values, errors, touched }) => {
               type InputKey = keyof typeof values;
               return (
                 <View style={{ flex: 1 }}>
                   {inputs.map((input) => (
-                    <>
+                    <View key={input.field}>
                       <VehicleInput
-                        key={input.field}
                         placeholder={input.placeholder}
                         value={values[input.field as InputKey]}
                         title={input.title}
@@ -129,14 +174,15 @@ const AddVehicleScreen = () => {
                             * {errors[input.field as InputKey]}
                           </Text>
                         )}
-                    </>
+                    </View>
                   ))}
                   <AppButton
                     height={"44"}
                     style={styles.button}
-                    onPress={handleSubmit}
-                    backgroundColor={Colors.light.primary}>
-                    <Text style={styles.textButton}>Add vehicle</Text>
+                    onPress={handleSubmit}>
+                    <Text style={styles.textButton}>
+                      {editData ? "Update" : "Add"} vehicle
+                    </Text>
                   </AppButton>
                 </View>
               );

@@ -115,8 +115,7 @@ const PersonalScreen = () => {
                   <AppButton
                     height={"44"}
                     style={styles.button}
-                    onPress={handleSubmit}
-                    backgroundColor={Colors.light.primary}>
+                    onPress={handleSubmit}>
                     <Text style={styles.textButton}>Update profile</Text>
                   </AppButton>
                 </View>

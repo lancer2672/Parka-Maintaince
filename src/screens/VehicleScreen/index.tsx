@@ -1,18 +1,78 @@
-import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Spinner } from "@nghinv/react-native-loading";
+import AppButton from "@src/components/common/AppButton";
+import VehicleItem from "@src/components/Vehicle/VehicleItem";
+import { Colors } from "@src/constants";
+import {
+  deleteVehicleAction,
+  getVehicleAction,
+} from "@src/store/actions/vehicleAction";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { selectUser, selectVehicles } from "@src/store/selectors";
+import React, { useEffect } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
 const VehicleScreen = ({ navigation }: any) => {
-  const navigateTo = () => {
+  const vehicleState = useAppSelector(selectVehicles);
+  const userState = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
+
+  const navigateToAdd = () => {
     navigation.navigate("AddVehicleScreen");
   };
+
+  const navigateToEdit = (data: Vehicle) => {
+    navigation.navigate("AddVehicleScreen", data);
+  };
+
+  const handleDelete = (idVehicle: string) => {
+    Spinner.show();
+    dispatch(deleteVehicleAction(idVehicle));
+  };
+
+  useEffect(() => {
+    Spinner.show();
+    dispatch(getVehicleAction(userState.idUser));
+  }, []);
+
   return (
-    <View>
-      <Text>Vehicle</Text>
-      <TouchableOpacity onPress={navigateTo}>
-        <Text>Add new vehicle</Text>
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <FlatList
+        data={vehicleState}
+        renderItem={({ item }) => (
+          <VehicleItem
+            item={item}
+            onEdit={() => navigateToEdit(item)}
+            onDelete={() => handleDelete(item.idVehicle)}
+          />
+        )}
+        keyExtractor={(item) => item.idVehicle}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingVertical: 20 }}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
+      <AppButton onPress={navigateToAdd} style={styles.button}>
+        <Text style={styles.buttonText}>Add a vehicle</Text>
+      </AppButton>
     </View>
   );
 };
 
 export default VehicleScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  button: {
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: Colors.light.background,
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  separator: {
+    height: 12,
+  },
+});

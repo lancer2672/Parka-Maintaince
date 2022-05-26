@@ -5,7 +5,6 @@ import { ActivityIndicator, TouchableOpacity } from "react-native";
 interface ButtonProps {
   width: string;
   height: string;
-  backgroundColor: string;
   onPress: any;
   isLoading: boolean;
   children: JSX.Element;

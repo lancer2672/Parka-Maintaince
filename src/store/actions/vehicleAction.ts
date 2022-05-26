@@ -23,4 +23,37 @@ const createVehicleAction = createAsyncThunk(
   },
 );
 
-export { createVehicleAction, getVehicleAction };
+const updateVehicleAction = createAsyncThunk(
+  "vehicles/update",
+  async (vehicle: Vehicle) => {
+    try {
+      const res = await vehicleApi.update(vehicle);
+      if (res.data.data) {
+        return res.data.data;
+      }
+    } catch (error: any) {
+      return { errorMessage: error.message };
+    }
+  },
+);
+
+const deleteVehicleAction = createAsyncThunk(
+  "vehicles/delete",
+  async (idVehicle: string) => {
+    try {
+      const res = await vehicleApi.delete(idVehicle);
+      if (res.data.data) {
+        return res.data.data;
+      }
+    } catch (error: any) {
+      return { errorMessage: error.message };
+    }
+  },
+);
+
+export {
+  createVehicleAction,
+  getVehicleAction,
+  updateVehicleAction,
+  deleteVehicleAction,
+};
