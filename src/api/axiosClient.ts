@@ -8,24 +8,26 @@ const axiosClient = axios.create({
     "Content-Type": "application/json",
   },
 });
-axiosClient.interceptors.request.use(async config => {
+
+axiosClient.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem("accessToken");
   if (token) {
     config.headers["x-access-token"] = JSON.parse(token);
   }
   return config;
 });
+
 axiosClient.interceptors.response.use(
-  res => {
+  (res) => {
     return res;
-  },  
-  async err => {
+  },
+  async (err) => {
     const originalConfig = err.config;
 
     if (originalConfig.url !== "/auths/signin" && err.response) {
       // Access Token was expired
 
-      if (err.response.status === 401  && !originalConfig._retry) {
+      if (err.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
 
         try {
@@ -36,7 +38,10 @@ axiosClient.interceptors.response.use(
           const { accessToken } = rs.data;
 
           if (accessToken) {
-            await AsyncStorage.setItem("accessToken", JSON.stringify(accessToken));
+            await AsyncStorage.setItem(
+              "accessToken",
+              JSON.stringify(accessToken),
+            );
           }
           // location.href = "/";
 
@@ -49,7 +54,6 @@ axiosClient.interceptors.response.use(
       if (err.response.status === 403) {
         Alert.alert("Your session has been expired. Please log in again!");
         await AsyncStorage.clear();
-        
       }
     }
 

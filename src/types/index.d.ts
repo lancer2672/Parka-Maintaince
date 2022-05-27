@@ -4,7 +4,8 @@ type User = {
   email: string;
   phoneNumber: string;
   idSocial?: string;
-}
+  imageUrl: string;
+};
 
 type ParkingLot = {
   idParkingLot: string;

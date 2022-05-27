@@ -9,22 +9,26 @@ import React from "react";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import { LogBox } from "react-native";
+import { LoadingService } from "@nghinv/react-native-loading";
+
+LogBox.ignoreAllLogs();
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
-  LogBox.ignoreAllLogs();
   if (!isLoadingComplete) {
     return null;
   } else {
     return (
-      <Provider store={store}>
-        <SafeAreaProvider>
-          <AppNavigator colorScheme={colorScheme} />
-          <StatusBar />
-        </SafeAreaProvider>
-      </Provider>
+      <LoadingService>
+        <Provider store={store}>
+          <SafeAreaProvider>
+            <AppNavigator colorScheme={colorScheme} />
+            <StatusBar />
+          </SafeAreaProvider>
+        </Provider>
+      </LoadingService>
     );
   }
 }
