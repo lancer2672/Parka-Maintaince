@@ -40,6 +40,11 @@ const AppNavigator = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack.Navigator>
         <Stack.Screen
+          name="App"
+          component={AppTabNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="OnboardingScreen"
           component={OnboardingScreen}
           options={{ headerShown: false }}
@@ -72,11 +77,11 @@ const AppNavigator = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
           options={{ headerShown: false }}
         />
 
-        <Stack.Screen
+        {/* <Stack.Screen
           name="App"
           component={AppTabNavigator}
           options={{ headerShown: false }}
-        />
+        /> */}
         <Stack.Screen
           name="NotFound"
           component={NotFoundScreen}

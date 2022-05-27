@@ -6,4 +6,15 @@ type User = {
   idSocial?: string;
 }
 
-export {User};
+type ParkingLot = {
+  idParkingLot: string;
+  name: string;
+  description: string;
+  address: string;
+  lat: string;
+  long: string;
+  idCompany: string;
+  isDeleted: boolean;
+}
+
+export {User, ParkingLot};
