@@ -5,7 +5,6 @@ import { ActivityIndicator, TouchableOpacity } from "react-native";
 interface ButtonProps {
   width: string;
   height: string;
-  backgroundColor: string;
   onPress: any;
   isLoading: boolean;
   children: JSX.Element;
@@ -44,7 +43,7 @@ const styles = {
   root: {
     paddingVertical: "auto",
     paddingHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: 8,
     shadowColor: "#6F7EC9",
     shadowOffset: {
       width: 0,

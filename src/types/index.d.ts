@@ -18,4 +18,10 @@ type ParkingLot = {
   isDeleted: boolean;
 }
 
-export {User, ParkingLot};
+type Vehicle = {
+  idVehicle: string;
+  idUser: string;
+  name: string;
+  number: string;
+  type: string;
+};

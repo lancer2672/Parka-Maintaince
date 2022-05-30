@@ -1,6 +1,5 @@
 import DetailModal from "@src/components/Home/DetailModal";
 import Map from "@src/components/Home/Map";
-import { ParkingLot } from "@src/types";
 import React, { useState } from "react";
 import {
   Keyboard,

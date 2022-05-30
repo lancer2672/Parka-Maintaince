@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import authApi from "@src/api/authApi";
 import userApi from "@src/api/userApi";
-import { User } from "@src/types";
 
 const createUserAction = createAsyncThunk("user/create", async (user: User) => {
   try {

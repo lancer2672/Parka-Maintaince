@@ -10,10 +10,8 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
-import axiosClient from "@src/api/axiosClient";
 import { Colors } from "@src/constants";
-import { ParkingLot } from "@src/types";
-import parkingLotApi from "@src/api/customer/parkingLotApi";
+import parkingLotApi from "@src/api/parkingLotApi";
 
 type Props = {
   onSelected: Function;

@@ -1,4 +1,4 @@
-import parkingLotApi from "@src/api/customer/parkingLotApi";
+import parkingLotApi from "@src/api/parkingLotApi";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Image, StyleSheet } from "react-native";
 import MapView, { Marker } from "react-native-maps";
@@ -6,7 +6,6 @@ import MapViewDirections from "react-native-maps-directions";
 import SearchAutocomplete from "../Search";
 import * as Location from "expo-location";
 import { Colors } from "@src/constants";
-import { ParkingLot } from "@src/types";
 
 type Props = {
   onSelectedMarker: Function;

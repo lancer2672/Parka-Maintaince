@@ -20,7 +20,6 @@ import {
 } from "react-native";
 import * as Linking from "expo-linking";
 import { convertToHour, convertToThounsandSeparator } from "@src/utils/convert";
-import { ParkingLot } from "@src/types";
 import AppStatusBar from "@src/components/common/AppStatusBar";
 type Item = {
   period: string;

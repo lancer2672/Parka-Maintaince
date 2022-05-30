@@ -1,14 +1,14 @@
-import axiosClient from "../axiosClient";
+import axiosClient from "./axiosClient";
 
 const parkingLotApi = {
   search: async (searchText: string) => {
-    const res = await axiosClient.post("customer/lots/search", {
+    const res = await axiosClient.post("/lots/search", {
       searchText
     });
     return res;
   },
   getAll: async () => {
-    return await axiosClient.get(`customer/lots`);
+    return await axiosClient.get(`/lots`);
   },
 };
 export default parkingLotApi;
