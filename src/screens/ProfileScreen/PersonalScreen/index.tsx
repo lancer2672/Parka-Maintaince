@@ -1,3 +1,4 @@
+import { Spinner } from "@nghinv/react-native-loading";
 import AppButton from "@src/components/common/AppButton";
 import AvatarUpload from "@src/components/Profile/AvatarUpload";
 import ProfileInput from "@src/components/Profile/ProfileInput";
@@ -17,11 +18,6 @@ import {
 } from "react-native";
 import { MailIcon, PhoneIcon, UserIcon } from "react-native-heroicons/outline";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  Spinner,
-  LoadingService,
-  LoadingView,
-} from "@nghinv/react-native-loading";
 
 interface IProfileInputProps {
   field: string;
@@ -119,8 +115,7 @@ const PersonalScreen = () => {
                   <AppButton
                     height={"44"}
                     style={styles.button}
-                    onPress={handleSubmit}
-                    backgroundColor={Colors.light.primary}>
+                    onPress={handleSubmit}>
                     <Text style={styles.textButton}>Update profile</Text>
                   </AppButton>
                 </View>

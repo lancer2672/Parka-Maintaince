@@ -1,5 +1,5 @@
 import { Colors } from "@src/constants";
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
 interface IProps {

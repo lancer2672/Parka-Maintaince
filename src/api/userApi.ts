@@ -1,5 +1,4 @@
 import axiosClient from "./axiosClient";
-import { User } from "@src/types";
 
 const userApi = {
   getAll: async () => {

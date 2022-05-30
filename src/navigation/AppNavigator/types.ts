@@ -4,8 +4,6 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { User } from "@src/types";
-import { Ref } from "react";
 
 interface IResetPasswordParams {
   verificationId: string;
@@ -15,7 +13,7 @@ interface IResetPasswordParams {
 interface ISignUpParams {
   verificationId: string;
   type: string;
-  user: User
+  user: User;
 }
 
 interface IVerificationParams {

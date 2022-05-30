@@ -1,8 +1,6 @@
-const tintColorDark = "#fff";
-
 const palette = {
   primary: "#4D65EB",
-  dark: "#35438E",
+  dark: "#1C244F",
   white: "#FFFFFF",
   light: "#E9ECFF",
   grayLight: "#90A3BC",

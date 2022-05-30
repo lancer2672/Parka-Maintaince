@@ -7,4 +7,21 @@ type User = {
   imageUrl: string;
 };
 
-export { User };
+type ParkingLot = {
+  idParkingLot: string;
+  name: string;
+  description: string;
+  address: string;
+  lat: string;
+  long: string;
+  idCompany: string;
+  isDeleted: boolean;
+}
+
+type Vehicle = {
+  idVehicle: string;
+  idUser: string;
+  name: string;
+  number: string;
+  type: string;
+};
