@@ -1,3 +1,4 @@
 import userApi from "./userApi";
+import vehicleApi from "./vehicleApi";
 
-export { userApi };
+export { userApi, vehicleApi };

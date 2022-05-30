@@ -9,4 +9,6 @@ export type BookingHistoryStackParams = {
 export type ProfileStackParams = {
   ProfileScreen: undefined;
   PersonalScreen: undefined;
+  VehicleScreen: undefined;
+  AddVehicleScreen: Vehicle;
 };

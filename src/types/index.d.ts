@@ -7,4 +7,10 @@ type User = {
   imageUrl: string;
 };
 
-export { User };
+type Vehicle = {
+  idVehicle: string;
+  idUser: string;
+  name: string;
+  number: string;
+  type: string;
+};
