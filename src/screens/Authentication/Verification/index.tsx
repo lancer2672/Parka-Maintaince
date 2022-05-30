@@ -1,12 +1,11 @@
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RouteProp } from "@react-navigation/native";
-import authApi from "@src/api/authApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { auth } from "@src/firebase";
-import { createUserAction } from "@src/store/actions/userAction";
 import { useAppDispatch } from "@src/store/hooks";
+import { userActions } from "@src/store/slices/userSlice";
 import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -27,12 +26,12 @@ type Props = {
 };
 
 const Verification = (props: Props) => {
-  let refPin1 = useRef<TextInput>(null);
-  let refPin2 = useRef<TextInput>(null);
-  let refPin3 = useRef<TextInput>(null);
-  let refPin4 = useRef<TextInput>(null);
-  let refPin5 = useRef<TextInput>(null);
-  let refPin6 = useRef<TextInput>(null);
+  const refPin1 = useRef<TextInput>(null);
+  const refPin2 = useRef<TextInput>(null);
+  const refPin3 = useRef<TextInput>(null);
+  const refPin4 = useRef<TextInput>(null);
+  const refPin5 = useRef<TextInput>(null);
+  const refPin6 = useRef<TextInput>(null);
   const [pin1, setPin1] = useState("");
   const [pin2, setPin2] = useState("");
   const [pin3, setPin3] = useState("");
@@ -57,7 +56,9 @@ const Verification = (props: Props) => {
       );
       await signInWithCredential(auth, credential);
       if (routeData.type === "SignUp") {
-        const res = await dispatch(createUserAction(routeData.user)).unwrap();
+        const res = await dispatch(
+          userActions.createUser(routeData.user),
+        ).unwrap();
         setIsLoading(false);
         if (res.errorMessage) {
           Alert.alert("Error: " + res.errorMessage);
@@ -102,7 +103,7 @@ const Verification = (props: Props) => {
   };
 
   const countDown = () => {
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
       setTimer((lastTimerCount) => {
         lastTimerCount <= 1 && clearInterval(interval);
         return lastTimerCount - 1;
@@ -112,7 +113,7 @@ const Verification = (props: Props) => {
     return () => clearInterval(interval);
   };
   useEffect(() => {
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
       setTimer((lastTimerCount) => {
         lastTimerCount <= 1 && clearInterval(interval);
         return lastTimerCount - 1;

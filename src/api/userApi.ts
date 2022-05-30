@@ -10,7 +10,7 @@ const userApi = {
     return res;
   },
   checkDuplicatePhone: async (phoneNumber: any) => {
-    const res = await axiosClient.post("users/check-phone", { phoneNumber });
+    const res = await axiosClient.post("/users/check-phone", { phoneNumber });
     return res.data;
   },
   createUser: async (user: any) => {

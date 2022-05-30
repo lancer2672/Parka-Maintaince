@@ -1,10 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  createUserAction,
-  getUserAction,
-  loginAction,
-  updateUserAction,
-} from "../actions/userAction";
+import { createUser, getUser, login, updateUser } from "../actions/userAction";
 
 type UserState = Partial<{
   data: User;
@@ -18,7 +14,7 @@ const initialState: UserState = {
   isLoading: false,
 };
 
-const arrAction = [loginAction, createUserAction];
+const arrAction = [login, createUser];
 
 export const userSlice = createSlice({
   name: "user",
@@ -49,18 +45,28 @@ export const userSlice = createSlice({
       }),
     );
     builder.addCase(
-      updateUserAction.fulfilled,
+      updateUser.fulfilled,
       (state, { payload }: PayloadAction<User>) => {
         state.data = payload;
       },
     );
     builder.addCase(
-      getUserAction.fulfilled,
+      getUser.fulfilled,
       (state, { payload }: PayloadAction<User>) => {
         state.data = payload;
       },
     );
+    builder.addCase(getUser.rejected, (state, action) => {
+      state = initialState;
+      AsyncStorage.clear();
+    });
   },
 });
 
-export const { loginWithOauth } = userSlice.actions;
+export const userActions = {
+  ...userSlice.actions,
+  createUser,
+  getUser,
+  login,
+  updateUser,
+};

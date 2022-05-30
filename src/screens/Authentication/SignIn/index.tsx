@@ -4,9 +4,8 @@ import AppButton from "@src/components/common/AppButton";
 import { FacebookLoginButton } from "@src/components/Login/FacebookLoginButton";
 import GoogleLoginButton from "@src/components/Login/GoogleLoginButton";
 import { Colors } from "@src/constants";
-import { loginAction } from "@src/store/actions/userAction";
-import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import { loginWithOauth } from "@src/store/slices/userSlice";
+import { useAppDispatch } from "@src/store/hooks";
+import { userActions } from "@src/store/slices/userSlice";
 import { Formik, FormikProps } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -55,7 +54,7 @@ const SignIn = (props: Props) => {
     try {
       setIsLoading(true);
       const result = await dispatch(
-        loginAction({
+        userActions.login({
           username: values.phoneNumber,
           password: values.password,
         }),
@@ -81,7 +80,7 @@ const SignIn = (props: Props) => {
   };
 
   const handleLoginWithOauth = (newUser: User) => {
-    dispatch(loginWithOauth(newUser));
+    dispatch(userActions.loginWithOauth(newUser));
     props.navigation.navigate("App");
   };
 
@@ -198,8 +197,7 @@ const SignIn = (props: Props) => {
               <AppButton
                 style={styles.btnSignIn}
                 isLoading={isLoading}
-                onPress={handleSubmit}
-                backgroundColor={isLoading ? "#A498ED" : Colors.light.primary}>
+                onPress={handleSubmit}>
                 <Text
                   style={{ fontSize: 22, fontWeight: "600", color: "white" }}>
                   Sign in

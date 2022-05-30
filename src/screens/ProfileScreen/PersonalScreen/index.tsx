@@ -3,9 +3,9 @@ import AppButton from "@src/components/common/AppButton";
 import AvatarUpload from "@src/components/Profile/AvatarUpload";
 import ProfileInput from "@src/components/Profile/ProfileInput";
 import { Colors, Layout } from "@src/constants";
-import { updateUserAction } from "@src/store/actions/userAction";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { selectUser } from "@src/store/selectors";
+import { userActions } from "@src/store/slices/userSlice";
 import { Formik, FormikProps } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -69,7 +69,7 @@ const PersonalScreen = () => {
 
   const handleUpdateProfile = (values: ProfileForm) => {
     const user = { ...userState, ...values, imageUrl };
-    dispatch(updateUserAction(user));
+    dispatch(userActions.updateUser(user));
     setIsLoading(true);
   };
 

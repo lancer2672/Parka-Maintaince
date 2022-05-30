@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import authApi from "@src/api/authApi";
 import userApi from "@src/api/userApi";
 
-const createUserAction = createAsyncThunk("user/create", async (user: User) => {
+const createUser = createAsyncThunk("user/create", async (user: User) => {
   try {
     const res = await userApi.createUser(user);
     if (res.data.data) {
@@ -14,7 +14,7 @@ const createUserAction = createAsyncThunk("user/create", async (user: User) => {
   }
 });
 
-const loginAction = createAsyncThunk(
+const login = createAsyncThunk(
   "user/login",
   async (params: { username: string; password: string }) => {
     try {
@@ -32,6 +32,8 @@ const loginAction = createAsyncThunk(
           JSON.stringify(data.refreshToken),
         );
         await AsyncStorage.setItem("idUser", JSON.stringify(data.data.idUser));
+        const idUser = await AsyncStorage.getItem("idUser");
+        console.log(idUser);
         return data.data;
       } else {
         return { errorMessage: "Incorrect username or password!" };
@@ -42,7 +44,7 @@ const loginAction = createAsyncThunk(
   },
 );
 
-const updateUserAction = createAsyncThunk("user/update", async (user: User) => {
+const updateUser = createAsyncThunk("user/update", async (user: User) => {
   try {
     const res = await userApi.updateUser(user);
     if (res.data.data) {
@@ -53,9 +55,9 @@ const updateUserAction = createAsyncThunk("user/update", async (user: User) => {
   }
 });
 
-const getUserAction = createAsyncThunk("user/get", async (idUser: string) => {
+const getUser = createAsyncThunk("user/get", async (idUser: string) => {
   const res = await userApi.getUserById(idUser);
   return res.data;
 });
 
-export { loginAction, createUserAction, updateUserAction, getUserAction };
+export { login, createUser, updateUser, getUser };
