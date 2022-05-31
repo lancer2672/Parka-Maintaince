@@ -1,13 +1,8 @@
 import DetailModal from "@src/components/Home/DetailModal";
 import Map from "@src/components/Home/Map";
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import {
-  Keyboard,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { Keyboard, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
@@ -18,7 +13,6 @@ const HomeScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView style={styles.container}>
-        <StatusBar style="dark" />
         <Map
           onSelectedMarker={(parking: ParkingLot) => {
             setIsShowDetail(true);
@@ -26,14 +20,12 @@ const HomeScreen = () => {
           }}
           setDistance={setDistance}
         />
-        <View style={{ flex: 1 }}>
-          <DetailModal
-            distance={distance}
-            isShow={isShowDetail}
-            onClose={() => setIsShowDetail(false)}
-            data={seletedParking}
-          />
-        </View>
+        <DetailModal
+          distance={distance}
+          isShow={isShowDetail}
+          onClose={() => setIsShowDetail(false)}
+          data={seletedParking}
+        />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -43,6 +35,6 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     marginTop: 10,
-    height: "100%",
+    flex: 1,
   },
 });
