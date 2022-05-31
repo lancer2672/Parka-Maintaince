@@ -1,5 +1,4 @@
 import { parkingLotApi } from "@/api";
-import { ParkingLot } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 

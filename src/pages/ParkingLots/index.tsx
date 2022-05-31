@@ -1,8 +1,8 @@
-import AddParkingLotsForm from "@/components/ParkingLots/AddParkingLotsForm";
+import AddParkingLot from "@/components/ParkingLots/AddParkingLot";
 import { deleteParkingLot, getAllParkingLots } from "@/store/actions/parkingLotActions";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { parkingLotActions } from "@/store/reducers/parkingLotSlice";
 import { selectAuth, selectParkingLot } from "@/store/selectors";
-import { ParkingLot } from "@/types";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Modal, Popconfirm, Row, Table, Tag, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
@@ -98,7 +98,7 @@ const ParkingLots: FC = () => {
 
   useEffect(() => {
     const idCompany = authState.auth?.idCompany;
-    dispatch(getAllParkingLots(idCompany));
+    dispatch(parkingLotActions.getAllParkingLots(idCompany));
   }, [dispatch]);
 
   useEffect(() => {
@@ -110,6 +110,7 @@ const ParkingLots: FC = () => {
       setEditData(undefined);
     }
   }, [isVisible]);
+
   return (
     <div>
       <h1>Parking lots</h1>
@@ -148,15 +149,11 @@ const ParkingLots: FC = () => {
           </Col>
         </Row>
       </Card>
-      <Modal
-        title="Add parking lot"
-        centered
-        closable
-        footer={null}
-        visible={isVisible}
-        onCancel={() => setIsVisible(false)}>
-        <AddParkingLotsForm changeVisible={setIsVisible} editData={editData} />
-      </Modal>
+      <AddParkingLot
+        editData={editData}
+        isVisible={isVisible}
+        onCancel={() => setIsVisible(false)}
+      />
     </div>
   );
 };

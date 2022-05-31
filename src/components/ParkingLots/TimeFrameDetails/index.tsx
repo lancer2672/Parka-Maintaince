@@ -1,29 +1,26 @@
-import { blockApi } from "@/api";
-import { Card, Col, message, Row, Table, Tag } from "antd";
+import { timeFrameApi } from "@/api";
+import { parseThousand } from "@/utils/stringHelper";
+import { Card, Col, message, Row, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 interface IProps {
   idParkingLot: string;
 }
-const BlockDetails = (props: IProps) => {
-  const [data, setData] = useState<Array<Block>>();
+const TimeFrameDetails = (props: IProps) => {
+  const [data, setData] = useState<Array<TimeFrame>>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const columns: ColumnsType<Block> = [
+
+  const columns: ColumnsType<TimeFrame> = [
     {
-      title: "Block code",
-      dataIndex: "blockCode",
+      title: "Duration (minute)",
+      dataIndex: "duration",
       align: "center",
     },
     {
-      title: "Number of slots",
-      dataIndex: "numOfSlot",
+      title: "Cost (vnđ)",
+      dataIndex: "cost",
       align: "center",
-    },
-    {
-      title: "Status",
-      dataIndex: "isFull",
-      render: () => <Tag color={"blue"}>isFull</Tag>,
-      align: "center",
+      render: (cost: any) => parseThousand(cost),
     },
   ];
 
@@ -31,7 +28,7 @@ const BlockDetails = (props: IProps) => {
     (async () => {
       try {
         setIsLoading(true);
-        const res = await blockApi.getAll(props.idParkingLot);
+        const res = await timeFrameApi.getAll(props.idParkingLot);
         setData(res.data.data);
         setIsLoading(false);
       } catch (error) {
@@ -42,15 +39,15 @@ const BlockDetails = (props: IProps) => {
   return (
     <Row gutter={[20, 20]}>
       <Col span={24}>
-        <h3 className=" text-xl">Blocks</h3>
+        <h3 className=" text-xl">TimeFrames</h3>
         <Col flex="auto" />
         <Card>
-          <Table<Block>
+          <Table<TimeFrame>
             bordered
+            loading={isLoading}
             columns={columns}
             dataSource={data}
-            loading={isLoading}
-            rowKey={(row) => row.idBlock}
+            rowKey={(row) => row.idParkingLot}
             pagination={{ pageSize: 5 }}
           />
         </Card>
@@ -59,4 +56,4 @@ const BlockDetails = (props: IProps) => {
   );
 };
 
-export default BlockDetails;
+export default TimeFrameDetails;

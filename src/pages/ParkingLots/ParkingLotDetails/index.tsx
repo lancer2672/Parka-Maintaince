@@ -1,6 +1,8 @@
 import { parkingLotApi } from "@/api";
 import BlockDetails from "@/components/ParkingLots/BlockDetails";
-import { ParkingLot } from "@/types";
+import TimeFrameDetails from "@/components/ParkingLots/TimeFrameDetails";
+import { useAppSelector } from "@/store/hooks";
+import { selectParkingLot } from "@/store/selectors";
 import { Card, Col, Row } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -23,12 +25,18 @@ const DescriptionItem = (props: IProps) => (
 const ParkingLotDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState<ParkingLot>();
+  const parkingLotState = useAppSelector(selectParkingLot);
 
   useEffect(() => {
-    parkingLotApi
-      .getOne(id)
-      .then((res) => setData(res.data.data))
-      .catch((err) => console.log(err));
+    const parkingLot = parkingLotState.parkingLots.find((e) => e.idParkingLot == id);
+    if (parkingLot) {
+      setData(parkingLot);
+    } else {
+      parkingLotApi
+        .getOne(id)
+        .then((res) => setData(res.data.data))
+        .catch((err) => console.log(err));
+    }
   }, [id]);
 
   return (
@@ -45,11 +53,10 @@ const ParkingLotDetails = () => {
           </Card>
         </Col>
         <Col span={12}>
-          <BlockDetails />
+          <BlockDetails idParkingLot={id ?? ""} />
         </Col>
         <Col span={12}>
-          <h3>Slots</h3>
-          <Card></Card>
+          <TimeFrameDetails idParkingLot={id ?? ""} />
         </Col>
       </Row>
     </div>

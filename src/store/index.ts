@@ -4,7 +4,7 @@ import { authSlice, counterSlice, parkingLotSlice } from "./reducers";
 export const store = configureStore({
   reducer: {
     counter: counterSlice,
-    parkingLot: parkingLotSlice,
+    parkingLot: parkingLotSlice.reducer,
     auth: authSlice,
   },
 });

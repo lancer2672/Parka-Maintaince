@@ -1,58 +1,57 @@
 import { createParkingLot, updateParkingLot } from "@/store/actions/parkingLotActions";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectAuth, selectParkingLot } from "@/store/selectors";
-import { ParkingLot } from "@/types";
 import { Button, Col, Form, Input, message, Row } from "antd";
 import { useEffect } from "react";
+
 const { TextArea } = Input;
 
 interface IProps {
-  changeVisible: Function;
   editData: ParkingLot | undefined;
+  form: any;
 }
 
-const AddParkingLotsForm = (props: IProps) => {
-  const [form] = Form.useForm();
-  const authState = useAppSelector(selectAuth);
-  const dispatch = useAppDispatch();
+const ParkingLotsForm = (props: IProps) => {
   const parkingLotState = useAppSelector(selectParkingLot);
 
-  const handleSubmit = () => {
-    const formValues = { ...form.getFieldsValue(), idCompany: authState.auth?.idCompany };
-    if (props.editData) {
-      const edited = { ...formValues, idParkingLot: props.editData.idParkingLot };
-      dispatch(updateParkingLot(edited));
+  const ParkingLotNamValidator = (rule: any, value: any, callback: any) => {
+    if (value != null) {
+      const isExist = parkingLotState.parkingLots.find((e) => e.name == value);
+      if (isExist && value != props.editData?.name) {
+        callback("This name is already in use!");
+      } else {
+        callback();
+      }
     } else {
-      dispatch(createParkingLot(formValues));
+      callback();
     }
-    props.changeVisible(false);
-    form.resetFields();
   };
-
-  useEffect(() => {
-    message.error(parkingLotState.error);
-  }, [parkingLotState.error]);
+  // useEffect(() => {
+  //   message.error(parkingLotState.error);
+  // }, [parkingLotState.error]);
 
   useEffect(() => {
     const tmp = props.editData;
     if (tmp) {
-      form.setFieldsValue({
+      props.form.setFieldsValue({
         name: tmp.name,
         address: tmp.address,
         lat: tmp.lat,
         long: tmp.long,
         description: tmp.description,
       });
-    } else {
-      form.resetFields();
     }
   }, [props.editData]);
+
   return (
-    <Form form={form} layout="vertical" onFinish={handleSubmit}>
+    <div>
       <Form.Item
         label="Name"
         name="name"
-        rules={[{ required: true, message: "Please input parking lot name!" }]}>
+        rules={[
+          { required: true, message: "Please input parking lot name!" },
+          { validator: ParkingLotNamValidator },
+        ]}>
         <Input />
       </Form.Item>
       <Form.Item
@@ -82,13 +81,8 @@ const AddParkingLotsForm = (props: IProps) => {
       <Form.Item label="Description" name="description">
         <TextArea rows={2} />
       </Form.Item>
-      <Form.Item>
-        <Button block size="large" type="primary" htmlType="submit">
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
+    </div>
   );
 };
 
-export default AddParkingLotsForm;
+export default ParkingLotsForm;

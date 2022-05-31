@@ -22,5 +22,8 @@ const parkingLotApi = {
   delete: (id: string) => {
     return axiosClient.delete(`${url}/${id}`);
   },
+  checkNameDuplicate: (name: string) => {
+    return axiosClient.post(`${url}/check-name`, { name });
+  },
 };
 export default parkingLotApi;

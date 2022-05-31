@@ -15,8 +15,14 @@ type Block = {
   description: string;
   idParkingLot: string;
   isFull: boolean;
+  numOfSlot: number;
+  ParkingSlots: Array<ParkingSlot>;
 };
-
+type ParkingSlot = {
+  idParkingSlot: string;
+  slotNumber: number;
+  idBlock: string;
+};
 type Company = {
   idCompany: string;
   companyName: string;
@@ -24,4 +30,9 @@ type Company = {
   email: string;
 };
 
-export type { ParkingLot, Block, Company };
+type TimeFrame = {
+  idTimeFrame: string;
+  idParkingLot: string;
+  duration: number;
+  cost: number;
+};

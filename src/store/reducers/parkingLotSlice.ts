@@ -1,4 +1,3 @@
-import { ParkingLot } from "@/types";
 import { createSlice } from "@reduxjs/toolkit";
 import {
   createParkingLot,
@@ -19,7 +18,7 @@ const initialState: ParkingLotState = {
   error: null,
 };
 
-const parkingLotSlice = createSlice({
+export const parkingLotSlice = createSlice({
   name: "parkingLot",
   initialState,
   reducers: {},
@@ -76,4 +75,10 @@ const parkingLotSlice = createSlice({
   },
 });
 
-export default parkingLotSlice.reducer;
+export const parkingLotActions = {
+  ...parkingLotSlice.actions,
+  getAllParkingLots,
+  createParkingLot,
+  updateParkingLot,
+  deleteParkingLot,
+};

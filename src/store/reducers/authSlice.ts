@@ -1,4 +1,3 @@
-import { Company } from "@/types";
 import { createSlice } from "@reduxjs/toolkit";
 import { login, verifyToken } from "../actions/authAction";
 
