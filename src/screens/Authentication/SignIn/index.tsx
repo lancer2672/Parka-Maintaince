@@ -217,9 +217,9 @@ const SignIn = (props: Props) => {
                 <View style={{ marginBottom: 10 }}>
                   <GoogleLoginButton handleLogin={handleLoginWithOauth} />
                 </View>
-                <View>
+                {/* <View>
                   <FacebookLoginButton handleLogin={handleLoginWithOauth} />
-                </View>
+                </View> */}
                 <View
                   style={{
                     display: "flex",

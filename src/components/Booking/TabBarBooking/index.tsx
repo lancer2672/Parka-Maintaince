@@ -63,7 +63,6 @@ const TabBarBooking = ({
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
-            testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
             style={styles.tab}>
@@ -77,6 +76,14 @@ const TabBarBooking = ({
                 { opacity: activeOpacity },
               ]}>
               <Text style={[styles.label, styles.active]}>{label}</Text>
+              <View
+                style={{
+                  backgroundColor: Colors.light.primary,
+                  height: 2,
+                  width: "50%",
+                  marginTop: 4,
+                }}
+              />
             </Animated.View>
           </TouchableOpacity>
         );
@@ -100,6 +107,7 @@ const styles = StyleSheet.create({
   item: {
     alignItems: "center",
     justifyContent: "center",
+    marginVertical: 14,
   },
   activeItem: {
     position: "absolute",
@@ -117,6 +125,5 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "600",
-    marginVertical: 12,
   },
 });

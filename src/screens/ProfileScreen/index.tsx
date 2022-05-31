@@ -72,14 +72,14 @@ const ProfileScreen = ({ navigation }: any) => {
         bounces={true}
         showsVerticalScrollIndicator={false}>
         <View style={{ marginBottom: 40 }}>
-          <Image
+          {/* <Image
             style={styles.avatar}
             source={{
               uri:
                 userState?.imageUrl ||
                 "https://ui-avatars.com/api/?background=random&color=random&font-size=0.33&name=user",
             }}
-          />
+          /> */}
           {actions.map((action) => (
             <ProfileAction
               key={action.text}

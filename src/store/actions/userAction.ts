@@ -32,8 +32,6 @@ const login = createAsyncThunk(
           JSON.stringify(data.refreshToken),
         );
         await AsyncStorage.setItem("idUser", JSON.stringify(data.data.idUser));
-        const idUser = await AsyncStorage.getItem("idUser");
-        console.log(idUser);
         return data.data;
       } else {
         return { errorMessage: "Incorrect username or password!" };

@@ -6,6 +6,7 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { LogBox } from "react-native";
 import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import "../thepatch";
@@ -23,10 +24,12 @@ export default function App() {
     return (
       <LoadingService>
         <Provider store={store}>
-          <SafeAreaProvider>
-            <AppNavigator colorScheme={colorScheme} />
-            <StatusBar />
-          </SafeAreaProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaProvider>
+              <AppNavigator colorScheme={colorScheme} />
+              {/* <StatusBar style="inverted" /> */}
+            </SafeAreaProvider>
+          </GestureHandlerRootView>
         </Provider>
       </LoadingService>
     );

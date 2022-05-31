@@ -1,5 +1,6 @@
 import DetailModal from "@src/components/Home/DetailModal";
 import Map from "@src/components/Home/Map";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   Keyboard,
@@ -17,6 +18,7 @@ const HomeScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView style={styles.container}>
+        <StatusBar style="dark" />
         <Map
           onSelectedMarker={(parking: ParkingLot) => {
             setIsShowDetail(true);

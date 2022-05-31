@@ -11,7 +11,7 @@ WebBrowser.maybeCompleteAuthSession();
 const AUTH_STATE_KEY = "AuthKey";
 
 type Props = {
-  handleLogin: Function;
+  handleLogin: any;
 };
 
 export const FacebookLoginButton = (props: Props) => {
@@ -76,7 +76,7 @@ export const FacebookLoginButton = (props: Props) => {
       }}>
       <View style={styles.wrapper}>
         <FacebookLogo width={26} height={26} />
-        <Text style={styles.text}>{$t("loginwfb")}</Text>
+        {/* <Text style={styles.text}>{$t("loginwfb")}</Text> */}
       </View>
     </TouchableOpacity>
   );
@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.15,
     shadowRadius: 10,
-    marginHorizontal: 20,
   },
   wrapper: {
     display: "flex",

@@ -3,7 +3,6 @@ import { Colors } from "@src/constants";
 import React, { useState } from "react";
 import {
   Animated,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -16,7 +15,6 @@ import {
   SceneRendererProps,
   TabView,
 } from "react-native-tab-view";
-import ActiveBookingScreen from "./ActiveBookingScreen";
 import HistoryBookingScreen from "./HistoryBookingScreen";
 import ScheduledBookingScreen from "./ScheduledBookingScreen";
 
@@ -32,14 +30,12 @@ const BookingHistoryScreen = () => {
 
   const renderScene = SceneMap({
     scheduled: ScheduledBookingScreen,
-    active: ActiveBookingScreen,
     history: HistoryBookingScreen,
   });
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: "scheduled", title: "Scheduled" },
-    { key: "active", title: "Active" },
     { key: "history", title: "History" },
   ]);
 

@@ -10,7 +10,7 @@ import GoogleLogo from "@src/assets/svg/google.svg";
 WebBrowser.maybeCompleteAuthSession();
 const AUTH_STATE_KEY = "AuthKey";
 type Props = {
-  handleLogin: Function;
+  handleLogin: any;
 };
 
 const GoogleLoginButton = (props: Props) => {
@@ -68,7 +68,7 @@ const GoogleLoginButton = (props: Props) => {
 
 const styles = StyleSheet.create({
   btn: {
-    backgroundColor: "#fff",
+    backgroundColor: "#fcfcfc",
     alignItems: "center",
     paddingVertical: 16,
     borderRadius: 8,
@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.15,
     shadowRadius: 10,
-    marginHorizontal: 20,
   },
   wrapper: {
     display: "flex",

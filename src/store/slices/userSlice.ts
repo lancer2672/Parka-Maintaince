@@ -58,7 +58,7 @@ export const userSlice = createSlice({
     );
     builder.addCase(getUser.rejected, (state, action) => {
       state = initialState;
-      AsyncStorage.clear();
+      AsyncStorage.removeItem("idUser");
     });
   },
 });
