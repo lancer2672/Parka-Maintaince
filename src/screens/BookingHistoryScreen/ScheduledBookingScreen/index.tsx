@@ -1,6 +1,6 @@
-import ScheduleBookingItem from "@src/components/Booking/ScheduleBookingItem";
+import ScheduleBookingItem from "@src/components/BookingHistory/ScheduleBookingItem";
 import React from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, View } from "react-native";
 
 const ScheduledBookingScreen = () => {
   const data = [
@@ -34,8 +34,9 @@ const ScheduledBookingScreen = () => {
   const renderItem = (item: any) => {
     return <ScheduleBookingItem />;
   };
+
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1 }}>
       <FlatList
         style={{ flex: 1 }}
         data={data}
@@ -48,10 +49,3 @@ const ScheduledBookingScreen = () => {
 };
 
 export default ScheduledBookingScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-});

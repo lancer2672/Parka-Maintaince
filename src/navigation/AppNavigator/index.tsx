@@ -54,7 +54,7 @@ const AppNavigator = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
     };
 
     checkFirstLaunched();
-    getUser();
+    // getUser();
   }, []);
   return (
     <NavigationContainer

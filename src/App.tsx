@@ -2,7 +2,6 @@ import { LoadingService } from "@nghinv/react-native-loading";
 import useCachedResources from "@src/hooks/useCachedResources";
 import useColorScheme from "@src/hooks/useColorScheme";
 import AppNavigator from "@src/navigation/AppNavigator";
-import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { LogBox } from "react-native";
 import "react-native-gesture-handler";

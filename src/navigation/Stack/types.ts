@@ -1,5 +1,9 @@
 export type HomeStackParams = {
   HomeScreen: undefined;
+  ParkingDetailsScreen: undefined;
+  SelectVehicleScreen: undefined;
+  AddVehicleScreen: Vehicle;
+  ReserveParkingScreen: undefined;
 };
 
 export type BookingHistoryStackParams = {

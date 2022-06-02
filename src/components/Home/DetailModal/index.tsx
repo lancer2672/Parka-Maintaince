@@ -29,12 +29,13 @@ const renderItem = (value: any) => {
 type Props = {
   isShow: boolean;
   onClose: any;
-  data: ParkingLot;
+  selectedParking: ParkingLot;
   distance: number;
+  navigateBooking: any;
 };
 
 const DetailModal = (props: Props) => {
-  const { isShow, onClose, data } = props;
+  const { isShow, onClose, selectedParking, navigateBooking } = props;
   const ref = React.useRef<BottomSheet>(null);
   const [timeFrames, setTimeFrames] = useState([]);
 
@@ -47,7 +48,7 @@ const DetailModal = (props: Props) => {
 
   useEffect(() => {
     if (isShow === true) {
-      onOpenBottomSheetHandler(0);
+      onOpenBottomSheetHandler(1);
     } else {
       onOpenBottomSheetHandler(-1);
     }
@@ -60,10 +61,10 @@ const DetailModal = (props: Props) => {
         setTimeFrames(result.data.data);
       }
     };
-    if (data) {
-      getTimeFrame(data.idParkingLot);
+    if (selectedParking) {
+      getTimeFrame(selectedParking.idParkingLot);
     }
-  }, [data]);
+  }, [selectedParking]);
 
   return (
     <>
@@ -71,7 +72,7 @@ const DetailModal = (props: Props) => {
         ref={ref}
         enablePanDownToClose={true}
         onClose={onClose}
-        snapPoints={[280, "52%", "95%"]}>
+        snapPoints={[1, 280, "52%", "95%"]}>
         <BottomSheetView>
           <View
             style={{
@@ -94,7 +95,7 @@ const DetailModal = (props: Props) => {
                     lineHeight: 24,
                   }}
                   numberOfLines={2}>
-                  {data?.name}
+                  {selectedParking?.name}
                 </Text>
                 <View style={styles.flexRow}>
                   <Feather
@@ -113,7 +114,7 @@ const DetailModal = (props: Props) => {
                       width: "90%",
                       marginLeft: Spacing.s,
                     }}>
-                    {data?.address}
+                    {selectedParking?.address}
                   </Text>
                 </View>
               </View>
@@ -128,7 +129,7 @@ const DetailModal = (props: Props) => {
                 }}
               />
             </View>
-            <TouchableOpacity style={styles.btnBook}>
+            <TouchableOpacity style={styles.btnBook} onPress={navigateBooking}>
               <Text
                 style={{
                   fontSize: 18,
@@ -208,7 +209,7 @@ const DetailModal = (props: Props) => {
                 text={"Share"}
               />
             </View>
-            <Text style={styles.title}>Description</Text>
+            <Text style={styles.title}>Info</Text>
             <Text
               style={{
                 fontSize: 14,
@@ -216,18 +217,10 @@ const DetailModal = (props: Props) => {
                 color: "#818283",
                 textAlign: "justify",
               }}>
-              {data?.description}
+              {selectedParking?.description}
             </Text>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "700",
-                color: "#4D65EB",
-                marginVertical: 8,
-              }}>
-              Parking time
-            </Text>
-            <View style={{ height: 70 }}>
+            <Text style={styles.title}>Parking time</Text>
+            <View style={{ height: 50 }}>
               <BottomSheetFlatList
                 style={{ flexGrow: 0 }}
                 data={timeFrames}
@@ -236,15 +229,7 @@ const DetailModal = (props: Props) => {
                 showsHorizontalScrollIndicator={false}
               />
             </View>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "700",
-                color: "#4D65EB",
-                marginVertical: 8,
-              }}>
-              Payment type
-            </Text>
+            <Text style={styles.title}>Payment type</Text>
           </View>
         </BottomSheetView>
       </BottomSheet>

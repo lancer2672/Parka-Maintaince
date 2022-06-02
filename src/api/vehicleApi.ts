@@ -2,7 +2,7 @@ import axiosClient from "./axiosClient";
 
 const vehicleApi = {
   create: async (vehicle: Vehicle) => {
-    const res = await axiosClient.post("/user/vehicles", vehicle);
+    const res = await axiosClient.post("/vehicles", vehicle);
     return res;
   },
   getById: async (idVehicle: string) => {

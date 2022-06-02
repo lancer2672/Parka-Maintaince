@@ -2,7 +2,7 @@ import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
 } from "@react-navigation/material-top-tabs";
-import TabBarBooking from "@src/components/Booking/TabBarBooking";
+import TabBarBooking from "@src/components/BookingHistory/TabBarBooking";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { View } from "react-native";

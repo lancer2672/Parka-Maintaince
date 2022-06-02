@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Colors } from "@src/constants";
 import useColorScheme from "@src/hooks/useColorScheme";
-import Test from "@src/screens/Test";
 import React from "react";
 import {
   HomeIcon,

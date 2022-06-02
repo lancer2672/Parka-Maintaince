@@ -1,7 +1,7 @@
 const CarType = [
-  { label: "Motorbike", value: "motorbike" },
+  { label: "Bike", value: "bike" },
   { label: "Car", value: "car" },
-  { label: "Pickup truck", value: "pickuptruck" },
+  { label: "Van", value: "van" },
 ];
 
 export default CarType;

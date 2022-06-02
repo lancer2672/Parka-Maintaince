@@ -13,14 +13,14 @@ const HistoryBookingItem = () => {
           { alignItems: "center", justifyContent: "space-between" },
         ]}>
         <View style={styles.status}>
-          <Text style={styles.statusText}>Parking ongoging</Text>
+          <Text style={styles.statusText}>Completed</Text>
         </View>
         <Text style={styles.price} numberOfLines={1}>
           100.000₫
         </Text>
       </View>
       <Text style={styles.title} numberOfLines={2}>
-        Vicom Mega Mall
+        Vicom Mega Mall 1
       </Text>
       <View style={[styles.flexRow]}>
         <Feather name="map-pin" size={14} color={Colors.light.subtitle} />
@@ -63,15 +63,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.light.background,
     borderRadius: 12,
-    overflow: "hidden",
-    shadowColor: "#6F7EC9",
+    shadowColor: ColorHelper.hexToRgbA("#000000", 0.2),
     shadowOffset: {
-      width: 0,
-      height: 6,
+      width: 2,
+      height: 4,
     },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
     marginVertical: 10,
+    marginHorizontal: 20,
     padding: 10,
   },
   status: {

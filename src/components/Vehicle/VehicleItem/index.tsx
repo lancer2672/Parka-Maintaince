@@ -2,13 +2,8 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "@src/constants";
 import { AlertHelper, ColorHelper } from "@src/utils";
 import React, { useRef } from "react";
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Animated, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 
 interface IProps {
@@ -26,7 +21,7 @@ const VehicleItem = ({ item, onEdit, onDelete }: IProps) => {
 
   const renderTag = (type: string) => {
     switch (type) {
-      case "motorbike":
+      case "bike":
         return (
           <View style={styles.tag}>
             <MaterialCommunityIcons
@@ -34,7 +29,7 @@ const VehicleItem = ({ item, onEdit, onDelete }: IProps) => {
               size={22}
               color={Colors.light.primary}
             />
-            <Text style={styles.tagText}>Motorbike</Text>
+            <Text style={styles.tagText}>Bike</Text>
           </View>
         );
       case "car":
@@ -52,11 +47,11 @@ const VehicleItem = ({ item, onEdit, onDelete }: IProps) => {
         return (
           <View style={styles.tag}>
             <MaterialCommunityIcons
-              name="truck-flatbed"
-              size={18}
+              name="van-utility"
+              size={20}
               color={Colors.light.primary}
             />
-            <Text style={styles.tagText}>Pickup truck</Text>
+            <Text style={styles.tagText}>Van</Text>
           </View>
         );
     }
@@ -94,9 +89,6 @@ const VehicleItem = ({ item, onEdit, onDelete }: IProps) => {
         }
         renderRightActions={renderRightAction}>
         <View style={styles.item}>
-          {/* <View style={styles.image}>
-            <Text>{item.type}</Text>
-          </View> */}
           <View style={styles.wrapper}>
             <Text style={styles.title} numberOfLines={2}>
               {item.name}
@@ -122,11 +114,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     display: "flex",
     flexDirection: "row",
-  },
-  image: {
-    width: 40,
-    height: 40,
-    marginRight: 20,
   },
   tag: {
     paddingHorizontal: 8,

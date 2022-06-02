@@ -32,7 +32,7 @@ type VehicleFormProps = {
 
 const VehicleSchema = Yup.object().shape({
   type: Yup.mixed()
-    .oneOf(["motorbike", "car", "pickuptruck"], "Please select car type!")
+    .oneOf(["bike", "car", "van"], "Please select car type!")
     .required("Please select car type!")
     .nullable(),
   number: Yup.string().max(50).required("Please enter license plate!"),

@@ -2,14 +2,16 @@ import DetailModal from "@src/components/Home/DetailModal";
 import Map from "@src/components/Home/Map";
 import React, { useState } from "react";
 import { Keyboard, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }: any) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [seletedParking, setSelectedParking] = useState<ParkingLot>();
   const [distance, setDistance] = useState(0);
 
+  const navigateBooking = (seletedParking: ParkingLot) => {
+    navigation.navigate("ParkingDetailsScreen", seletedParking);
+  };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView style={styles.container}>
@@ -24,7 +26,8 @@ const HomeScreen = () => {
           distance={distance}
           isShow={isShowDetail}
           onClose={() => setIsShowDetail(false)}
-          data={seletedParking}
+          selectedParking={seletedParking}
+          navigateBooking={() => navigateBooking(seletedParking)}
         />
       </SafeAreaView>
     </TouchableWithoutFeedback>

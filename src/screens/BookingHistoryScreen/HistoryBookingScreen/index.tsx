@@ -1,6 +1,6 @@
-import HistoryBookingItem from "@src/components/Booking/HistoryBookingItem";
+import HistoryBookingItem from "@src/components/BookingHistory/HistoryBookingItem";
 import React from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, View } from "react-native";
 
 const HistoryBookingScreen = () => {
   const data = [
@@ -35,7 +35,7 @@ const HistoryBookingScreen = () => {
     return <HistoryBookingItem />;
   };
   return (
-    <View style={{ flex: 1, paddingHorizontal: 20 }}>
+    <View style={{ flex: 1 }}>
       <FlatList
         style={{ flex: 1 }}
         data={data}
