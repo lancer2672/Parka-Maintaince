@@ -8,10 +8,10 @@ const timeFrameApi = {
   },
 
   create: async (data: any) => {
-    return await axiosClient.post(url + "/create", data);
+    return await axiosClient.post(url, data);
   },
   update: async (idParkingLot: any, data: any) => {
-    return await axiosClient.patch(`${url}/update?idParkingLot=${idParkingLot}`, data);
+    return await axiosClient.patch(`${url}/${idParkingLot}`, data);
   },
 
   // getOne: (id: any) => {
