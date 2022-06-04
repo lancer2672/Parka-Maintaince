@@ -15,19 +15,8 @@ const AddBlockForm = (props: Props) => {
   const SlotNumberValidator = (rule: any, value: any, callback: any) => {
     const index = rule.field.split(".")[1];
     const range = props.form.getFieldValue("blocks")[index];
-    if (value != null) {
-      if (parseInt(range.from) > parseInt(range.to)) callback("From <= to");
-      else {
-        const res = props.form.getFieldsValue().blocks.find((element: any, i: number) => {
-          return (
-            parseInt(element.to) >= parseInt(range.from) &&
-            parseInt(element.from) <= parseInt(range.to) &&
-            i != index
-          );
-        });
-        if (res) callback("Slot number is being overlapped!");
-        else callback();
-      }
+    if (value != null && parseInt(range.from) > parseInt(range.to)) {
+      callback("From <= to");
     } else {
       callback();
     }
