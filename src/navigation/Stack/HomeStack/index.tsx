@@ -16,10 +16,10 @@ const Stack = createNativeStackNavigator<HomeStackParams>();
 
 const headerOption = {
   headerStyle: {
-    backgroundColor: Colors.light.primary,
+    backgroundColor: Colors.light.background,
   },
   headerTitleStyle: {
-    color: Colors.light.background,
+    color: Colors.light.primary,
   },
 };
 
@@ -29,17 +29,12 @@ const HomeStack = () => {
       screenOptions={{
         headerBackTitleVisible: false,
         headerShadowVisible: false,
-        headerTintColor: Colors.light.background,
+        headerTintColor: Colors.light.primary,
       }}>
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}
-        options={{
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitle: "",
-        }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ParkingDetailsScreen"
@@ -101,8 +96,7 @@ const HomeStack = () => {
         name="ParkingTicketScreen"
         component={ParkingTicketScreen}
         options={{
-          title: "Parking ticket",
-          ...headerOption,
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

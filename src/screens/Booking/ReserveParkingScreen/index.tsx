@@ -3,8 +3,8 @@ import SelectableTimeItem from "@src/components/Booking/SelectableTimeItem";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import { selectReservation, selectTimeFrames } from "@src/store/selectors";
-import { reservationActions } from "@src/store/slices/reservationSlice";
+import { selectBooking, selectTimeFrames } from "@src/store/selectors";
+import { bookingActions } from "@src/store/slices/bookingSlice";
 import { ColorHelper, CurrencyHelper, DateTimeHelper } from "@src/utils";
 import React, { useState } from "react";
 import {
@@ -24,24 +24,24 @@ const ReserveParkingScreen = ({ navigation }: any) => {
   const [isDateVisible, setDateVisible] = useState<boolean>(false);
   const [isTimeVisible, setTimeVisible] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const reservationState = useAppSelector(selectReservation);
+  const bookingState = useAppSelector(selectBooking);
   const timeFrames = useAppSelector(selectTimeFrames);
 
   const handleConfirmDate = (date: Date) => {
-    dispatch(reservationActions.update({ field: "bookingDate", value: date }));
+    dispatch(bookingActions.update({ field: "bookingDate", value: date }));
     setDateVisible(false);
   };
 
   const handleConfirmTime = (time: Date) => {
-    dispatch(reservationActions.update({ field: "startTime", value: time }));
+    dispatch(bookingActions.update({ field: "startTime", value: time }));
     setTimeVisible(false);
   };
 
   const navigateNext = () => {
     if (
-      reservationState.bookingDate &&
-      reservationState.startTime &&
-      reservationState.timeFrame
+      bookingState.bookingDate &&
+      bookingState.startTime &&
+      bookingState.timeFrame
     ) {
       navigation.navigate("SelectParkingSlotScreen");
     } else {
@@ -50,9 +50,7 @@ const ReserveParkingScreen = ({ navigation }: any) => {
   };
 
   const onSelectTimeFrame = (timeFrame: TimeFrame) => {
-    dispatch(
-      reservationActions.update({ field: "timeFrame", value: timeFrame }),
-    );
+    dispatch(bookingActions.update({ field: "timeFrame", value: timeFrame }));
   };
 
   return (
@@ -66,7 +64,7 @@ const ReserveParkingScreen = ({ navigation }: any) => {
             style={styles.dateContainer}
             onPress={() => setDateVisible(true)}>
             <Text style={styles.date}>
-              {DateTimeHelper.formatDate(reservationState.bookingDate)}
+              {DateTimeHelper.formatDate(bookingState.bookingDate)}
             </Text>
             <Feather name="calendar" size={20} color={Colors.light.text} />
           </TouchableOpacity>
@@ -74,13 +72,13 @@ const ReserveParkingScreen = ({ navigation }: any) => {
             style={[styles.dateContainer, { marginLeft: 12 }]}
             onPress={() => setTimeVisible(true)}>
             <Text style={styles.date}>
-              {DateTimeHelper.formatTime(reservationState.startTime)}
+              {DateTimeHelper.formatTime(bookingState.startTime)}
             </Text>
             <Feather name="clock" size={20} color={Colors.light.text} />
           </TouchableOpacity>
         </View>
         <DateTimePickerModal
-          date={reservationState.bookingDate}
+          date={bookingState.bookingDate}
           isVisible={isDateVisible}
           mode="date"
           minimumDate={new Date()}
@@ -88,7 +86,7 @@ const ReserveParkingScreen = ({ navigation }: any) => {
           onCancel={() => setDateVisible(false)}
         />
         <DateTimePickerModal
-          date={reservationState.startTime}
+          date={bookingState.startTime}
           isVisible={isTimeVisible}
           mode="time"
           minuteInterval={minuteInterval}
@@ -104,14 +102,14 @@ const ReserveParkingScreen = ({ navigation }: any) => {
           renderItem={({ item }) => (
             <SelectableTimeItem
               item={item}
-              selectedId={reservationState?.timeFrame?.idTimeFrame}
+              selectedId={bookingState?.timeFrame?.idTimeFrame}
               onSelect={() => onSelectTimeFrame(item)}
             />
           )}
         />
         <Text style={styles.title}>Total</Text>
         <Text style={styles.total}>
-          {CurrencyHelper.formatVND(reservationState.timeFrame?.cost) || "0₫"}
+          {CurrencyHelper.formatVND(bookingState.timeFrame?.cost) || "0₫"}
         </Text>
       </ScrollView>
       <AppButton style={styles.continueButton} onPress={navigateNext}>

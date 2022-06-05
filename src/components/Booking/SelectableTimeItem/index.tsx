@@ -1,5 +1,5 @@
 import { Colors } from "@src/constants";
-import { ColorHelper, CurrencyHelper } from "@src/utils";
+import { ColorHelper, CurrencyHelper, DateTimeHelper } from "@src/utils";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
@@ -20,7 +20,9 @@ const SelectableTimeItem = ({ item, onSelect, selectedId }: Props) => (
       style={[
         styles.time,
         selectedId == item.idTimeFrame && styles.selectedText,
-      ]}>{`${item.duration} mins`}</Text>
+      ]}>
+      {DateTimeHelper.convertToHour(item.duration)}
+    </Text>
     <Text
       style={[
         styles.price,

@@ -10,9 +10,8 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import { Colors, Spacing } from "@src/constants";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import { selectReservation, selectTimeFrames } from "@src/store/selectors";
+import { selectBooking, selectTimeFrames } from "@src/store/selectors";
 import { timeFrameActions } from "@src/store/slices/timeFrameSlice";
-import { convertToHour, convertToThounsandSeparator } from "@src/utils/convert";
 import * as Linking from "expo-linking";
 import React, { useEffect } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -20,12 +19,7 @@ import ActionButton from "../ActionButton";
 import TimeItem from "../TimeItem";
 
 const renderItem = (value: any) => {
-  return (
-    <TimeItem
-      period={convertToHour(value.item.duration)}
-      cost={convertToThounsandSeparator(value.item.cost)}
-    />
-  );
+  return <TimeItem period={value.item.duration} cost={value.item.cost} />;
 };
 
 type Props = {
@@ -38,7 +32,7 @@ type Props = {
 const DetailModal = (props: Props) => {
   const { isShow, onClose, navigateBooking } = props;
   const ref = React.useRef<BottomSheet>(null);
-  const selectedParking = useAppSelector(selectReservation).parkingLot;
+  const selectedParking = useAppSelector(selectBooking).parkingLot;
   const timeFrames = useAppSelector(selectTimeFrames);
   const dispatch = useAppDispatch();
 
@@ -214,7 +208,7 @@ const DetailModal = (props: Props) => {
               }}>
               {selectedParking?.description}
             </Text>
-            <Text style={styles.title}>Parking time</Text>
+            {/* <Text style={styles.title}>Parking time</Text>
             <View style={{ height: 50 }}>
               <BottomSheetFlatList
                 style={{ flexGrow: 0 }}
@@ -224,7 +218,7 @@ const DetailModal = (props: Props) => {
                 showsHorizontalScrollIndicator={false}
               />
             </View>
-            <Text style={styles.title}>Payment type</Text>
+            <Text style={styles.title}>Payment type</Text> */}
           </View>
         </BottomSheetView>
       </BottomSheet>

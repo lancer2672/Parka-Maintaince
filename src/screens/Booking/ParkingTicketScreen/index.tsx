@@ -1,15 +1,24 @@
-import { Images } from "@src/assets";
+import AppQRCode from "@src/components/Booking/QRCode";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
-import React, { useCallback, useRef, useState } from "react";
-import { Alert, Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import DashedLine from "react-native-dashed-line";
-import ViewShot from "react-native-view-shot";
-import * as Sharing from "expo-sharing";
-import * as ImageManipulator from "expo-image-manipulator";
-import { useAppSelector } from "@src/store/hooks";
-import { selectReservation, selectUser } from "@src/store/selectors";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { selectBooking, selectUser } from "@src/store/selectors";
+import { bookingActions } from "@src/store/slices/bookingSlice";
 import { DateTimeHelper } from "@src/utils";
+import * as ImageManipulator from "expo-image-manipulator";
+import * as Sharing from "expo-sharing";
+import React, { useCallback, useRef, useState } from "react";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import DashedLine from "react-native-dashed-line";
+import { ClipboardListIcon } from "react-native-heroicons/outline";
+import ViewShot from "react-native-view-shot";
 
 const Item = ({ title, value }: { title: string; value: string }) => {
   return (
@@ -24,14 +33,14 @@ const Item = ({ title, value }: { title: string; value: string }) => {
   );
 };
 
-const ParkingTicketScreen = () => {
+const ParkingTicketScreen = ({ navigation }: any) => {
   const ref = useRef(null);
   const [uri, setUri] = useState<string>(
     "https://shopping.saigoncentre.com.vn/Data/Sites/1/News/32/013.jpg",
   );
-
+  const dispatch = useAppDispatch();
   const userState = useAppSelector(selectUser);
-  const reservationState = useAppSelector(selectReservation);
+  const bookingState = useAppSelector(selectBooking);
 
   const onCapture = useCallback(() => {
     ref?.current.capture().then((uri: any) => {
@@ -48,8 +57,21 @@ const ParkingTicketScreen = () => {
     const imageProcess = await ImageManipulator.manipulateAsync(uri);
     await Sharing.shareAsync(imageProcess.uri);
   };
+
+  const navigationNext = () => {
+    dispatch(bookingActions.reset());
+    navigation.navigate("HomeScreen");
+  };
   return (
     <View style={{ flex: 1 }}>
+      <View style={styles.header}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.headerText}>Parking ticket</Text>
+        </View>
+        <TouchableOpacity style={styles.copy} onPress={onCapture}>
+          <ClipboardListIcon color={Colors.light.primary} />
+        </TouchableOpacity>
+      </View>
       <ScrollView
         style={{ paddingVertical: 24 }}
         showsVerticalScrollIndicator={false}>
@@ -61,7 +83,7 @@ const ParkingTicketScreen = () => {
             <Text style={styles.note}>
               Scan this when you are in the parking lot
             </Text>
-            <Image style={styles.code} source={Images.QR_Code} />
+            <AppQRCode size={180} content={bookingState.idParkingReservation} />
           </View>
           <DashedLine
             dashLength={10}
@@ -79,30 +101,28 @@ const ParkingTicketScreen = () => {
             <Item title={"Name"} value={userState?.displayName} />
             <Item
               title={"Parking area"}
-              value={reservationState.parkingLot?.name}
+              value={bookingState.parkingLot?.name}
             />
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Item title={"Parking spot"} value={"A1"} />
                 <Item
                   title={"Date"}
-                  value={DateTimeHelper.formatDate(
-                    reservationState.bookingDate,
-                  )}
+                  value={DateTimeHelper.formatDate(bookingState.bookingDate)}
                 />
                 <Item
                   title={"Duration"}
-                  value={reservationState.timeFrame?.duration.toString()}
+                  value={bookingState.timeFrame?.duration.toString()}
                 />
               </View>
               <View style={{ flex: 1 }}>
                 <Item
                   title={"Vehicle"}
-                  value={`${reservationState.vehicle?.name} (${reservationState.vehicle?.number})`}
+                  value={`${bookingState.vehicle?.name} (${bookingState.vehicle?.number})`}
                 />
                 <Item
                   title={"Hours"}
-                  value={DateTimeHelper.formatTime(reservationState.startTime)}
+                  value={DateTimeHelper.formatTime(bookingState.startTime)}
                 />
                 <Item title={"Phone number"} value={userState?.phoneNumber} />
               </View>
@@ -110,8 +130,8 @@ const ParkingTicketScreen = () => {
           </View>
         </ViewShot>
       </ScrollView>
-      <AppButton style={styles.continueButton} onPress={onCapture}>
-        <Text style={styles.countinueText}>Capture ticket</Text>
+      <AppButton style={styles.continueButton} onPress={navigationNext}>
+        <Text style={styles.countinueText}>Back to home</Text>
       </AppButton>
     </View>
   );
@@ -120,10 +140,26 @@ const ParkingTicketScreen = () => {
 export default ParkingTicketScreen;
 
 const styles = StyleSheet.create({
+  header: {
+    paddingTop: 16,
+    paddingHorizontal: 20,
+    height: 80,
+    backgroundColor: Colors.light.background,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  headerText: {
+    fontSize: 20,
+    color: Colors.light.primary,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+  copy: {},
   card: {
     marginHorizontal: 20,
     backgroundColor: Colors.light.background,
-    borderRadius: 18,
+    borderRadius: 16,
     paddingVertical: 20,
     paddingHorizontal: 16,
     shadowColor: "#6F7EC9",

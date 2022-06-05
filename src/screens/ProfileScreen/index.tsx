@@ -6,14 +6,12 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ParkaQRCode from "@src/components/Booking/QRCode";
 import ProfileAction from "@src/components/Profile/ProfileAction";
 import { Colors } from "@src/constants";
-import { useAppSelector } from "@src/store/hooks";
-import { selectUser } from "@src/store/selectors";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -62,8 +60,6 @@ const actions = [
 ];
 
 const ProfileScreen = ({ navigation }: any) => {
-  const userState = useAppSelector(selectUser);
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />

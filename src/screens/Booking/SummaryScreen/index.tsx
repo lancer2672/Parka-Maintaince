@@ -1,10 +1,14 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Images } from "@src/assets";
 import AppButton from "@src/components/common/AppButton";
 import AppModalMessage from "@src/components/common/AppModalMessage";
 import { Colors } from "@src/constants";
-import { useAppSelector } from "@src/store/hooks";
-import { selectReservation } from "@src/store/selectors";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { selectBooking, selectUser } from "@src/store/selectors";
+import { bookingActions } from "@src/store/slices/bookingSlice";
+import { reservationActions } from "@src/store/slices/reservationSlice";
 import { CurrencyHelper, DateTimeHelper } from "@src/utils";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -19,54 +23,90 @@ const Item = ({ title, value }: { title: string; value: string }) => {
 
 const SummaryScreen = ({ navigation }: any) => {
   const [isVisible, setVisible] = useState<boolean>(false);
-  const reservationState = useAppSelector(selectReservation);
+  const [isSuccess, setSuccess] = useState<boolean>(false);
+  const bookingState = useAppSelector(selectBooking);
+  const userState = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
 
-  const navigateNext = () => {
+  const confirmBooking = async () => {
+    const idUser = await AsyncStorage.getItem("idUser");
+
+    dispatch(
+      reservationActions.createReservation({
+        idVehicle: bookingState.vehicle?.idVehicle,
+        idUser: userState?.idUser || JSON.parse(idUser),
+        idParkingSlot: bookingState.parkingSlot?.idParkingSlot,
+        idTimeFrame: bookingState.timeFrame?.idTimeFrame,
+        startTime: dayjs(bookingState.startTime).format("HH:mm:ss"),
+        bookingDate: bookingState.bookingDate,
+        duration: bookingState.timeFrame.duration,
+      }),
+    )
+      .unwrap()
+      .then((res) => {
+        setSuccess(true);
+        dispatch(
+          bookingActions.update({
+            field: "idParkingReservation",
+            value: res.idParkingReservation,
+          }),
+        );
+      })
+      .catch(() => {
+        setSuccess(false);
+      })
+      .finally(() => {
+        setVisible(true);
+      });
+  };
+
+  const navigateNext = (isSuccess: boolean) => {
     setVisible(false);
-    navigation.navigate("ParkingTicketScreen");
+    if (isSuccess) {
+      navigation.navigate("ParkingTicketScreen");
+    } else {
+      navigation.navigate("HomeScreen");
+    }
   };
 
   return (
     <View style={{ flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
-          <Item
-            title={"Parking area"}
-            value={reservationState.parkingLot?.name}
-          />
-          <Item
-            title={"Address"}
-            value={reservationState.parkingLot?.address}
-          />
+          <Item title={"Parking area"} value={bookingState.parkingLot?.name} />
+          <Item title={"Address"} value={bookingState.parkingLot?.address} />
           <Item
             title={"Vehicle"}
-            value={`${reservationState.vehicle?.name} (${reservationState.vehicle?.number})`}
+            value={`${bookingState.vehicle?.name} (${bookingState.vehicle?.number})`}
           />
           <Item title={"Parking spot"} value={"A01"} />
           <Item
             title={"Date"}
-            value={DateTimeHelper.formatDate(reservationState.bookingDate)}
+            value={DateTimeHelper.formatDate(bookingState.bookingDate)}
           />
           <Item
             title={"Duration"}
-            value={reservationState.timeFrame?.duration.toString()}
+            value={bookingState.timeFrame?.duration.toString()}
           />
           <Item
             title={"Hours"}
-            value={DateTimeHelper.formatTime(reservationState.startTime)}
+            value={DateTimeHelper.formatTime(bookingState.startTime)}
           />
         </View>
         <View style={styles.card}>
           <Item
             title={"Amount"}
-            value={CurrencyHelper.formatVND(reservationState.timeFrame?.cost)}
+            value={CurrencyHelper.formatVND(bookingState.timeFrame?.cost)}
           />
           {/* <Item title={"Fees"} value={"20.000 ₫"} /> */}
           <Text style={styles.dash} ellipsizeMode="clip" numberOfLines={1}>
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             - - - - - - - - - - - - - - - - - - - -
           </Text>
-          <Item title={"Total"} value={"220.000 ₫"} />
+          <Item
+            title={"Total"}
+            value={CurrencyHelper.formatVND(bookingState.timeFrame?.cost)}
+          />
         </View>
         <View
           style={[
@@ -82,15 +122,19 @@ const SummaryScreen = ({ navigation }: any) => {
           </View>
         </View>
       </ScrollView>
-      <AppButton style={styles.continueButton} onPress={() => setVisible(true)}>
+      <AppButton style={styles.continueButton} onPress={confirmBooking}>
         <Text style={styles.countinueText}>Confirm payment</Text>
       </AppButton>
       <AppModalMessage
         isVisible={isVisible}
-        isSuccess={true}
-        onOk={navigateNext}
-        okText={"View parking ticket"}
-        message={"Successfully made parking reservation"}
+        isSuccess={isSuccess}
+        onOk={() => navigateNext(isSuccess)}
+        okText={isSuccess ? "View parking ticket" : "Back to home"}
+        message={
+          isSuccess
+            ? "Successfully made parking reservation"
+            : "There is an error!"
+        }
       />
     </View>
   );

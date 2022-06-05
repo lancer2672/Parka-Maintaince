@@ -1,18 +1,33 @@
 import { Feather } from "@expo/vector-icons";
 import AppButton from "@src/components/common/AppButton";
+import ReadMore from "@src/components/common/ReadMore";
+import TimeItem from "@src/components/Home/TimeItem";
 import { Colors, Spacing } from "@src/constants";
-import { useAppSelector } from "@src/store/hooks";
-import { selectReservation } from "@src/store/selectors";
-import React from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { selectBooking, selectTimeFrames } from "@src/store/selectors";
+import { timeFrameActions } from "@src/store/slices/timeFrameSlice";
+import React, { useEffect } from "react";
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 const ParkingDetailsScreen = ({ navigation }: any) => {
-  const parkingLot: ParkingLot = useAppSelector(selectReservation).parkingLot;
+  const parkingLot: ParkingLot = useAppSelector(selectBooking).parkingLot;
+  const timeFrames = useAppSelector(selectTimeFrames);
+  const dispatch = useAppDispatch();
 
   const navigateNext = () => {
     navigation.navigate("SelectVehicleScreen");
   };
 
+  useEffect(() => {
+    dispatch(timeFrameActions.getTimeFrames(parkingLot?.idParkingLot));
+  }, [parkingLot]);
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
@@ -31,16 +46,21 @@ const ParkingDetailsScreen = ({ navigation }: any) => {
             </Text>
           </View>
           <Text style={styles.title}>Description</Text>
-          <Text style={styles.description}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-            placerat tortor massa. Mauris vulputate sit amet metus lobortis
-            consequat. Curabitur convallis nibh elit, vitae ornare neque
-            imperdiet nec. Aenean lacinia egestas arcu. Fusce id dapibus augue.
-            Vivamus nisi tellus, sodales nec commodo vel, dignissim lobortis
-            lorem. Quisque rutrum et arcu eu dignissim.
-            {parkingLot?.description}
-          </Text>
+          <ReadMore
+            maxLine={4}
+            lineHeight={20}
+            content={parkingLot?.description}
+            styleText={styles.description}
+          />
           <Text style={styles.title}>Parking time</Text>
+          <FlatList
+            data={timeFrames}
+            renderItem={({ item }) => (
+              <TimeItem period={item.duration} cost={item.cost} />
+            )}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
       </ScrollView>
       <AppButton style={styles.button} onPress={navigateNext}>

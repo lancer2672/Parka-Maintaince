@@ -1,5 +1,6 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Spinner } from "@nghinv/react-native-loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Images } from "@src/assets";
 import AppButton from "@src/components/common/AppButton";
 import VehicleInput from "@src/components/Vehicle/VehicleInput";
@@ -120,10 +121,12 @@ const AddVehicleScreen = ({ route, navigation }: any) => {
     dispatch(updateVehicleAction(vehicle));
   };
 
-  const handleAdd = (values: VehicleFormProps) => {
+  const handleAdd = async (values: VehicleFormProps) => {
+    const idUser = await AsyncStorage.getItem("idUser");
+
     const vehicle: Vehicle = {
       idVehicle: "",
-      idUser: userState?.idUser,
+      idUser: userState?.idUser || JSON.parse(idUser),
       name: values.name,
       number: values.number,
       type: values.type,

@@ -114,6 +114,9 @@ export default SearchAutocomplete;
 const styles = StyleSheet.create({
   searchContainer: {
     width: "100%",
+    backgroundColor: "transparent",
+    paddingTop: 30,
+    overflow: "visible",
   },
   search: {
     display: "flex",
@@ -122,7 +125,8 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     borderRadius: 4,
-    borderColor: "#90A3BC",
+    borderColor: Colors.light.subtitle,
+    backgroundColor: Colors.light.background,
     marginHorizontal: 10,
     paddingHorizontal: 10,
   },

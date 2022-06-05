@@ -48,11 +48,22 @@ type TimeFrame = {
   cost: number;
 };
 
-type Reservation = {
+type Booking = {
+  idParkingReservation: string;
   parkingLot: ParkingLot;
   vehicle: Vehicle;
   parkingSlot: ParkingSlot;
   timeFrame: TimeFrame;
   startTime: Date;
   bookingDate: Date;
+};
+
+type Reservation = {
+  idVehicle: string;
+  idUser: string;
+  idParkingSlot: string;
+  idTimeFrame: string;
+  startTime: string;
+  bookingDate: string;
+  duration: string;
 };

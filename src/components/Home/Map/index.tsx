@@ -115,7 +115,7 @@ const Map = (props: Props) => {
             origin={currentLocation}
             destination={destination}
             apikey="AIzaSyBF_-xGpB4Wt3S8nnRkwfGGVz1yngAp2Uw"
-            strokeWidth={7}
+            strokeWidth={4}
             strokeColor={Colors.light.primary}
             optimizeWaypoints={true}
             onReady={(result) => {
@@ -131,7 +131,7 @@ const Map = (props: Props) => {
 const styles = StyleSheet.create({
   map: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 130,
+    height: Dimensions.get("window").height - 100,
     marginTop: -10,
   },
   marker: {

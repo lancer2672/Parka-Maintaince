@@ -1,4 +1,5 @@
 import { Spinner } from "@nghinv/react-native-loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppButton from "@src/components/common/AppButton";
 import VehicleItem from "@src/components/Vehicle/VehicleItem";
 import { Colors } from "@src/constants";
@@ -30,8 +31,13 @@ const VehicleScreen = ({ navigation }: any) => {
   };
 
   useEffect(() => {
-    Spinner.show();
-    dispatch(getVehicleAction(userState.idUser));
+    const getVehicle = async () => {
+      Spinner.show();
+      const idUser = await AsyncStorage.getItem("idUser");
+      dispatch(getVehicleAction(JSON.parse(idUser)));
+    };
+
+    getVehicle();
   }, []);
 
   return (

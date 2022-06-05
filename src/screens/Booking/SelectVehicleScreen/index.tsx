@@ -1,15 +1,16 @@
 import { Spinner } from "@nghinv/react-native-loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import SelectableVehicleItem from "@src/components/Booking/SelectableVehicleItem";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { getVehicleAction } from "@src/store/actions/vehicleAction";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import {
-  selectReservation,
+  selectBooking,
   selectUser,
   selectVehicles,
 } from "@src/store/selectors";
-import { reservationActions } from "@src/store/slices/reservationSlice";
+import { bookingActions } from "@src/store/slices/bookingSlice";
 import { ColorHelper } from "@src/utils";
 import React, { useEffect } from "react";
 import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
@@ -18,10 +19,10 @@ const SelectVehicleScreen = ({ navigation }: any) => {
   const vehicleState = useAppSelector(selectVehicles);
   const userState = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
-  const selectedVehicle = useAppSelector(selectReservation).vehicle;
+  const selectedVehicle = useAppSelector(selectBooking).vehicle;
 
   const handleSelect = (vehicle: Vehicle) => {
-    dispatch(reservationActions.update({ field: "vehicle", value: vehicle }));
+    dispatch(bookingActions.update({ field: "vehicle", value: vehicle }));
   };
 
   const navigateToAdd = () => {
@@ -37,8 +38,13 @@ const SelectVehicleScreen = ({ navigation }: any) => {
   };
 
   useEffect(() => {
-    Spinner.show();
-    dispatch(getVehicleAction(userState.idUser));
+    const getVehicle = async () => {
+      Spinner.show();
+      const idUser = await AsyncStorage.getItem("idUser");
+      dispatch(getVehicleAction(JSON.parse(idUser)));
+    };
+
+    getVehicle();
   }, []);
 
   return (

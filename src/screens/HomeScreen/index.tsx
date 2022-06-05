@@ -1,10 +1,11 @@
 import DetailModal from "@src/components/Home/DetailModal";
 import Map from "@src/components/Home/Map";
 import { useAppDispatch } from "@src/store/hooks";
-import { reservationActions } from "@src/store/slices/reservationSlice";
+import { bookingActions } from "@src/store/slices/bookingSlice";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { Keyboard, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View } from "react-native";
 
 const HomeScreen = ({ navigation }: any) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
@@ -16,11 +17,12 @@ const HomeScreen = ({ navigation }: any) => {
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <StatusBar style="dark" />
         <Map
           onSelectedMarker={(parking: ParkingLot) => {
             dispatch(
-              reservationActions.update({
+              bookingActions.update({
                 field: "parkingLot",
                 value: parking,
               }),
@@ -35,7 +37,7 @@ const HomeScreen = ({ navigation }: any) => {
           onClose={() => setIsShowDetail(false)}
           navigateBooking={navigateBooking}
         />
-      </SafeAreaView>
+      </View>
     </TouchableWithoutFeedback>
   );
 };
