@@ -3,7 +3,7 @@ import { Colors } from "@src/constants";
 import { AlertHelper, ColorHelper } from "@src/utils";
 import React, { useRef } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 
 interface IProps {

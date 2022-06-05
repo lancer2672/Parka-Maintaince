@@ -1,6 +1,5 @@
 import {
   FlatList,
-  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -14,7 +13,7 @@ import { Colors } from "@src/constants";
 import parkingLotApi from "@src/api/parkingLotApi";
 
 type Props = {
-  onSelected: Function;
+  onSelected: any;
 };
 
 const SearchAutocomplete = (props: Props) => {

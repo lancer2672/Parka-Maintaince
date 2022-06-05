@@ -1,6 +1,6 @@
 import parkingLotApi from "@src/api/parkingLotApi";
 import React, { useEffect, useState } from "react";
-import { Dimensions, Image, StyleSheet } from "react-native";
+import { Dimensions, Image, StyleSheet, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import SearchAutocomplete from "../Search";
@@ -8,8 +8,8 @@ import * as Location from "expo-location";
 import { Colors } from "@src/constants";
 
 type Props = {
-  onSelectedMarker: Function;
-  setDistance: Function;
+  onSelectedMarker: any;
+  setDistance: any;
 };
 type Location = {
   longitude: number;
@@ -44,13 +44,13 @@ const Map = (props: Props) => {
 
   useEffect(() => {
     const getCurrentLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
         return;
       }
 
-      let tmp = await Location.getCurrentPositionAsync({});
+      const tmp = await Location.getCurrentPositionAsync({});
       setRegion({
         latitude: tmp.coords.latitude,
         longitude: tmp.coords.longitude,

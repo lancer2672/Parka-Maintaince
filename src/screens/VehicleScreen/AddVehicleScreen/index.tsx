@@ -136,7 +136,7 @@ const AddVehicleScreen = ({ route, navigation }: any) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <View style={styles.imageContainer}>
-            <Image source={Images.Car} style={styles.image} />
+            <Image source={Images.CarPeople} style={styles.image} />
           </View>
           <Text style={styles.title}>Vehicle details</Text>
           <Text style={styles.subtitle}>

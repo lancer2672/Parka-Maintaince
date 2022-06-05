@@ -7,8 +7,21 @@ import { Colors } from "@src/constants";
 import SelectVehicleScreen from "@src/screens/Booking/SelectVehicleScreen";
 import AddVehicleScreen from "@src/screens/VehicleScreen/AddVehicleScreen";
 import ReserveParkingScreen from "@src/screens/Booking/ReserveParkingScreen";
+import SelectParkingSlotScreen from "@src/screens/Booking/SelectParkingSlotScreen";
+import SelectPaymentScreen from "@src/screens/Booking/SelectPaymentScreen";
+import SummaryScreen from "@src/screens/Booking/SummaryScreen";
+import ParkingTicketScreen from "@src/screens/Booking/ParkingTicketScreen";
 
 const Stack = createNativeStackNavigator<HomeStackParams>();
+
+const headerOption = {
+  headerStyle: {
+    backgroundColor: Colors.light.primary,
+  },
+  headerTitleStyle: {
+    color: Colors.light.background,
+  },
+};
 
 const HomeStack = () => {
   return (
@@ -21,19 +34,19 @@ const HomeStack = () => {
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}
-        options={{ headerShown: false }}
+        options={{
+          headerStyle: {
+            backgroundColor: Colors.light.primary,
+          },
+          headerTitle: "",
+        }}
       />
       <Stack.Screen
         name="ParkingDetailsScreen"
         component={ParkingDetailsScreen}
         options={{
           title: "Parking details",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
+          ...headerOption,
         }}
       />
       <Stack.Screen
@@ -41,12 +54,7 @@ const HomeStack = () => {
         component={SelectVehicleScreen}
         options={{
           title: "Select your vehicle",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
+          ...headerOption,
         }}
       />
       <Stack.Screen
@@ -54,12 +62,7 @@ const HomeStack = () => {
         component={AddVehicleScreen}
         options={{
           title: "Add a vehicle",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
+          ...headerOption,
         }}
       />
       <Stack.Screen
@@ -67,12 +70,39 @@ const HomeStack = () => {
         component={ReserveParkingScreen}
         options={{
           title: "Reserve parking",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
+          ...headerOption,
+        }}
+      />
+      <Stack.Screen
+        name="SelectParkingSlotScreen"
+        component={SelectParkingSlotScreen}
+        options={{
+          title: "Select parking slot",
+          ...headerOption,
+        }}
+      />
+      <Stack.Screen
+        name="SelectPaymentScreen"
+        component={SelectPaymentScreen}
+        options={{
+          title: "Select payment method",
+          ...headerOption,
+        }}
+      />
+      <Stack.Screen
+        name="SummaryScreen"
+        component={SummaryScreen}
+        options={{
+          title: "Review summary",
+          ...headerOption,
+        }}
+      />
+      <Stack.Screen
+        name="ParkingTicketScreen"
+        component={ParkingTicketScreen}
+        options={{
+          title: "Parking ticket",
+          ...headerOption,
         }}
       />
     </Stack.Navigator>

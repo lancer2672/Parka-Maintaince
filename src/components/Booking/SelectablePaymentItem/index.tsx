@@ -1,47 +1,33 @@
 import { Images } from "@src/assets";
 import { Colors } from "@src/constants";
-import { ColorHelper } from "@src/utils";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface IProps {
-  item: Vehicle;
+  item: any;
   checkedId: string;
   handleSelect: any;
 }
 
-const SelectableVehicleItem = ({ item, checkedId, handleSelect }: IProps) => {
-  const renderTag = (type: string) => {
-    const vehicleType = type.charAt(0).toUpperCase() + type.slice(1);
-    type ImageKey = keyof typeof Images;
-    return (
-      <View style={styles.tag}>
-        <Image source={Images[vehicleType as ImageKey]} style={styles.image} />
-      </View>
-    );
-  };
-
+const SelectablePaymentItem = ({ item, checkedId, handleSelect }: IProps) => {
   return (
     <TouchableOpacity
-      style={[styles.item, checkedId == item.idVehicle && styles.selectedItem]}
-      onPress={() => handleSelect(item)}>
-      {renderTag(item.type)}
+      style={[styles.item, checkedId && styles.selectedItem]}
+      onPress={handleSelect}>
+      <Image source={Images.Money} style={styles.image} />
       <View style={styles.wrapper}>
         <Text style={styles.title} numberOfLines={2}>
-          {item.name}
-        </Text>
-        <Text style={styles.subtitle} numberOfLines={1}>
-          {item.number}
+          {item.type}
         </Text>
       </View>
       <View style={styles.radioWrapper}>
-        {checkedId == item.idVehicle && <View style={styles.radio} />}
+        {checkedId && <View style={styles.radio} />}
       </View>
     </TouchableOpacity>
   );
 };
 
-export default SelectableVehicleItem;
+export default SelectablePaymentItem;
 
 const styles = StyleSheet.create({
   item: {
@@ -54,13 +40,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderColor: "transparent",
+    justifyContent: "space-between",
   },
-  selectedItem: { borderColor: Colors.light.primary },
-  tag: { paddingHorizontal: 8, marginRight: 12 },
-  image: { width: 40, height: 40 },
-  wrapper: { flex: 1, marginRight: 12 },
+  selectedItem: {
+    borderColor: Colors.light.primary,
+  },
+  image: { width: 34, height: 34, marginVertical: 6 },
+  wrapper: { flex: 1, marginHorizontal: 16 },
   title: { fontSize: 20, color: Colors.light.heading, fontWeight: "600" },
-  subtitle: { fontSize: 14, color: Colors.light.subtitle, marginTop: 4 },
   radioWrapper: {
     borderRadius: 100,
     borderWidth: 2,

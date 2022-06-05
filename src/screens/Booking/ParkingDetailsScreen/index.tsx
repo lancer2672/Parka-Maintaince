@@ -1,14 +1,18 @@
 import { Feather } from "@expo/vector-icons";
 import AppButton from "@src/components/common/AppButton";
 import { Colors, Spacing } from "@src/constants";
+import { useAppSelector } from "@src/store/hooks";
+import { selectReservation } from "@src/store/selectors";
 import React from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
-const ParkingDetailsScreen = ({ route, navigation }: any) => {
-  const parkingLot: ParkingLot = route.params;
+const ParkingDetailsScreen = ({ navigation }: any) => {
+  const parkingLot: ParkingLot = useAppSelector(selectReservation).parkingLot;
+
   const navigateNext = () => {
     navigation.navigate("SelectVehicleScreen");
   };
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
@@ -34,7 +38,7 @@ const ParkingDetailsScreen = ({ route, navigation }: any) => {
             imperdiet nec. Aenean lacinia egestas arcu. Fusce id dapibus augue.
             Vivamus nisi tellus, sodales nec commodo vel, dignissim lobortis
             lorem. Quisque rutrum et arcu eu dignissim.
-            {parkingLot.description}
+            {parkingLot?.description}
           </Text>
           <Text style={styles.title}>Parking time</Text>
         </View>

@@ -4,19 +4,24 @@ import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { getVehicleAction } from "@src/store/actions/vehicleAction";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import { selectUser, selectVehicles } from "@src/store/selectors";
+import {
+  selectReservation,
+  selectUser,
+  selectVehicles,
+} from "@src/store/selectors";
+import { reservationActions } from "@src/store/slices/reservationSlice";
 import { ColorHelper } from "@src/utils";
-import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import React, { useEffect } from "react";
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 
 const SelectVehicleScreen = ({ navigation }: any) => {
   const vehicleState = useAppSelector(selectVehicles);
   const userState = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
-  const [checkedId, setCheckedId] = useState<string>();
+  const selectedVehicle = useAppSelector(selectReservation).vehicle;
 
-  const handleSelect = (idVehicle: string) => {
-    setCheckedId(idVehicle);
+  const handleSelect = (vehicle: Vehicle) => {
+    dispatch(reservationActions.update({ field: "vehicle", value: vehicle }));
   };
 
   const navigateToAdd = () => {
@@ -24,7 +29,11 @@ const SelectVehicleScreen = ({ navigation }: any) => {
   };
 
   const navigateNext = () => {
-    navigation.navigate("ReserveParkingScreen");
+    if (selectedVehicle) {
+      navigation.navigate("ReserveParkingScreen");
+    } else {
+      Alert.alert("You must select your vehicle!");
+    }
   };
 
   useEffect(() => {
@@ -43,7 +52,7 @@ const SelectVehicleScreen = ({ navigation }: any) => {
         renderItem={({ item }) => (
           <SelectableVehicleItem
             item={item}
-            checkedId={checkedId}
+            checkedId={selectedVehicle?.idVehicle}
             handleSelect={handleSelect}
           />
         )}

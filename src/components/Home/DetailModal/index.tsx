@@ -8,11 +8,13 @@ import BottomSheet, {
   BottomSheetFlatList,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { timeFrameApi } from "@src/api";
 import { Colors, Spacing } from "@src/constants";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { selectReservation, selectTimeFrames } from "@src/store/selectors";
+import { timeFrameActions } from "@src/store/slices/timeFrameSlice";
 import { convertToHour, convertToThounsandSeparator } from "@src/utils/convert";
 import * as Linking from "expo-linking";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ActionButton from "../ActionButton";
 import TimeItem from "../TimeItem";
@@ -29,15 +31,16 @@ const renderItem = (value: any) => {
 type Props = {
   isShow: boolean;
   onClose: any;
-  selectedParking: ParkingLot;
   distance: number;
   navigateBooking: any;
 };
 
 const DetailModal = (props: Props) => {
-  const { isShow, onClose, selectedParking, navigateBooking } = props;
+  const { isShow, onClose, navigateBooking } = props;
   const ref = React.useRef<BottomSheet>(null);
-  const [timeFrames, setTimeFrames] = useState([]);
+  const selectedParking = useAppSelector(selectReservation).parkingLot;
+  const timeFrames = useAppSelector(selectTimeFrames);
+  const dispatch = useAppDispatch();
 
   const onOpenBottomSheetHandler = (index: number) => {
     ref?.current?.snapToIndex(index);
@@ -52,18 +55,10 @@ const DetailModal = (props: Props) => {
     } else {
       onOpenBottomSheetHandler(-1);
     }
-  }, [isShow]);
+  }, [isShow, selectedParking]);
 
   useEffect(() => {
-    const getTimeFrame = async (id: string) => {
-      const result = await timeFrameApi.getAll(id);
-      if (result.data.data) {
-        setTimeFrames(result.data.data);
-      }
-    };
-    if (selectedParking) {
-      getTimeFrame(selectedParking.idParkingLot);
-    }
+    dispatch(timeFrameActions.getTimeFrames(selectedParking?.idParkingLot));
   }, [selectedParking]);
 
   return (
@@ -137,7 +132,7 @@ const DetailModal = (props: Props) => {
                   color: Colors.light.background,
                   textAlign: "center",
                 }}>
-                Book now
+                View details
               </Text>
             </TouchableOpacity>
             <View style={styles.flexRow}>

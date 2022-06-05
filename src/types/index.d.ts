@@ -16,7 +16,7 @@ type ParkingLot = {
   long: string;
   idCompany: string;
   isDeleted: boolean;
-}
+};
 
 type Vehicle = {
   idVehicle: string;
@@ -24,4 +24,35 @@ type Vehicle = {
   name: string;
   number: string;
   type: string;
+};
+
+type ParkingSlot = {
+  idParkingSlot: string;
+  idBlock: string;
+  slotNumber: number;
+};
+
+type Block = {
+  idBlock: string;
+  idParkingLot: string;
+  blockCode: string;
+  description: string;
+  isFull: boolean;
+  numOfSlot: number;
+};
+
+type TimeFrame = {
+  idTimeFrame: string;
+  idParkingLot: string;
+  duration: number;
+  cost: number;
+};
+
+type Reservation = {
+  parkingLot: ParkingLot;
+  vehicle: Vehicle;
+  parkingSlot: ParkingSlot;
+  timeFrame: TimeFrame;
+  startTime: Date;
+  bookingDate: Date;
 };
