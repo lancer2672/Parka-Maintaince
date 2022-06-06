@@ -8,7 +8,15 @@ const Stack = createNativeStackNavigator<BookingHistoryStackParams>();
 
 const BookingHistoryStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+        headerShadowVisible: false,
+        headerTintColor: Colors.light.background,
+        contentStyle: {
+          backgroundColor: Colors.light.background,
+        },
+      }}>
       <Stack.Screen
         name="BookingHistoryScreen"
         component={BookingHistoryScreen}

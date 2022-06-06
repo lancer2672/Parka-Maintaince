@@ -26,13 +26,12 @@ const SelectPaymentScreen = ({ navigation }: any) => {
     }
   };
   return (
-    <View
-      style={{ flex: 1, paddingHorizontal: 20, justifyContent: "flex-start" }}>
+    <View style={{ flex: 1, justifyContent: "flex-start" }}>
       <FlatList
         data={data}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingVertical: 20 }}
+        contentContainerStyle={{ padding: 20 }}
         renderItem={({ item }) => (
           <SelectablePaymentItem
             item={item}
@@ -41,11 +40,6 @@ const SelectPaymentScreen = ({ navigation }: any) => {
           />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        // ListFooterComponent={
-        //   <AppButton style={styles.addButton} onPress={navigateToAdd}>
-        //     <Text style={styles.addText}>Add new vehicle</Text>
-        //   </AppButton>
-        // }
       />
       <AppButton style={styles.continueButton} onPress={navigateNext}>
         <Text style={styles.countinueText}>Countinue</Text>

@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 6,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.155,
     shadowRadius: 10,
   },
 });

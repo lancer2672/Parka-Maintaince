@@ -5,11 +5,7 @@ import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
 import { getVehicleAction } from "@src/store/actions/vehicleAction";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import {
-  selectBooking,
-  selectUser,
-  selectVehicles,
-} from "@src/store/selectors";
+import { selectBooking, selectVehicles } from "@src/store/selectors";
 import { bookingActions } from "@src/store/slices/bookingSlice";
 import { ColorHelper } from "@src/utils";
 import React, { useEffect } from "react";
@@ -17,7 +13,6 @@ import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 
 const SelectVehicleScreen = ({ navigation }: any) => {
   const vehicleState = useAppSelector(selectVehicles);
-  const userState = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const selectedVehicle = useAppSelector(selectBooking).vehicle;
 
@@ -48,13 +43,12 @@ const SelectVehicleScreen = ({ navigation }: any) => {
   }, []);
 
   return (
-    <View
-      style={{ flex: 1, paddingHorizontal: 20, justifyContent: "flex-start" }}>
+    <View style={{ flex: 1, justifyContent: "flex-start" }}>
       <FlatList
         data={vehicleState}
         keyExtractor={(item) => item.idVehicle}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingVertical: 20 }}
+        contentContainerStyle={{ padding: 20 }}
         renderItem={({ item }) => (
           <SelectableVehicleItem
             item={item}

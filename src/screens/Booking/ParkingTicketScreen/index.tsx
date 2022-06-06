@@ -45,8 +45,8 @@ const ParkingTicketScreen = ({ navigation }: any) => {
   const onCapture = useCallback(() => {
     ref?.current.capture().then((uri: any) => {
       setUri(uri);
+      shareImage();
     });
-    shareImage();
   }, []);
 
   const shareImage = async () => {

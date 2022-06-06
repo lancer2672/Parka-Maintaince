@@ -41,6 +41,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "transparent",
     justifyContent: "space-between",
+    shadowColor: Colors.light.primary,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
   },
   selectedItem: {
     borderColor: Colors.light.primary,

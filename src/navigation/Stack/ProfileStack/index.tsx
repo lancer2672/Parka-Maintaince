@@ -16,6 +16,9 @@ const ProfileStack = () => {
         headerBackTitleVisible: false,
         headerShadowVisible: false,
         headerTintColor: Colors.light.background,
+        contentStyle: {
+          backgroundColor: Colors.light.background,
+        },
       }}>
       <Stack.Screen
         name="ProfileScreen"

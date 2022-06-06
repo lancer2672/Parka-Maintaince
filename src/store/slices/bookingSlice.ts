@@ -31,7 +31,9 @@ export const bookingSlice = createSlice({
       state.entities[field as BookingKey] = value;
     },
     reset: (state: BookingState) => {
+      const parkingLot = state.entities.parkingLot;
       state = initialState;
+      state.entities.parkingLot = parkingLot;
     },
   },
 });

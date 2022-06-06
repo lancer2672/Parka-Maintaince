@@ -19,7 +19,7 @@ const headerOption = {
     backgroundColor: Colors.light.background,
   },
   headerTitleStyle: {
-    color: Colors.light.primary,
+    color: Colors.light.heading,
   },
 };
 
@@ -29,7 +29,11 @@ const HomeStack = () => {
       screenOptions={{
         headerBackTitleVisible: false,
         headerShadowVisible: false,
-        headerTintColor: Colors.light.primary,
+        headerTintColor: Colors.light.heading,
+        headerTitleAlign: "left",
+        contentStyle: {
+          backgroundColor: Colors.light.background,
+        },
       }}>
       <Stack.Screen
         name="HomeScreen"

@@ -3,6 +3,7 @@ import {
   MaterialTopTabBarProps,
 } from "@react-navigation/material-top-tabs";
 import TabBarBooking from "@src/components/BookingHistory/TabBarBooking";
+import { Colors } from "@src/constants";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { View } from "react-native";
@@ -16,6 +17,7 @@ const BookingHistoryScreen = () => {
     <View style={{ flex: 1 }}>
       <StatusBar style="auto" />
       <Tab.Navigator
+        sceneContainerStyle={{ backgroundColor: Colors.light.background }}
         tabBar={(props: MaterialTopTabBarProps) => (
           <TabBarBooking {...props} />
         )}>
