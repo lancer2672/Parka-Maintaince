@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { selectBooking, selectTimeFrames } from "@src/store/selectors";
 import { bookingActions } from "@src/store/slices/bookingSlice";
 import { ColorHelper, CurrencyHelper, DateTimeHelper } from "@src/utils";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import {
   Alert,
@@ -50,6 +51,11 @@ const ReserveParkingScreen = ({ navigation }: any) => {
   };
 
   const onSelectTimeFrame = (timeFrame: TimeFrame) => {
+    const endTime = dayjs(bookingState.startTime).add(
+      timeFrame.duration,
+      "minutes",
+    );
+    dispatch(bookingActions.update({ field: "endTime", value: endTime }));
     dispatch(bookingActions.update({ field: "timeFrame", value: timeFrame }));
   };
 

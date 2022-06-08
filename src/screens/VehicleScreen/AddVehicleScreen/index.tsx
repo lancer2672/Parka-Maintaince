@@ -202,7 +202,6 @@ export default AddVehicleScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F6F7FB",
     paddingHorizontal: 20,
     paddingVertical: 32,
     height: Layout.window.height - 100,

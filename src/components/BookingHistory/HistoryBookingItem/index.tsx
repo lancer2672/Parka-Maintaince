@@ -1,12 +1,21 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@src/constants";
-import { ColorHelper } from "@src/utils";
+import { ColorHelper, CurrencyHelper } from "@src/utils";
+import dayjs from "dayjs";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const HistoryBookingItem = () => {
+type Props = {
+  item: any;
+  onViewTicket: any;
+};
+
+const HistoryBookingItem = ({ item, onViewTicket }: Props) => {
+  const parkingSlot = item?.ParkingSlot;
+  const parkingLot = parkingSlot?.Block?.ParkingLot;
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onViewTicket}>
       <View
         style={[
           styles.flexRow,
@@ -16,26 +25,26 @@ const HistoryBookingItem = () => {
           <Text style={styles.statusText}>Completed</Text>
         </View>
         <Text style={styles.price} numberOfLines={1}>
-          100.000₫
+          {CurrencyHelper.formatVND(item?.total)}
         </Text>
       </View>
       <Text style={styles.title} numberOfLines={2}>
-        Vicom Mega Mall 1
+        {parkingLot?.name}
       </Text>
       <View style={[styles.flexRow]}>
         <Feather name="map-pin" size={14} color={Colors.light.subtitle} />
         <Text style={styles.subtitle} numberOfLines={1}>
-          address address address
+          {parkingLot?.address}
         </Text>
       </View>
       <View style={[styles.flexRow, { marginTop: 12, alignItems: "center" }]}>
         <Feather name="calendar" size={20} color={Colors.light.text} />
         <View style={styles.wrapper}>
           <Text style={styles.date} numberOfLines={1}>
-            Thu 23 Jan
+            {dayjs(item?.bookingDate).format("DD MMM YY")}
           </Text>
           <Text style={styles.time} numberOfLines={1}>
-            10:00 AM
+            {(item?.startTime).toString().substring(0, 5)}
           </Text>
         </View>
         <MaterialIcons
@@ -45,10 +54,10 @@ const HistoryBookingItem = () => {
         />
         <View style={styles.wrapper}>
           <Text style={styles.date} numberOfLines={1}>
-            Thu 23 Jan
+            {dayjs(item?.bookingDate).format("DD MMM YY")}
           </Text>
           <Text style={styles.time} numberOfLines={1}>
-            12:00 PM
+            {(item?.endTime).toString().substring(0, 5)}
           </Text>
         </View>
       </View>
@@ -107,6 +116,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: Colors.light.subtitle,
     marginLeft: 4,
+    paddingRight: 20,
   },
   flexRow: { display: "flex", flexDirection: "row" },
   wrapper: { marginHorizontal: 12 },

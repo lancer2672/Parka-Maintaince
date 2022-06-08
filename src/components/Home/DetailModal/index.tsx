@@ -132,11 +132,15 @@ const DetailModal = (props: Props) => {
             <View style={styles.flexRow}>
               <View
                 style={{
-                  backgroundColor: "#4D65EB",
+                  backgroundColor: Colors.light.primary,
                   padding: 4,
                   borderRadius: 4,
                 }}>
-                <MaterialIcons name="directions-walk" size={20} color="#fff" />
+                <MaterialIcons
+                  name="directions-walk"
+                  size={20}
+                  color={Colors.light.background}
+                />
               </View>
               <Text
                 style={{
@@ -149,11 +153,15 @@ const DetailModal = (props: Props) => {
               </Text>
               <View
                 style={{
-                  backgroundColor: "#4D65EB",
+                  backgroundColor: Colors.light.primary,
                   padding: 5,
                   borderRadius: 4,
                 }}>
-                <MaterialCommunityIcons name="parking" size={18} color="#fff" />
+                <MaterialCommunityIcons
+                  name="parking"
+                  size={18}
+                  color={Colors.light.background}
+                />
               </View>
               <Text
                 style={{
@@ -175,14 +183,22 @@ const DetailModal = (props: Props) => {
               <ActionButton
                 action={handleCall}
                 icon={
-                  <Ionicons name="ios-call-outline" size={24} color="#4D65EB" />
+                  <Ionicons
+                    name="ios-call-outline"
+                    size={24}
+                    color={Colors.light.primary}
+                  />
                 }
                 text={"Call"}
               />
               <ActionButton
                 action={() => onOpenBottomSheetHandler(0)}
                 icon={
-                  <MaterialIcons name="directions" size={24} color="#4D65EB" />
+                  <MaterialIcons
+                    name="directions"
+                    size={24}
+                    color={Colors.light.primary}
+                  />
                 }
                 text={"Direction"}
               />
@@ -192,7 +208,7 @@ const DetailModal = (props: Props) => {
                   <Ionicons
                     name="md-share-social-outline"
                     size={24}
-                    color="#4D65EB"
+                    color={Colors.light.primary}
                   />
                 }
                 text={"Share"}
@@ -203,7 +219,7 @@ const DetailModal = (props: Props) => {
               style={{
                 fontSize: 14,
                 lineHeight: 20,
-                color: "#818283",
+                color: Colors.light.subtitle,
                 textAlign: "justify",
               }}>
               {selectedParking?.description}
@@ -231,14 +247,14 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#4D65EB",
+    backgroundColor: Colors.light.primary,
     borderRadius: 8,
     height: 42,
     marginVertical: 12,
   },
   header: {
-    backgroundColor: "#FFFFFF",
-    shadowColor: "#333333",
+    backgroundColor: Colors.light.background,
+    shadowColor: Colors.light.primary,
     shadowOffset: { width: -1, height: -4 },
     shadowRadius: 2,
     shadowOpacity: 0.15,
@@ -259,7 +275,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#4D65EB",
+    color: Colors.light.primary,
     marginBottom: 8,
     marginTop: 16,
   },

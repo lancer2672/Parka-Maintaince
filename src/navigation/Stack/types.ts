@@ -12,6 +12,7 @@ export type HomeStackParams = {
 
 export type BookingHistoryStackParams = {
   BookingHistoryScreen: undefined;
+  BookingTicketScreen: undefined;
 };
 
 export type ProfileStackParams = {

@@ -11,8 +11,10 @@ const initialState: BookingState = {
     parkingLot: null,
     vehicle: null,
     parkingSlot: null,
+    blockCode: null,
     timeFrame: null,
     startTime: DateTimeHelper.getRoundUpDate(10),
+    endTime: DateTimeHelper.getRoundUpDate(10),
     bookingDate: new Date(),
   },
 };

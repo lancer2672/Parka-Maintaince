@@ -1,47 +1,52 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import ScheduleBookingItem from "@src/components/BookingHistory/ScheduleBookingItem";
-import React from "react";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { selectUser } from "@src/store/selectors";
+import { reservationActions } from "@src/store/slices/reservationSlice";
+import React, { useState } from "react";
 import { FlatList, View } from "react-native";
 
-const ScheduledBookingScreen = () => {
-  const data = [
-    {
-      id: "1",
-      image:
-        "https://www.templetreefarm.in/wp-content/uploads/2019/11/V-page-parking-992x496.jpg",
-    },
-    {
-      id: "2",
-      image:
-        "https://www.templetreefarm.in/wp-content/uploads/2019/11/V-page-parking-992x496.jpg",
-    },
-    {
-      id: "3",
-      image:
-        "https://www.templetreefarm.in/wp-content/uploads/2019/11/V-page-parking-992x496.jpg",
-    },
-    {
-      id: "4",
-      image:
-        "https://www.templetreefarm.in/wp-content/uploads/2019/11/V-page-parking-992x496.jpg",
-    },
-    {
-      id: "5",
-      image:
-        "https://www.templetreefarm.in/wp-content/uploads/2019/11/V-page-parking-992x496.jpg",
-    },
-  ];
+type Props = {
+  reservations: Reservation[];
+  navigation: any;
+};
 
-  const renderItem = (item: any) => {
-    return <ScheduleBookingItem />;
+const ScheduledBookingScreen = ({ reservations, navigation }: Props) => {
+  const [isRefreshing, setRefreshing] = useState<boolean>(false);
+  const userState = useAppSelector(selectUser);
+
+  const dispatch = useAppDispatch();
+
+  const onRefresh = () => {
+    (async () => {
+      let idUser;
+      if (userState?.idUser) {
+        idUser = await AsyncStorage.getItem("idUser");
+      }
+      setRefreshing(true);
+      dispatch(
+        reservationActions.getReservations(userState?.idUser || idUser),
+      ).finally(() => setRefreshing(false));
+    })();
   };
 
+  const navigationTicket = (item: any) => {
+    navigation.navigate("BookingTicketScreen", item);
+  };
   return (
     <View style={{ flex: 1 }}>
       <FlatList
         style={{ flex: 1 }}
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
+        data={reservations}
+        refreshing={isRefreshing}
+        onRefresh={onRefresh}
+        keyExtractor={(item) => item.idParkingReservation}
+        renderItem={({ item }) => (
+          <ScheduleBookingItem
+            onViewTicket={() => navigationTicket(item)}
+            item={item}
+          />
+        )}
         showsVerticalScrollIndicator={false}
       />
     </View>

@@ -80,7 +80,7 @@ const VehicleItem = ({ item, onEdit, onDelete }: IProps) => {
   };
 
   return (
-    <TouchableOpacity onPress={onEdit}>
+    <TouchableOpacity style={styles.container} onPress={onEdit}>
       <Swipeable
         ref={swipeRef}
         key={item.idVehicle}
@@ -107,6 +107,16 @@ const VehicleItem = ({ item, onEdit, onDelete }: IProps) => {
 export default VehicleItem;
 
 const styles = StyleSheet.create({
+  container: {
+    shadowColor: Colors.light.primary,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
   item: {
     backgroundColor: Colors.light.background,
     paddingVertical: 12,
@@ -116,7 +126,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   tag: {
-    paddingHorizontal: 8,
+    paddingHorizontal: 12,
     backgroundColor: ColorHelper.hexToRgbA(Colors.light.primary, 0.2),
     borderRadius: 100,
     flexDirection: "row",

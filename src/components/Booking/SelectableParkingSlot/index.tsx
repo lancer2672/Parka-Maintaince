@@ -13,6 +13,7 @@ const SelectableParkingSlot = ({ blockCode, slot, selectedId }: Props) => {
   const dispatch = useAppDispatch();
 
   const onSelect = () => {
+    dispatch(bookingActions.update({ field: "blockCode", value: blockCode }));
     dispatch(bookingActions.update({ field: "parkingSlot", value: slot }));
   };
   return (

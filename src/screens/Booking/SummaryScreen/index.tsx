@@ -38,8 +38,10 @@ const SummaryScreen = ({ navigation }: any) => {
         idParkingSlot: bookingState.parkingSlot?.idParkingSlot,
         idTimeFrame: bookingState.timeFrame?.idTimeFrame,
         startTime: dayjs(bookingState.startTime).format("HH:mm:ss"),
+        endTime: dayjs(bookingState.endTime).format("HH:mm:ss"),
         bookingDate: bookingState.bookingDate,
         duration: bookingState.timeFrame.duration,
+        total: bookingState.timeFrame?.cost,
       }),
     )
       .unwrap()
@@ -52,10 +54,12 @@ const SummaryScreen = ({ navigation }: any) => {
           }),
         );
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         setSuccess(false);
       })
       .finally(() => {
+        console.log("final");
         setVisible(true);
       });
   };
@@ -79,18 +83,25 @@ const SummaryScreen = ({ navigation }: any) => {
             title={"Vehicle"}
             value={`${bookingState.vehicle?.name} (${bookingState.vehicle?.number})`}
           />
-          <Item title={"Parking spot"} value={"A01"} />
+          <Item
+            title={"Parking spot"}
+            value={`${bookingState.blockCode} - ${bookingState.parkingSlot?.slotNumber}`}
+          />
           <Item
             title={"Date"}
             value={DateTimeHelper.formatDate(bookingState.bookingDate)}
           />
           <Item
             title={"Duration"}
-            value={bookingState.timeFrame?.duration.toString()}
+            value={DateTimeHelper.convertToHour(
+              bookingState.timeFrame?.duration,
+            )}
           />
           <Item
             title={"Hours"}
-            value={DateTimeHelper.formatTime(bookingState.startTime)}
+            value={`${DateTimeHelper.formatTime(
+              bookingState.startTime,
+            )} - ${DateTimeHelper.formatTime(bookingState.endTime)}`}
           />
         </View>
         <View style={styles.card}>
@@ -125,17 +136,19 @@ const SummaryScreen = ({ navigation }: any) => {
       <AppButton style={styles.continueButton} onPress={confirmBooking}>
         <Text style={styles.countinueText}>Confirm payment</Text>
       </AppButton>
-      <AppModalMessage
-        isVisible={isVisible}
-        isSuccess={isSuccess}
-        onOk={() => navigateNext(isSuccess)}
-        okText={isSuccess ? "View parking ticket" : "Back to home"}
-        message={
-          isSuccess
-            ? "Successfully made parking reservation"
-            : "There is an error!"
-        }
-      />
+      {isVisible && (
+        <AppModalMessage
+          isVisible={isVisible}
+          isSuccess={isSuccess}
+          onOk={() => navigateNext(isSuccess)}
+          okText={isSuccess ? "View parking ticket" : "Back to home"}
+          message={
+            isSuccess
+              ? "Successfully made parking reservation"
+              : "There is an error!"
+          }
+        />
+      )}
     </View>
   );
 };

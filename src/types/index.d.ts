@@ -52,18 +52,23 @@ type Booking = {
   idParkingReservation: string;
   parkingLot: ParkingLot;
   vehicle: Vehicle;
+  blockCode: string;
   parkingSlot: ParkingSlot;
   timeFrame: TimeFrame;
   startTime: Date;
+  endTime: Date;
   bookingDate: Date;
 };
 
 type Reservation = {
+  idParkingReservation: string;
   idVehicle: string;
   idUser: string;
   idParkingSlot: string;
   idTimeFrame: string;
   startTime: string;
+  endTime: string;
   bookingDate: string;
-  duration: string;
+  total: string;
+  status: string;
 };

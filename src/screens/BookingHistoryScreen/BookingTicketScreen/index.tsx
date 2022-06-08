@@ -33,14 +33,17 @@ const Item = ({ title, value }: { title: string; value: string }) => {
   );
 };
 
-const ParkingTicketScreen = ({ navigation }: any) => {
+const BookingTicketScreen = ({ navigation, route }: any) => {
   const ref = useRef(null);
   const [uri, setUri] = useState<string>(
     "https://shopping.saigoncentre.com.vn/Data/Sites/1/News/32/013.jpg",
   );
   const dispatch = useAppDispatch();
   const userState = useAppSelector(selectUser);
-  const bookingState = useAppSelector(selectBooking);
+  // const bookingState = useAppSelector(selectBooking);
+  const reservation = route.params;
+  const parkingSlot = reservation?.ParkingSlot;
+  const parkingLot = parkingSlot?.Block?.ParkingLot;
 
   const onCapture = useCallback(() => {
     ref?.current.capture().then((uri: any) => {
@@ -76,14 +79,14 @@ const ParkingTicketScreen = ({ navigation }: any) => {
         style={{ paddingVertical: 24 }}
         showsVerticalScrollIndicator={false}>
         <ViewShot
-          style={{ flex: 1, paddingBottom: 100 }}
+          style={{ flex: 1, paddingBottom: 80 }}
           ref={ref}
           options={{ format: "png", quality: 0.9 }}>
           <View style={styles.card}>
             <Text style={styles.note}>
               Scan this when you are in the parking lot
             </Text>
-            <AppQRCode size={180} content={bookingState.idParkingReservation} />
+            <AppQRCode size={180} content={reservation.idParkingReservation} />
           </View>
           <DashedLine
             dashLength={10}
@@ -101,17 +104,17 @@ const ParkingTicketScreen = ({ navigation }: any) => {
             <Item title={"Name"} value={userState?.displayName} />
             <Item
               title={"Parking area"}
-              value={bookingState.parkingLot?.name}
+              value={reservation?.parkingLot?.name}
             />
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Item
                   title={"Parking spot"}
-                  value={`${bookingState.blockCode} - ${bookingState.parkingSlot.slotNumber}`}
+                  value={`${parkingLot?.Block?.blockCode} - ${parkingSlot?.slotNumber}`}
                 />
                 <Item
                   title={"Date"}
-                  value={DateTimeHelper.formatDate(bookingState.bookingDate)}
+                  value={DateTimeHelper.formatDate(reservation?.bookingDate)}
                 />
                 <Item title={"Phone number"} value={userState?.phoneNumber} />
               </View>
@@ -119,38 +122,38 @@ const ParkingTicketScreen = ({ navigation }: any) => {
                 <Item
                   title={"Duration"}
                   value={DateTimeHelper.convertToHour(
-                    bookingState.timeFrame?.duration,
+                    reservation?.TimeFrame?.duration,
                   )}
                 />
                 <Item
                   title={"Hours"}
                   value={`${DateTimeHelper.formatTime(
-                    bookingState.startTime,
-                  )} - ${DateTimeHelper.formatTime(bookingState.endTime)}`}
+                    reservation?.startTime,
+                  )} - ${DateTimeHelper.formatTime(reservation?.endTime)}`}
                 />
                 <Item
                   title={"Vehicle"}
-                  value={`${bookingState.vehicle?.name} (${bookingState.vehicle?.number})`}
+                  value={`${reservation?.Vehicle?.name} (${reservation?.Vehicle?.number})`}
                 />
               </View>
             </View>
           </View>
         </ViewShot>
       </ScrollView>
-      <AppButton style={styles.continueButton} onPress={navigationNext}>
+      {/* <AppButton style={styles.continueButton} onPress={navigationNext}>
         <Text style={styles.countinueText}>Back to home</Text>
-      </AppButton>
+      </AppButton> */}
     </View>
   );
 };
 
-export default ParkingTicketScreen;
+export default BookingTicketScreen;
 
 const styles = StyleSheet.create({
   header: {
     paddingTop: 16,
     paddingHorizontal: 20,
-    height: 80,
+    height: 70,
     backgroundColor: Colors.light.background,
     flexDirection: "row",
     alignItems: "center",

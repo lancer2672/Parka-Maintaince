@@ -3,6 +3,7 @@ import { Colors } from "@src/constants";
 import BookingHistoryScreen from "@src/screens/BookingHistoryScreen";
 import { BookingHistoryStackParams } from "../types";
 import React from "react";
+import BookingTicketScreen from "@src/screens/BookingHistoryScreen/BookingTicketScreen";
 
 const Stack = createNativeStackNavigator<BookingHistoryStackParams>();
 
@@ -23,12 +24,17 @@ const BookingHistoryStack = () => {
         options={{
           title: "My booking",
           headerStyle: {
-            backgroundColor: Colors.light.primary,
+            backgroundColor: Colors.light.background,
           },
           headerTitleStyle: {
-            color: Colors.light.background,
+            color: Colors.light.primary,
           },
         }}
+      />
+      <Stack.Screen
+        name="BookingTicketScreen"
+        component={BookingTicketScreen}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
