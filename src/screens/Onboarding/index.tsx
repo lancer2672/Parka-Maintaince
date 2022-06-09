@@ -69,7 +69,7 @@ const OnboardingScreen = ({ navigation }: any) => {
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
   return (
     <View style={styles.container}>
-      <StatusBar />
+      <StatusBar style="dark" />
       <View style={{ flex: 3 }}>
         <FlatList
           data={slides}

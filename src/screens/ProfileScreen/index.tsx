@@ -5,14 +5,13 @@ import {
   Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ParkaQRCode from "@src/components/Booking/QRCode";
 import ProfileAction from "@src/components/Profile/ProfileAction";
 import { Colors } from "@src/constants";
-import { useAppSelector } from "@src/store/hooks";
-import { selectUser } from "@src/store/selectors";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -61,8 +60,6 @@ const actions = [
 ];
 
 const ProfileScreen = ({ navigation }: any) => {
-  const userState = useAppSelector(selectUser);
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
@@ -71,14 +68,14 @@ const ProfileScreen = ({ navigation }: any) => {
         bounces={true}
         showsVerticalScrollIndicator={false}>
         <View style={{ marginBottom: 40 }}>
-          <Image
+          {/* <Image
             style={styles.avatar}
             source={{
               uri:
                 userState?.imageUrl ||
                 "https://ui-avatars.com/api/?background=random&color=random&font-size=0.33&name=user",
             }}
-          />
+          /> */}
           {actions.map((action) => (
             <ProfileAction
               key={action.text}
@@ -88,7 +85,9 @@ const ProfileScreen = ({ navigation }: any) => {
               icon={action.icon}
             />
           ))}
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => AsyncStorage.removeItem("idUser")}>
             <View style={styles.buttonContent}>
               <Text style={styles.buttonText}>Log out</Text>
               <LogoutIcon color={Colors.light.primary} size={22} />

@@ -57,7 +57,7 @@ const ChangePassword = (props: Props) => {
           await AsyncStorage.setItem("password", values.password);
         }
         props.navigation.navigate("SignIn");
-        Alert.alert(`You have successfully changed password!`);
+        Alert.alert("You have successfully changed password!");
       } else {
         Alert.alert("Failed");
       }

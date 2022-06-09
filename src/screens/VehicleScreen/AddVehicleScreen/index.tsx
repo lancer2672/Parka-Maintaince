@@ -1,5 +1,6 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Spinner } from "@nghinv/react-native-loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Images } from "@src/assets";
 import AppButton from "@src/components/common/AppButton";
 import VehicleInput from "@src/components/Vehicle/VehicleInput";
@@ -32,7 +33,7 @@ type VehicleFormProps = {
 
 const VehicleSchema = Yup.object().shape({
   type: Yup.mixed()
-    .oneOf(["motorbike", "car", "pickuptruck"], "Please select car type!")
+    .oneOf(["bike", "car", "van"], "Please select car type!")
     .required("Please select car type!")
     .nullable(),
   number: Yup.string().max(50).required("Please enter license plate!"),
@@ -120,10 +121,12 @@ const AddVehicleScreen = ({ route, navigation }: any) => {
     dispatch(updateVehicleAction(vehicle));
   };
 
-  const handleAdd = (values: VehicleFormProps) => {
+  const handleAdd = async (values: VehicleFormProps) => {
+    const idUser = await AsyncStorage.getItem("idUser");
+
     const vehicle: Vehicle = {
       idVehicle: "",
-      idUser: userState?.idUser,
+      idUser: userState?.idUser || JSON.parse(idUser),
       name: values.name,
       number: values.number,
       type: values.type,
@@ -136,7 +139,7 @@ const AddVehicleScreen = ({ route, navigation }: any) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <View style={styles.imageContainer}>
-            <Image source={Images.Car} style={styles.image} />
+            <Image source={Images.CarPeople} style={styles.image} />
           </View>
           <Text style={styles.title}>Vehicle details</Text>
           <Text style={styles.subtitle}>
@@ -199,7 +202,6 @@ export default AddVehicleScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F6F7FB",
     paddingHorizontal: 20,
     paddingVertical: 32,
     height: Layout.window.height - 100,

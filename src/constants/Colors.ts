@@ -1,10 +1,10 @@
 const palette = {
-  primary: "#4D65EB",
+  primary: "#4D5DFA",
   dark: "#1C244F",
   white: "#FFFFFF",
   light: "#E9ECFF",
   grayLight: "#90A3BC",
-  green: "#32D74B",
+  green: "#3CB878",
   red: "#FF453A",
   yellow: "#FFC700",
   black1: "#252525",

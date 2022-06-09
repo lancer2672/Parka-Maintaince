@@ -15,19 +15,22 @@ const ProfileStack = () => {
       screenOptions={{
         headerBackTitleVisible: false,
         headerShadowVisible: false,
-        headerTintColor: Colors.light.background,
+        headerTintColor: Colors.light.primary,
+        contentStyle: {
+          backgroundColor: Colors.light.background,
+        },
+        headerStyle: {
+          backgroundColor: Colors.light.background,
+        },
+        headerTitleStyle: {
+          color: Colors.light.primary,
+        },
       }}>
       <Stack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
         options={{
           title: "Profile",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
         }}
       />
       <Stack.Screen
@@ -35,12 +38,6 @@ const ProfileStack = () => {
         component={PersonalScreen}
         options={{
           title: "Personal information",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
         }}
       />
       <Stack.Screen
@@ -48,12 +45,6 @@ const ProfileStack = () => {
         component={VehicleScreen}
         options={{
           title: "My vehicles",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
         }}
       />
       <Stack.Screen
@@ -61,12 +52,6 @@ const ProfileStack = () => {
         component={AddVehicleScreen}
         options={{
           title: "Add a vehicle",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
         }}
       />
     </Stack.Navigator>
