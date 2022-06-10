@@ -1,6 +1,7 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import bookingSlice from "./slices/bookingSlice";
 import counterReducer from "./slices/counterSlice";
+import favoriteSlice from "./slices/favoriteSlice";
 import reservationSlice from "./slices/reservationSlice";
 import timeFrameSlice from "./slices/timeFrameSlice";
 import { userSlice } from "./slices/userSlice";
@@ -14,6 +15,7 @@ export const store = configureStore({
     reservation: reservationSlice.reducer,
     booking: bookingSlice.reducer,
     timeFrame: timeFrameSlice.reducer,
+    favorite: favoriteSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

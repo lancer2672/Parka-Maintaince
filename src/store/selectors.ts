@@ -6,3 +6,4 @@ export const selectBooking = (state: RootState) => state.booking.entities;
 export const selectTimeFrames = (state: RootState) => state.timeFrame.entities;
 export const selectReservations = (state: RootState) =>
   state.reservation.entities;
+export const selectFavorites = (state: RootState) => state.favorite.entities;

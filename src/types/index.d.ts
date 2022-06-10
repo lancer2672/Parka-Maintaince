@@ -72,3 +72,9 @@ type Reservation = {
   total: string;
   status: string;
 };
+
+type Favorite = {
+  idFavorite: string;
+  idUser: string;
+  idParkingLot: string;
+};

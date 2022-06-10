@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { selectReservations, selectUser } from "@src/store/selectors";
 import { reservationActions } from "@src/store/slices/reservationSlice";
 import dayjs from "dayjs";
-import objectSupport from "dayjs/plugin/objectSupport";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";

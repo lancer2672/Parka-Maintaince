@@ -20,4 +20,5 @@ export type ProfileStackParams = {
   PersonalScreen: undefined;
   VehicleScreen: undefined;
   AddVehicleScreen: Vehicle;
+  FavoriteScreen: undefined;
 };
