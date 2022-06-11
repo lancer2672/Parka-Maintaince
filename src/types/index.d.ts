@@ -17,6 +17,7 @@ type Block = {
   isFull: boolean;
   numOfSlot: number;
   ParkingSlots: Array<ParkingSlot>;
+  ParkingLot?: ParkingLot;
 };
 type ParkingSlot = {
   idParkingSlot: string;
@@ -35,4 +36,35 @@ type TimeFrame = {
   idParkingLot: string;
   duration: number;
   cost: number;
+};
+
+type Vehicle = {
+  idVehicle: string;
+  idUser: string;
+  name: string;
+  number: string;
+  type: string;
+};
+
+type Reservation = {
+  idParkingReservation: string;
+  idVehicle: string;
+  idUser: string;
+  idParkingSlot: string;
+  idTimeFrame: string;
+  startTime: string;
+  endTime: string;
+  bookingDate: string;
+  total: string;
+  status: string;
+  ParkingSlot: Slot;
+  Vehicle: Vehicle;
+  TimeFrame: TimeFrame;
+};
+
+type Slot = {
+  idParkingSlot: string;
+  slotNumber: number;
+  idBlock: string;
+  Block: Block;
 };

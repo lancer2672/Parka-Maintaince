@@ -1,5 +1,6 @@
 import { FaParking } from "react-icons/fa";
 import { HiViewGrid } from "react-icons/hi";
+import { IoTicket } from "react-icons/io5";
 
 const MenuItems = {
   routes: [
@@ -18,6 +19,15 @@ const MenuItems = {
       icon: (
         <span role="img" className="anticon">
           <FaParking />
+        </span>
+      ),
+    },
+    {
+      path: "/bookings",
+      name: "Bookings",
+      icon: (
+        <span role="img" className="anticon">
+          <IoTicket />
         </span>
       ),
     },
