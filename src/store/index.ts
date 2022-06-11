@@ -1,9 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { authSlice, counterSlice, parkingLotSlice } from "./reducers";
+import { authSlice, parkingLotSlice } from "./reducers";
 
 export const store = configureStore({
   reducer: {
-    counter: counterSlice,
     parkingLot: parkingLotSlice.reducer,
     auth: authSlice,
   },
