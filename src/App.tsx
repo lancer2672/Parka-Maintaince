@@ -26,7 +26,6 @@ export default function App() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaProvider>
               <AppNavigator colorScheme={colorScheme} />
-              {/* <StatusBar style="inverted" /> */}
             </SafeAreaProvider>
           </GestureHandlerRootView>
         </Provider>
