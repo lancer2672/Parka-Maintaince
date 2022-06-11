@@ -12,7 +12,6 @@ const MainLayout = () => {
 
   return (
     <div
-      id="test-pro-layout"
       style={{
         height: "100vh",
       }}>

@@ -1,4 +1,5 @@
 import AboutPage from "@/pages/AboutPage";
+import Bookings from "@/pages/Bookings";
 import Dashboard from "@/pages/Dashboard";
 import ParkingLots from "@/pages/ParkingLots";
 import ParkingLotDetails from "@/pages/ParkingLots/ParkingLotDetails";
@@ -24,6 +25,10 @@ const MerchantRoutes: IRoute[] = [
   {
     path: "/lots/:id",
     page: <ParkingLotDetails />,
+  },
+  {
+    path: "/bookings",
+    page: <Bookings />,
   },
 ];
 

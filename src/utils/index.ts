@@ -1,1 +1,3 @@
-export default {};
+import CurrencyHelper from "./CurrencyHelper";
+
+export { CurrencyHelper };
