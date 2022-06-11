@@ -64,10 +64,12 @@ const Verification = (props: Props) => {
           Alert.alert("Error: " + res.errorMessage);
           return;
         }
+
         if (res.data) {
           Alert.alert("Successfully!");
           await AsyncStorage.setItem("password", res.data.password);
           await AsyncStorage.setItem("phoneNumber", res.data.phoneNumber);
+          await AsyncStorage.setItem("idUser", res.data.idUser);
           props.navigation.navigate("App");
         }
       } else if (routeData.type === "ResetPassword") {
@@ -217,14 +219,11 @@ const Verification = (props: Props) => {
             />
           </View>
           <AppButton
-            title="Continue"
             style={styles.btnContinue}
-            color="white"
-            backgroundColor={isLoading ? "#A498ED" : Colors.light.primary}
             isLoading={isLoading}
-            textStyle={{ fontSize: 22, fontWeight: "600" }}
-            onPress={() => handleVerification()}
-          />
+            onPress={() => handleVerification()}>
+            <Text>Continue</Text>
+          </AppButton>
           {timerCount > 0 && (
             <View style={styles.resend}>
               <Text style={{ fontSize: 16, fontWeight: "600" }}>

@@ -39,6 +39,7 @@ type Block = {
   description: string;
   isFull: boolean;
   numOfSlot: number;
+  ParkingSlots: ParkingSlot[];
 };
 
 type TimeFrame = {
@@ -71,4 +72,10 @@ type Reservation = {
   bookingDate: string;
   total: string;
   status: string;
+};
+
+type Favorite = {
+  idFavorite: string;
+  idUser: string;
+  idParkingLot: string;
 };

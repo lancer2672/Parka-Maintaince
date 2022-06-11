@@ -7,8 +7,8 @@ const parkingReservationApi = {
     const res = await axiosClient.post(url, data);
     return res.data;
   },
-  getAllByIdUser: async (idUser: string) => {
-    const res = await axiosClient.get(`${url}/user/${idUser}`);
+  getAllByIdUser: async (idUser: string, status: string) => {
+    const res = await axiosClient.get(`${url}/user/${idUser}?status=${status}`);
     return res.data;
   },
 };

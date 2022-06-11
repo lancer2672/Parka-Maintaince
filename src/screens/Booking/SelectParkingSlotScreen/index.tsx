@@ -3,48 +3,44 @@ import parkingSlotApi from "@src/api/parkingSlotApi";
 import ParkingSlotItem from "@src/components/Booking/ParkingSlotItem";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
-import { useAppSelector } from "@src/store/hooks";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { selectBooking } from "@src/store/selectors";
+import { availableSlotsActions } from "@src/store/slices/availableSlotSlice";
+import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
 const SelectParkingSlotScreen = ({ navigation }: any) => {
   const bookingState = useAppSelector(selectBooking);
-  const [slots, setSlots] = useState<ParkingSlot[]>();
-  const [blocks, setBlocks] = useState<Block[]>();
-
+  const dispatch = useAppDispatch();
+  const availableSlotState = useAppSelector((state) => state.availableSlot);
   const navigateNext = () => {
     navigation.navigate("SelectPaymentScreen");
   };
 
-  const getblockSlots = (block: Block, slots: ParkingSlot[]) => {
-    const blockSlots = slots.map((slot) =>
-      slot.idBlock == block.idBlock ? slot : null,
-    );
-    return blockSlots;
-  };
-
   useEffect(() => {
-    Spinner.show();
-    parkingSlotApi
-      .getAll(bookingState.parkingLot.idParkingLot)
-      .then((res) => {
-        setSlots(res.data.slots);
-        setBlocks(res.data.blocks);
-        Spinner.hide();
-      })
-      .catch((err) => console.log(err));
+    const getSlots = async () => {
+      const data = {
+        start: dayjs(bookingState.startTime).format("HH:mm"),
+        end: dayjs(bookingState.endTime).format("HH:mm"),
+        date: dayjs(bookingState.bookingDate).format("YYYY-MM-DD"),
+        idParkingLot: bookingState.parkingLot.idParkingLot,
+      };
+      dispatch(availableSlotsActions.getAvailableSlots(data));
+    };
+    getSlots();
   }, []);
+
   return (
     <View style={{ flex: 1, paddingHorizontal: 20 }}>
       <FlatList
-        data={blocks}
+        data={availableSlotState.blocks}
         keyExtractor={(block) => block.idBlock}
         renderItem={({ item }) => (
           <ParkingSlotItem
             key={item.idBlock}
             block={item}
-            slots={getblockSlots(item, slots)}
+            slots={item.ParkingSlots}
           />
         )}
       />

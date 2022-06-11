@@ -24,6 +24,7 @@ const minuteInterval = 10;
 const ReserveParkingScreen = ({ navigation }: any) => {
   const [isDateVisible, setDateVisible] = useState<boolean>(false);
   const [isTimeVisible, setTimeVisible] = useState<boolean>(false);
+  const [timFrameSelected, setTimeFrameSelected] = useState<TimeFrame>(null);
   const dispatch = useAppDispatch();
   const bookingState = useAppSelector(selectBooking);
   const timeFrames = useAppSelector(selectTimeFrames);
@@ -44,6 +45,12 @@ const ReserveParkingScreen = ({ navigation }: any) => {
       bookingState.startTime &&
       bookingState.timeFrame
     ) {
+      const endTime = dayjs(bookingState.startTime).add(
+        bookingState.timeFrame.duration,
+        "minutes",
+      );
+      dispatch(bookingActions.update({ field: "endTime", value: endTime }));
+
       navigation.navigate("SelectParkingSlotScreen");
     } else {
       Alert.alert("You must select booking time!");
@@ -55,6 +62,7 @@ const ReserveParkingScreen = ({ navigation }: any) => {
       timeFrame.duration,
       "minutes",
     );
+    setTimeFrameSelected(timeFrame);
     dispatch(bookingActions.update({ field: "endTime", value: endTime }));
     dispatch(bookingActions.update({ field: "timeFrame", value: timeFrame }));
   };

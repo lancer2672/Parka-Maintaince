@@ -6,7 +6,6 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ParkaQRCode from "@src/components/Booking/QRCode";
 import ProfileAction from "@src/components/Profile/ProfileAction";
 import { Colors } from "@src/constants";
 import { StatusBar } from "expo-status-bar";
@@ -36,7 +35,7 @@ const actions = [
   },
   {
     text: "Favorite",
-    screen: "HomeScreen",
+    screen: "FavoriteScreen",
     icon: <FontAwesome name="heart-o" size={20} color={Colors.light.primary} />,
   },
   {
@@ -62,7 +61,7 @@ const actions = [
 const ProfileScreen = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       <ScrollView
         style={styles.scroll}
         bounces={true}
@@ -87,7 +86,10 @@ const ProfileScreen = ({ navigation }: any) => {
           ))}
           <TouchableOpacity
             style={styles.button}
-            onPress={() => AsyncStorage.removeItem("idUser")}>
+            onPress={async () => {
+              navigation.navigate("SignIn");
+              await AsyncStorage.removeItem("idUser");
+            }}>
             <View style={styles.buttonContent}>
               <Text style={styles.buttonText}>Log out</Text>
               <LogoutIcon color={Colors.light.primary} size={22} />

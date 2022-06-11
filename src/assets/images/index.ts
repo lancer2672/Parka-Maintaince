@@ -10,6 +10,7 @@ const Images = {
   Success: require("./message/success.png"),
   Error: require("./message/error.png"),
   QR_Code: require("./qrcode.png"),
+  EmptyBox: require("./empty-box.png"),
 };
 
 export default Images;

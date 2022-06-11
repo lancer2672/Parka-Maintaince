@@ -3,6 +3,8 @@ import vehicleApi from "./vehicleApi";
 import parkingLotApi from "./parkingLotApi";
 import timeFrameApi from "./timeFrameApi";
 import parkingReservationApi from "./parkingReservationApi";
+import parkingSlotApi from "./parkingSlotApi";
+import favoriteApi from "./favoriteApi";
 
 export {
   userApi,
@@ -10,4 +12,6 @@ export {
   parkingLotApi,
   timeFrameApi,
   parkingReservationApi,
+  parkingSlotApi,
+  favoriteApi,
 };

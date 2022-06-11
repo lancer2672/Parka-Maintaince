@@ -4,16 +4,18 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import BottomSheet, {
-  BottomSheetFlatList,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { Spinner } from "@nghinv/react-native-loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import parkingSlotApi from "@src/api/parkingSlotApi";
 import { Colors, Spacing } from "@src/constants";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import { selectBooking, selectTimeFrames } from "@src/store/selectors";
+import { selectBooking, selectFavorites } from "@src/store/selectors";
+import { favoriteActions } from "@src/store/slices/favoriteSlice";
 import { timeFrameActions } from "@src/store/slices/timeFrameSlice";
+import dayjs from "dayjs";
 import * as Linking from "expo-linking";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ActionButton from "../ActionButton";
 import TimeItem from "../TimeItem";
@@ -33,7 +35,9 @@ const DetailModal = (props: Props) => {
   const { isShow, onClose, navigateBooking } = props;
   const ref = React.useRef<BottomSheet>(null);
   const selectedParking = useAppSelector(selectBooking).parkingLot;
-  const timeFrames = useAppSelector(selectTimeFrames);
+  const [numOfAvailableSlots, setNumOfAvailableSlots] = useState<number>(0);
+  const favoriteState = useAppSelector(selectFavorites);
+  const [isFavorite, setFavorite] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
   const onOpenBottomSheetHandler = (index: number) => {
@@ -41,6 +45,18 @@ const DetailModal = (props: Props) => {
   };
   const handleCall = () => {
     Linking.openURL("tel:+84779952304");
+  };
+  const addFavorite = () => {
+    (async () => {
+      const idUser = await AsyncStorage.getItem("idUser");
+      dispatch(
+        favoriteActions.createFavorite({
+          idParkingLot: selectedParking?.idParkingLot,
+          idUser: JSON.parse(idUser),
+        }),
+      );
+      setFavorite(true);
+    })();
   };
 
   useEffect(() => {
@@ -53,6 +69,33 @@ const DetailModal = (props: Props) => {
 
   useEffect(() => {
     dispatch(timeFrameActions.getTimeFrames(selectedParking?.idParkingLot));
+    let isFav = false;
+    favoriteState.forEach((favorite) => {
+      if (favorite.idParkingLot == selectedParking.idParkingLot) isFav = true;
+    });
+    setFavorite(isFav);
+  }, [selectedParking]);
+
+  useEffect(() => {
+    const getNumOfSlots = async () => {
+      const time = dayjs().get("hour") + ":" + dayjs().get("minute");
+      Spinner.show();
+      const numOfSlots = await parkingSlotApi.getAvailableSlots(
+        time,
+        time,
+        dayjs().format("YYYY-MM-DD"),
+        selectedParking?.idParkingLot,
+      );
+      let num = 0;
+      numOfSlots.data.data.forEach((element: any) => {
+        num += element.ParkingSlots?.length;
+      });
+      setNumOfAvailableSlots(num);
+      Spinner.hide();
+    };
+    if (selectedParking) {
+      getNumOfSlots();
+    }
   }, [selectedParking]);
 
   return (
@@ -170,7 +213,7 @@ const DetailModal = (props: Props) => {
                   marginHorizontal: Spacing.s,
                   color: Colors.light.heading,
                 }}>
-                20 spots
+                {numOfAvailableSlots} slots available
               </Text>
             </View>
             <View
@@ -203,15 +246,23 @@ const DetailModal = (props: Props) => {
                 text={"Direction"}
               />
               <ActionButton
-                action={() => console.log("share")}
+                action={addFavorite}
                 icon={
-                  <Ionicons
-                    name="md-share-social-outline"
-                    size={24}
-                    color={Colors.light.primary}
-                  />
+                  isFavorite ? (
+                    <Ionicons
+                      name="md-heart"
+                      size={24}
+                      color={Colors.light.primary}
+                    />
+                  ) : (
+                    <Ionicons
+                      name="md-heart-outline"
+                      size={24}
+                      color={Colors.light.primary}
+                    />
+                  )
                 }
-                text={"Share"}
+                text={"Save"}
               />
             </View>
             <Text style={styles.title}>Info</Text>

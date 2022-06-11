@@ -68,9 +68,11 @@ const SignIn = (props: Props) => {
       if (isRemember) {
         await AsyncStorage.setItem("phoneNumber", values.phoneNumber);
         await AsyncStorage.setItem("password", values.password);
+        await AsyncStorage.setItem("idUser", result.idUser);
       } else {
         await AsyncStorage.removeItem("phoneNumber");
         await AsyncStorage.removeItem("password");
+        await AsyncStorage.removeItem("idUser");
       }
       props.navigation.navigate("App");
     } catch (error: any) {

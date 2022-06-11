@@ -2,18 +2,23 @@ import { Spinner } from "@nghinv/react-native-loading";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   createReservation,
-  getReservations,
+  getReservationsCompleted,
+  getReservationsScheduled,
 } from "../actions/reservationAction";
 
 export type ReservationState = Partial<{
-  entities: Reservation[];
+  entitiesScheduled: Reservation[];
+  entitiesCompleted: Reservation[];
+  status: string; 
 }>;
 
 const initialState: ReservationState = {
-  entities: [],
+  entitiesScheduled: [],
+  entitiesCompleted: [],
+  status: ""
 };
 
-const actions = [createReservation, getReservations];
+const actions = [createReservation, getReservationsScheduled];
 
 export const reservationSlice = createSlice({
   name: "reservation",
@@ -33,15 +38,24 @@ export const reservationSlice = createSlice({
     builder.addCase(
       createReservation.fulfilled,
       (state, { payload }: PayloadAction<Reservation>) => {
-        state.entities.push(payload);
+        state.entitiesScheduled.push(payload);
+        state.status = "scheduled";
         Spinner.hide();
       },
     );
     builder.addCase(
-      getReservations.fulfilled,
+      getReservationsScheduled.fulfilled,
       (state, { payload }: PayloadAction<Reservation[]>) => {
-        state.entities = payload;
+        state.entitiesScheduled = payload;
+        state.status = "scheduled";
         Spinner.hide();
+      },
+    );
+    builder.addCase(
+      getReservationsCompleted.fulfilled,
+      (state, { payload }: PayloadAction<Reservation[]>) => {
+        state.entitiesCompleted = payload;
+        state.status = "completed";
       },
     );
   },
@@ -50,7 +64,8 @@ export const reservationSlice = createSlice({
 export const reservationActions = {
   ...reservationSlice.actions,
   createReservation,
-  getReservations,
+  getReservationsScheduled,
+  getReservationsCompleted
 };
 
 export default reservationSlice;
