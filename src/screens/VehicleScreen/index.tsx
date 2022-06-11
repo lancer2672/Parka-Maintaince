@@ -43,7 +43,8 @@ const VehicleScreen = ({ navigation }: any) => {
   return (
     <View style={{ flex: 1 }}>
       {vehicleState.length == 0 ? (
-        <View>
+        <View
+          style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
           <Image source={Images.EmptyBox} style={styles.image} />
           <Text style={styles.text}>No data</Text>
         </View>

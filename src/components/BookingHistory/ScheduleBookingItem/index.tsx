@@ -22,14 +22,17 @@ const ScheduleBookingItem = ({ item, onViewTicket }: Props) => {
             styles.flexRow,
             { alignItems: "center", justifyContent: "space-between" },
           ]}>
-          {/* <View style={styles.status}>
-            <Text style={styles.statusText}>Ongoging</Text>
-          </View> */}
-          <View style={[styles.status, styles.schedule]}>
-            <Text style={[styles.statusText, styles.scheduleText]}>
-              Scheduled
-            </Text>
-          </View>
+          {item?.status == "ongoing" ? (
+            <View style={styles.status}>
+              <Text style={styles.statusText}>Ongoging</Text>
+            </View>
+          ) : (
+            <View style={[styles.status, styles.schedule]}>
+              <Text style={[styles.statusText, styles.scheduleText]}>
+                Scheduled
+              </Text>
+            </View>
+          )}
           <Text style={styles.price} numberOfLines={1}>
             {CurrencyHelper.formatVND(item?.total)}
           </Text>
@@ -88,24 +91,23 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
     marginVertical: 10,
-    marginHorizontal: 20,
-    padding: 10,
+    padding: 12,
   },
   status: {
     borderRadius: 20,
-    backgroundColor: ColorHelper.hexToRgbA(Colors.light.warning, 0.15),
+    backgroundColor: ColorHelper.hexToRgbA(Colors.light.primary, 0.1),
     paddingVertical: 4,
     paddingHorizontal: 12,
     alignSelf: "flex-start",
   },
   schedule: {
-    backgroundColor: ColorHelper.hexToRgbA(Colors.light.primary, 0.15),
+    backgroundColor: ColorHelper.hexToRgbA(Colors.light.warning, 0.1),
   },
   scheduleText: {
-    color: Colors.light.primary,
+    color: Colors.light.warning,
   },
   statusText: {
-    color: Colors.light.warning,
+    color: Colors.light.primary,
     textAlign: "center",
     fontWeight: "500",
     fontSize: 14,

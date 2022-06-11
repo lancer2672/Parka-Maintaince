@@ -6,6 +6,7 @@ import GoogleLoginButton from "@src/components/Login/GoogleLoginButton";
 import { Colors } from "@src/constants";
 import { useAppDispatch } from "@src/store/hooks";
 import { userActions } from "@src/store/slices/userSlice";
+import { StatusBar } from "expo-status-bar";
 import { Formik, FormikProps } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -100,6 +101,7 @@ const SignIn = (props: Props) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView style={styles.container}>
+        <StatusBar style="light" />
         <View style={{ height: "20%", justifyContent: "center" }}>
           <Text style={styles.title}>Sign in</Text>
         </View>
@@ -145,7 +147,7 @@ const SignIn = (props: Props) => {
                     secureTextEntry={hidePassword}
                   />
                   <Octicons
-                    name={hidePassword ? "eye-closed" : "eye"}
+                    name={hidePassword ? "eye" : "eye-closed"}
                     size={22}
                     color={Colors.light.text}
                     onPress={() => setHidePassword(!hidePassword)}
@@ -211,7 +213,7 @@ const SignIn = (props: Props) => {
                     textAlign: "center",
                     fontSize: 16,
                     color: "#90A3BC",
-                    marginBottom: 5,
+                    marginBottom: 12,
                     fontWeight: "600",
                   }}>
                   OR

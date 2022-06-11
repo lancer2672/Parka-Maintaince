@@ -72,7 +72,7 @@ const ScheduledBookingScreen = ({ navigation }: Props) => {
   return (
     <View style={{ flex: 1 }}>
       <FlatList
-        style={{ flex: 1 }}
+        style={{ flex: 1, padding: 20 }}
         data={scheduleBooking}
         refreshing={isRefreshing}
         onRefresh={onRefresh}

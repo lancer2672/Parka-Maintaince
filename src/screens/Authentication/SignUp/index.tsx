@@ -11,6 +11,7 @@ import { Colors } from "@src/constants";
 import { app, auth } from "@src/firebase";
 import { useAppDispatch } from "@src/store/hooks";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import { StatusBar } from "expo-status-bar";
 import { PhoneAuthProvider } from "firebase/auth";
 import { Formik } from "formik";
 import React, { useRef, useState } from "react";
@@ -36,7 +37,6 @@ const SignUp = (props: Props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const recaptchaVerifier = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useAppDispatch();
 
   //validate
   const SignupSchema = Yup.object().shape({
@@ -88,19 +88,12 @@ const SignUp = (props: Props) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView>
+        <StatusBar style="dark" />
         <View style={styles.container}>
           <FirebaseRecaptchaVerifierModal
             ref={recaptchaVerifier}
             firebaseConfig={app.options}
           />
-          <AntDesign
-            name="arrowleft"
-            size={24}
-            color="black"
-            onPress={() => props.navigation.goBack()}
-          />
-
-          <Text style={styles.title}>Sign up</Text>
           <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
             <Formik
               initialValues={{
@@ -186,7 +179,7 @@ const SignUp = (props: Props) => {
                         style={styles.input}
                       />
                       <Octicons
-                        name="eye-closed"
+                        name={secureTextEntry ? "eye" : "eye-closed"}
                         size={22}
                         style={styles.icon}
                         onPress={() => setSecureTextEntry(!secureTextEntry)}
@@ -211,7 +204,7 @@ const SignUp = (props: Props) => {
                         secureTextEntry={secureTextEntry}
                       />
                       <Octicons
-                        name="eye-closed"
+                        name={secureTextEntry ? "eye" : "eye-closed"}
                         size={22}
                         style={styles.icon}
                         onPress={() => setSecureTextEntry(!secureTextEntry)}
@@ -227,7 +220,14 @@ const SignUp = (props: Props) => {
                     style={styles.btnNext}
                     isLoading={isLoading}
                     onPress={handleSubmit}>
-                    <Text>Next</Text>
+                    <Text
+                      style={{
+                        fontSize: 22,
+                        fontWeight: "600",
+                        color: "white",
+                      }}>
+                      Next
+                    </Text>
                   </AppButton>
                 </>
               )}
@@ -243,7 +243,7 @@ export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
-    margin: 30,
+    margin: 20,
   },
   title: {
     fontSize: 28,
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     marginTop: 16,
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: 8,
     borderColor: "#90A3BC",
   },
   input: {

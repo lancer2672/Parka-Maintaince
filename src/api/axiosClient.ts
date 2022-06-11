@@ -3,8 +3,7 @@ import axios from "axios";
 import { Alert } from "react-native";
 
 const axiosClient = axios.create({
-  baseURL:
-    process.env.REACT_APP_API_URL || "http://192.168.1.87:8080/api/user",
+  baseURL: process.env.REACT_APP_API_URL || "http://192.168.1.8:8080/api/user",
   headers: {
     "Content-Type": "application/json",
   },

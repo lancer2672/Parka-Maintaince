@@ -6,7 +6,7 @@ const palette = {
   grayLight: "#90A3BC",
   green: "#3CB878",
   red: "#FF453A",
-  yellow: "#FFC700",
+  yellow: "#FFC12D",
   black1: "#252525",
   black2: "#4C4F51",
   black3: "#818283",

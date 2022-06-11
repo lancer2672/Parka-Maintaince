@@ -30,7 +30,8 @@ const FavoriteScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       {favoriteState.length == 0 ? (
-        <View style={{ alignSelf: "center" }}>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <Image source={Images.EmptyBox} style={styles.image} />
           <Text style={styles.text}>No data</Text>
         </View>
