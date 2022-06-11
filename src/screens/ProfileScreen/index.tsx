@@ -86,7 +86,10 @@ const ProfileScreen = ({ navigation }: any) => {
           ))}
           <TouchableOpacity
             style={styles.button}
-            onPress={() => AsyncStorage.removeItem("idUser")}>
+            onPress={async () => {
+              navigation.navigate("SignIn");
+              await AsyncStorage.removeItem("idUser");
+            }}>
             <View style={styles.buttonContent}>
               <Text style={styles.buttonText}>Log out</Text>
               <LogoutIcon color={Colors.light.primary} size={22} />

@@ -34,7 +34,7 @@ const VehicleScreen = ({ navigation }: any) => {
     const getVehicle = async () => {
       Spinner.show();
       const idUser = await AsyncStorage.getItem("idUser");
-      dispatch(getVehicleAction(JSON.parse(idUser)));
+      dispatch(getVehicleAction(idUser));
     };
 
     getVehicle();

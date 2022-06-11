@@ -21,7 +21,7 @@ const FavoriteScreen = () => {
   useEffect(() => {
     const getFavoriteLots = async () => {
       const idUser = await AsyncStorage.getItem("idUser");
-      dispatch(favoriteActions.getFavorites(JSON.parse(idUser)));
+      dispatch(favoriteActions.getFavorites(idUser));
     };
 
     getFavoriteLots();
