@@ -7,6 +7,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import AuthWrapper from "@/pages/AuthWrapper";
 import { verifyToken } from "@/store/actions/authAction";
 import { useAppDispatch } from "@/store/hooks";
+import SignUp from "./pages/SignUp";
 
 export default function App() {
   const dispatch = useAppDispatch();
@@ -27,6 +28,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/sign-up" element={<SignUp />} />
       <Route
         element={
           <AuthWrapper>

@@ -16,6 +16,20 @@ const login = createAsyncThunk("auth/login", async (data: any, { rejectWithValue
   }
 });
 
+const signup = createAsyncThunk("auth/signup", async (data: any, { rejectWithValue }) => {
+  try {
+    const res = await authApi.signup(data);
+    return res.data;
+  } catch (error: any) {
+    if (!error.response) {
+      throw error;
+    }
+    if (axios.isAxiosError(error)) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+});
+
 const verifyToken = createAsyncThunk(
   "auth/verify",
   async (accessToken: any, { rejectWithValue }) => {
@@ -33,4 +47,4 @@ const verifyToken = createAsyncThunk(
   },
 );
 
-export { login, verifyToken };
+export { login, verifyToken, signup };
