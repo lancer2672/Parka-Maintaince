@@ -1,12 +1,7 @@
 import AppButton from "@src/components/common/AppButton";
 import { Text } from "@src/components/Themed";
 import React, { useState } from "react";
-import {
-  Keyboard,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { Keyboard, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationScreenProp } from "react-navigation";
 

@@ -14,6 +14,9 @@ interface IResetPasswordParams {
 interface IVerificationParams {
   phoneNumber: string;
 }
+interface IParkingReservationDetailParams {
+  idParkingReservation: string;
+}
 
 export type AppStackParams = {
   OnboardingScreen: undefined;
@@ -21,4 +24,5 @@ export type AppStackParams = {
   App: undefined;
   NotFound: undefined;
   QRCode: undefined;
+  ParkingReservationDetail: IParkingReservationDetailParams;
 };

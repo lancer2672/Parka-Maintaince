@@ -1,20 +1,8 @@
-import React, { useState, useEffect } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Button,
-  Alert,
-  TouchableOpacity,
-} from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import React, { useEffect, useState } from "react";
+import { Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationScreenProp } from "react-navigation";
-import { parkingReservationApi } from "@src/api";
-import procedureApi from "@src/api/procedureApi";
-import parkingSlipApi from "@src/api/parkingSlipApi";
-import { ParkingSlip } from "@src/types";
-import { isFulfilled } from "@reduxjs/toolkit";
 
 interface IProps {
   navigation: NavigationScreenProp<any, any>;
@@ -32,48 +20,15 @@ const QRCode = (props: IProps) => {
   }, []);
 
   const handleBarCodeScanned = async ({ type, data }: any) => {
-    const idParkingReservation = data.split("-")[0];
-    const status = data.split("-")[1];
-    if (status === "scheduled") {
-      checkIn(idParkingReservation);
-    } else if (status === "ongoing") {
-      checkOut(idParkingReservation);
-    }
-
-    setScanned(true);
-  };
-
-  const checkIn = async (idParkingReservation: string) => {
-    const res = await procedureApi.checkIn(idParkingReservation);
-    if (res.data.data.status) {
-      Alert.alert("Check in successfully!!!");
+    if (data.slice(0, 5) !== "parka") {
+      Alert.alert("Invalid QR code!");
     } else {
-      Alert.alert("Fail!!!");
-    }
-  };
-
-  const checkOut = async (idParkingReservation: string) => {
-    const result = await parkingSlipApi.getByIdParkingReserver(
-      idParkingReservation,
-    );
-    if (result.data.data) {
-      const parkingSlip: ParkingSlip = result.data.data;
-      const data = {
+      const idParkingReservation = data.slice(5, data.length);
+      props.navigation.navigate("ParkingReservationDetail", {
         idParkingReservation,
-        idParkingSlip: parkingSlip.idParkingSlip,
-        exitTime: Date.now(),
-        cost: "",
-        total: "",
-        isPaid: true,
-      };
-
-      const isCheckOut = await procedureApi.checkOut(data);
-      if (isCheckOut.data.data.status) {
-        Alert.alert("Successfully!!!");
-      } else {
-        Alert.alert(isCheckOut.data.message);
-      }
+      });
     }
+    setScanned(true);
   };
 
   if (hasPermission === false) {

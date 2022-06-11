@@ -1,5 +1,3 @@
-import { StringLocale } from "yup/lib/locale";
-
 type User = {
   idUser: string;
   displayName: string;
@@ -51,3 +49,9 @@ type ParkingSlip = {
   total: number;
   isPaid: boolean;
 }
+type Company = {
+  idCompany: string;
+  companyName: string;
+  phoneNumber: string;
+  email: string;
+};

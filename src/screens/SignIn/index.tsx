@@ -2,9 +2,8 @@ import { MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
-import { loginAction } from "@src/store/actions/userAction";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import { loginWithOauth } from "@src/store/slices/userSlice";
+import { AuthAction } from "@src/store/slices/authSlice";
 import { Formik, FormikProps } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -14,7 +13,6 @@ import {
   Switch,
   Text,
   TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -26,7 +24,7 @@ type Props = {
   navigation: NavigationScreenProp<any, any>;
 };
 type LoginValue = {
-  phoneNumber: string;
+  email: string;
   password: string;
 };
 
@@ -38,10 +36,9 @@ const SignIn = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    phoneNumber: Yup.string()
-      .matches(new RegExp("^0"), "Invalid phone number")
-      .required("Please enter phone number!")
-      .length(10, "Phone number must include 10 numbers")
+    email: Yup.string()
+      .required("Please enter email!")
+      .email("Email invalid!")
       .nullable(),
     password: Yup.string().required("Please enter password").nullable(),
   });
@@ -50,41 +47,42 @@ const SignIn = (props: Props) => {
     setIsRemember((previousState) => !previousState);
 
   const login = async (values: any) => {
-    props.navigation.navigate("App");
-    // try {
-    //   setIsLoading(true);
-    //   const result = await dispatch(
-    //     loginAction({
-    //       username: values.phoneNumber,
-    //       password: values.password,
-    //     }),
-    //   ).unwrap();
+    try {
+      setIsLoading(true);
+      const result = await dispatch(
+        AuthAction.login({
+          email: values.email,
+          password: values.password,
+        }),
+      ).unwrap();
 
-    //   setIsLoading(false);
-    //   if (result.errorMessage) {
-    //     Alert.alert("Error: " + result.errorMessage);
-    //     return;
-    //   }
-    //   if (isRemember) {
-    //     await AsyncStorage.setItem("phoneNumber", values.phoneNumber);
-    //     await AsyncStorage.setItem("password", values.password);
-    //   } else {
-    //     await AsyncStorage.removeItem("phoneNumber");
-    //     await AsyncStorage.removeItem("password");
-    //   }
-    //   props.navigation.navigate("App");
-    // } catch (error: any) {
-    //   setIsLoading(false);
-    //   Alert.alert("Error: " + error);
-    // }
+      setIsLoading(false);
+      console.log(result);
+      if (result.error) {
+        Alert.alert(`${result.error}`);
+        return;
+      }
+
+      if (isRemember) {
+        await AsyncStorage.setItem("email", values.email);
+        await AsyncStorage.setItem("password", values.password);
+      } else {
+        await AsyncStorage.removeItem("email");
+        await AsyncStorage.removeItem("password");
+      }
+      props.navigation.navigate("App");
+    } catch (error: any) {
+      setIsLoading(false);
+      Alert.alert("Error");
+    }
   };
 
   useEffect(() => {
     const saveIntoAsyncStorage = async () => {
       if (formikRef.current) {
-        const phoneNumber = await AsyncStorage.getItem("phoneNumber");
+        const email = await AsyncStorage.getItem("email");
         const password = await AsyncStorage.getItem("password");
-        formikRef.current.setFieldValue("phoneNumber", phoneNumber);
+        formikRef.current.setFieldValue("email", email);
         formikRef.current.setFieldValue("password", password);
       }
     };
@@ -98,7 +96,7 @@ const SignIn = (props: Props) => {
         </View>
         <Formik
           innerRef={formikRef}
-          initialValues={{ phoneNumber: "", password: "" }}
+          initialValues={{ email: "", password: "" }}
           validationSchema={LoginSchema}
           onSubmit={(values) => login(values)}>
           {({ handleChange, handleSubmit, values, errors, touched }) => (
@@ -111,18 +109,15 @@ const SignIn = (props: Props) => {
                     color={Colors.light.text}
                   />
                   <TextInput
-                    placeholder="0326089954"
-                    onChangeText={handleChange("phoneNumber")}
-                    value={values.phoneNumber}
-                    keyboardType="number-pad"
+                    placeholder="parka@gmail.com"
+                    onChangeText={handleChange("email")}
+                    value={values.email}
                     style={styles.input}
                   />
                   <View style={{ width: 22 }} />
                 </View>
-                {errors.phoneNumber && touched.phoneNumber && (
-                  <Text style={styles.validateError}>
-                    * {errors.phoneNumber}
-                  </Text>
+                {errors.email && touched.email && (
+                  <Text style={styles.validateError}>* {errors.email}</Text>
                 )}
                 <View style={styles.groupInput}>
                   <MaterialCommunityIcons
