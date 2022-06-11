@@ -83,6 +83,7 @@ const ResetPassword = (props: Props) => {
                   <Feather name="phone" size={22} />
                   <TextInput
                     placeholder="Phone number"
+                    placeholderTextColor="#CBD5E1"
                     onChangeText={handleChange("phoneNumber")}
                     value={values.phoneNumber}
                     autoFocus

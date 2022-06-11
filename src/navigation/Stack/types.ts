@@ -21,4 +21,5 @@ export type ProfileStackParams = {
   VehicleScreen: undefined;
   AddVehicleScreen: Vehicle;
   FavoriteScreen: undefined;
+  ChangePasswordScreen: undefined;
 };

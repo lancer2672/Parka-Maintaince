@@ -8,6 +8,8 @@ import { RouteProp } from "@react-navigation/native";
 import authApi from "@src/api/authApi";
 import AppButton from "@src/components/common/AppButton";
 import { Colors } from "@src/constants";
+import { useAppSelector } from "@src/store/hooks";
+import { selectUser } from "@src/store/selectors";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import {
@@ -25,13 +27,12 @@ import * as Yup from "yup";
 
 type Props = {
   navigation: NavigationScreenProp<any, any>;
-  route: RouteProp<any, any>;
 };
 
-const ChangePassword = (props: Props) => {
-  const routeData = props.route.params;
+const ChangePasswordScreen = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
+  const userState = useAppSelector(selectUser);
   const ChangePasswordSchema = Yup.object().shape({
     password: Yup.string().required("Please enter new password!"),
     passwordConfirm: Yup.string().required("Please re-enter your password!"),
@@ -48,7 +49,7 @@ const ChangePassword = (props: Props) => {
       }
       const isSuccess = await authApi.resetPassword(
         values.password,
-        routeData.phoneNumber,
+        userState.phoneNumber,
       );
       setIsLoading(false);
       if (isSuccess.data.status) {
@@ -56,8 +57,8 @@ const ChangePassword = (props: Props) => {
         if (password) {
           await AsyncStorage.setItem("password", values.password);
         }
-        props.navigation.navigate("SignIn");
         Alert.alert("You have successfully changed password!");
+        props.navigation.goBack();
       } else {
         Alert.alert("Failed");
       }
@@ -69,14 +70,6 @@ const ChangePassword = (props: Props) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView>
         <View style={styles.container}>
-          <AntDesign
-            name="arrowleft"
-            size={24}
-            color="black"
-            onPress={() => props.navigation.navigate("ResetPassword")}
-          />
-          <Text style={styles.title}>Change Password</Text>
-          <Text style={styles.description}>Please enter new a password</Text>
           <Formik
             initialValues={{ password: "", passwordConfirm: "" }}
             onSubmit={(values) => handleChangePassword(values)}
@@ -100,7 +93,7 @@ const ChangePassword = (props: Props) => {
                       secureTextEntry={hidePassword}
                     />
                     <Octicons
-                      name={hidePassword ? "eye-closed" : "eye"}
+                      name={hidePassword ? "eye" : "eye-closed"}
                       size={22}
                       color={Colors.light.text}
                       onPress={() => setHidePassword(!hidePassword)}
@@ -126,7 +119,7 @@ const ChangePassword = (props: Props) => {
                       secureTextEntry={hidePassword}
                     />
                     <Octicons
-                      name={hidePassword ? "eye-closed" : "eye"}
+                      name={hidePassword ? "eye" : "eye-closed"}
                       size={22}
                       color={Colors.light.text}
                       onPress={() => setHidePassword(!hidePassword)}
@@ -139,10 +132,17 @@ const ChangePassword = (props: Props) => {
                   )}
                 </View>
                 <AppButton
-                  style={styles.btnSend}
+                  style={styles.btnChange}
                   isLoading={isLoading}
                   onPress={handleSubmit}>
-                  <Text>Change</Text>
+                  <Text
+                    style={{
+                      fontSize: 22,
+                      fontWeight: "600",
+                      color: "white",
+                    }}>
+                    Change password
+                  </Text>
                 </AppButton>
               </>
             )}
@@ -153,7 +153,7 @@ const ChangePassword = (props: Props) => {
   );
 };
 
-export default ChangePassword;
+export default ChangePasswordScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -196,10 +196,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: Colors.light.text,
   },
-  btnSend: {
+  btnChange: {
     height: 56,
-    marginLeft: 20,
-    marginRight: 20,
+    margin: 20,
+    marginTop: 20,
     justifyContent: "center",
   },
   validateError: {

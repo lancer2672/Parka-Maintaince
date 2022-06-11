@@ -46,8 +46,8 @@ const actions = [
     ),
   },
   {
-    text: "Setting",
-    screen: "HomeScreen",
+    text: "Change password",
+    screen: "ChangePasswordScreen",
     icon: (
       <MaterialCommunityIcons
         name="cog-outline"

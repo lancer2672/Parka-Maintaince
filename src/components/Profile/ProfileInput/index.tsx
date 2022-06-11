@@ -29,6 +29,7 @@ const ProfileInput = ({
           onChangeText={onChangeText}
           value={value}
           placeholder={placeholder}
+          placeholderTextColor="#CBD5E1"
           maxLength={maxLength}
         />
       </View>

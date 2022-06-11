@@ -21,9 +21,17 @@ const HistoryBookingItem = ({ item, onViewTicket }: Props) => {
           styles.flexRow,
           { alignItems: "center", justifyContent: "space-between" },
         ]}>
-        <View style={styles.status}>
-          <Text style={styles.statusText}>Completed</Text>
-        </View>
+        {item?.status == "end" ? (
+          <View style={styles.status}>
+            <Text style={styles.statusText}>Completed</Text>
+          </View>
+        ) : (
+          <View style={[styles.status, styles.cancelled]}>
+            <Text style={[styles.statusText, styles.scheduleText]}>
+              Cancelled
+            </Text>
+          </View>
+        )}
         <Text style={styles.price} numberOfLines={1}>
           {CurrencyHelper.formatVND(item?.total)}
         </Text>
@@ -91,11 +99,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     alignSelf: "flex-start",
   },
-  schedule: {
-    backgroundColor: ColorHelper.hexToRgbA(Colors.light.warning, 0.15),
+  cancelled: {
+    backgroundColor: ColorHelper.hexToRgbA(Colors.light.danger, 0.25),
   },
   scheduleText: {
-    color: Colors.light.warning,
+    color: "red",
   },
   statusText: {
     color: Colors.light.success,

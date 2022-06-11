@@ -120,7 +120,8 @@ const SignIn = (props: Props) => {
                     color={Colors.light.text}
                   />
                   <TextInput
-                    placeholder="0326089954"
+                    placeholder="Phone number"
+                    placeholderTextColor="#CBD5E1"
                     onChangeText={handleChange("phoneNumber")}
                     value={values.phoneNumber}
                     keyboardType="number-pad"
@@ -140,7 +141,9 @@ const SignIn = (props: Props) => {
                     color={Colors.light.text}
                   />
                   <TextInput
-                    placeholder="Mật khẩu"
+                    placeholder="Password"
+                    placeholderTextColor="#CBD5E1"
+                    placeholderTextColor="#CBD5E1"
                     onChangeText={handleChange("password")}
                     value={values.password}
                     style={styles.input}

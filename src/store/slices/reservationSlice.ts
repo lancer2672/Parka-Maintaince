@@ -1,6 +1,7 @@
 import { Spinner } from "@nghinv/react-native-loading";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  // cancelReservation,
   createReservation,
   getReservationsCompleted,
   getReservationsScheduled,
@@ -35,6 +36,15 @@ export const reservationSlice = createSlice({
         Spinner.hide();
       }),
     );
+    // builder.addCase(
+    //   cancelReservation.fulfilled,
+    //   (state, { payload }: PayloadAction<Reservation[]>) => {
+    //     state.entitiesScheduled = state.entitiesScheduled.filter(e => !payload.includes(e))
+    //     state.entitiesCompleted = [...state.entitiesCompleted, ...payload];
+    //     state.status = "scheduled";
+    //     Spinner.hide();
+    //   },
+    // );
     builder.addCase(
       createReservation.fulfilled,
       (state, { payload }: PayloadAction<Reservation>) => {

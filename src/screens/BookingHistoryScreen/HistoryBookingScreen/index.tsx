@@ -50,24 +50,6 @@ const HistoryBookingScreen = ({ navigation }: Props) => {
   useEffect(() => {
     const history: Reservation[] = [];
 
-    // const isAfter = (date: any, endTime: any) => {
-    //   if (dayjs(date).isBefore(dayjs())) {
-    //     return true;
-    //   } else if (dayjs(date).isSame(dayjs())) {
-    //     const hour = endTime.substring(0, 2);
-    //     const mins = endTime.substring(3, 5);
-    //     const endDate = dayjs().set({ hour: hour, mins: mins });
-
-    //     if (endDate.isBefore(dayjs())) {
-    //       return true;
-    //     } else {
-    //       return false;
-    //     }
-    //   } else {
-    //     return false;
-    //   }
-    // };
-
     if (reservationsCompletedState.length > 0) {
       reservationsCompletedState.map((reservation: Reservation) => {
         history.push(reservation);

@@ -18,12 +18,21 @@ import {
 } from "react-native";
 import DashedLine from "react-native-dashed-line";
 import { ClipboardListIcon } from "react-native-heroicons/outline";
+import { color } from "react-native-reanimated";
 import ViewShot from "react-native-view-shot";
 
-const Item = ({ title, value }: { title: string; value: string }) => {
+const Item = ({
+  title,
+  value,
+  color,
+}: {
+  title: string;
+  value: string;
+  color?: string;
+}) => {
   return (
     <View style={styles.flex}>
-      <Text style={styles.title} numberOfLines={1}>
+      <Text style={[styles.title, { color: color }]} numberOfLines={1}>
         {title}
       </Text>
       <Text style={styles.value} numberOfLines={2}>
@@ -44,6 +53,7 @@ const BookingTicketScreen = ({ navigation, route }: any) => {
   const reservation = route.params;
   const parkingSlot = reservation?.ParkingSlot;
   const parkingLot = parkingSlot?.Block?.ParkingLot;
+  const status = reservation?.status;
   const parkingSlip = reservation?.ParkingSlip;
 
   var time = `${reservation?.startTime.slice(
@@ -97,7 +107,7 @@ const BookingTicketScreen = ({ navigation, route }: any) => {
           options={{ format: "png", quality: 0.9 }}>
           <View style={styles.card}>
             <Text style={styles.note}>
-              {parkingSlip
+              {status == "end" || status == "cancel"
                 ? "QR code expired!"
                 : "Scan this when you are in the parking lot"}
             </Text>
@@ -140,10 +150,15 @@ const BookingTicketScreen = ({ navigation, route }: any) => {
                     reservation?.TimeFrame?.duration,
                   )}
                 />
-                <Item
-                  title={parkingSlip ? "Entry time - Exit time" : "Hours"}
-                  value={time}
-                />
+                {status == "cancel" && (
+                  <Item title="Cancelled" value="" color="red" />
+                )}
+                {status != "cancel" && (
+                  <Item
+                    title={status == "end" ? "Entry time - Exit time" : "Hours"}
+                    value={time}
+                  />
+                )}
                 <Item
                   title={"Vehicle"}
                   value={`${reservation?.Vehicle?.name} (${reservation?.Vehicle?.number})`}

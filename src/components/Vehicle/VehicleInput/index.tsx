@@ -64,6 +64,7 @@ const VehicleInput = ({
             onChangeText={onChangeText}
             value={value}
             placeholder={placeholder}
+            placeholderTextColor="#CBD5E1"
             maxLength={maxLength}
           />
         )}

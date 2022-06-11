@@ -22,5 +22,12 @@ const createReservation = createAsyncThunk(
     return res.data;
   },
 );
+// const cancelReservation = createAsyncThunk(
+//   "reservation/cancel",
+//   async (arrID: any) => {
+//     const res = await parkingReservationApi.cancel(arrID);
+//     return res.data;
+//   },
+// );
 
 export { getReservationsScheduled, createReservation, getReservationsCompleted };

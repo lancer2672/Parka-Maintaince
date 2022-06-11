@@ -123,7 +123,8 @@ const SignUp = (props: Props) => {
                       />
                       <TextInput
                         onChangeText={handleChange("name")}
-                        placeholder="Họ và tên"
+                        placeholder="Enter name"
+                        placeholderTextColor="#CBD5E1"
                         value={values.name}
                         style={styles.input}
                       />
@@ -141,6 +142,7 @@ const SignUp = (props: Props) => {
                       <TextInput
                         onChangeText={handleChange("email")}
                         placeholder="parka@gmail.com"
+                        placeholderTextColor="#CBD5E1"
                         value={values.email}
                         style={styles.input}
                         keyboardType="email-address"
@@ -153,7 +155,8 @@ const SignUp = (props: Props) => {
                       <Feather name="phone" size={24} style={styles.icon} />
                       <TextInput
                         onChangeText={handleChange("phoneNumber")}
-                        placeholder="Số điện thoại"
+                        placeholder="Phone number"
+                        placeholderTextColor="#CBD5E1"
                         value={values.phoneNumber}
                         style={styles.input}
                         maxLength={10}
@@ -173,7 +176,8 @@ const SignUp = (props: Props) => {
                       />
                       <TextInput
                         onChangeText={handleChange("password")}
-                        placeholder="Mật khẩu"
+                        placeholder="Enter password"
+                        placeholderTextColor="#CBD5E1"
                         secureTextEntry={secureTextEntry}
                         value={values.password}
                         style={styles.input}
@@ -198,7 +202,8 @@ const SignUp = (props: Props) => {
                       />
                       <TextInput
                         onChangeText={handleChange("passwordConfirm")}
-                        placeholder="Nhập lại mật khẩu"
+                        placeholder="Re-enter password"
+                        placeholderTextColor="#CBD5E1"
                         value={values.passwordConfirm}
                         style={styles.input}
                         secureTextEntry={secureTextEntry}

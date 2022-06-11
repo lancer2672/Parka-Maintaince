@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Colors } from "@src/constants";
+import ChangePasswordScreen from "@src/screens/ProfileScreen/ChangePasswordScreen";
 import ProfileScreen from "@src/screens/ProfileScreen";
 import FavoriteScreen from "@src/screens/ProfileScreen/FavoriteScreen";
 import PersonalScreen from "@src/screens/ProfileScreen/PersonalScreen";
@@ -60,6 +61,13 @@ const ProfileStack = () => {
         component={FavoriteScreen}
         options={{
           title: "Favorite parking lots",
+        }}
+      />
+      <Stack.Screen
+        name="ChangePasswordScreen"
+        component={ChangePasswordScreen}
+        options={{
+          title: "Change your password",
         }}
       />
     </Stack.Navigator>

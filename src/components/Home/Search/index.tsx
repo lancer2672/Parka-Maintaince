@@ -70,6 +70,7 @@ const SearchAutocomplete = (props: Props) => {
         />
         <TextInput
           placeholder="Search"
+          placeholderTextColor="#CBD5E1"
           style={styles.input}
           value={value}
           onChangeText={(text) => {
