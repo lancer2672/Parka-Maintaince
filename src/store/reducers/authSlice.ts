@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { login, updateCompany, verifyToken } from "../actions/authAction";
+
+import { login, updateCompany, signup, verifyToken } from "../actions/authAction";
 
 export type AuthState = Partial<{
   auth: Company;
@@ -33,6 +34,18 @@ const authSlice = createSlice({
         localStorage.setItem("accessToken", payload.accessToken);
       })
       .addCase(login.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
+      })
+      .addCase(signup.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(signup.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.auth = payload.data;
+        localStorage.setItem("accessToken", payload.accessToken);
+      })
+      .addCase(signup.rejected, (state, { payload }) => {
         state.loading = false;
         state.error = payload;
       })
