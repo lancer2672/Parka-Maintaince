@@ -44,6 +44,19 @@ const BookingTicketScreen = ({ navigation, route }: any) => {
   const reservation = route.params;
   const parkingSlot = reservation?.ParkingSlot;
   const parkingLot = parkingSlot?.Block?.ParkingLot;
+  const parkingSlip = reservation?.ParkingSlip;
+
+  var time = `${reservation?.startTime.slice(
+    0,
+    reservation?.startTime.length - 3,
+  )} - ${reservation?.endTime.slice(0, reservation?.endTime.length - 3)}`;
+
+  if (parkingSlip) {
+    time = `${parkingSlip?.entryTime.slice(
+      0,
+      parkingSlip?.entryTime.length - 3,
+    )} - ${parkingSlip?.exitTime.slice(0, parkingSlip?.exitTime.length - 3)}`;
+  }
 
   const onCapture = useCallback(() => {
     ref?.current.capture().then((uri: any) => {
@@ -84,9 +97,14 @@ const BookingTicketScreen = ({ navigation, route }: any) => {
           options={{ format: "png", quality: 0.9 }}>
           <View style={styles.card}>
             <Text style={styles.note}>
-              Scan this when you are in the parking lot
+              {parkingSlip
+                ? "QR code expired!"
+                : "Scan this when you are in the parking lot"}
             </Text>
-            <AppQRCode size={180} content={reservation.idParkingReservation} />
+            <AppQRCode
+              size={180}
+              content={"parka" + reservation.idParkingReservation}
+            />
           </View>
           <DashedLine
             dashLength={10}
@@ -102,15 +120,12 @@ const BookingTicketScreen = ({ navigation, route }: any) => {
               { alignItems: "flex-start", paddingVertical: 12 },
             ]}>
             <Item title={"Name"} value={userState?.displayName} />
-            <Item
-              title={"Parking area"}
-              value={reservation?.parkingLot?.name}
-            />
+            <Item title={"Parking area"} value={parkingLot?.name} />
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Item
                   title={"Parking spot"}
-                  value={`${parkingLot?.Block?.blockCode} - ${parkingSlot?.slotNumber}`}
+                  value={`${parkingSlot?.Block?.blockCode} - ${parkingSlot?.slotNumber}`}
                 />
                 <Item
                   title={"Date"}
@@ -126,10 +141,8 @@ const BookingTicketScreen = ({ navigation, route }: any) => {
                   )}
                 />
                 <Item
-                  title={"Hours"}
-                  value={`${DateTimeHelper.formatTime(
-                    reservation?.startTime,
-                  )} - ${DateTimeHelper.formatTime(reservation?.endTime)}`}
+                  title={parkingSlip ? "Entry time - Exit time" : "Hours"}
+                  value={time}
                 />
                 <Item
                   title={"Vehicle"}

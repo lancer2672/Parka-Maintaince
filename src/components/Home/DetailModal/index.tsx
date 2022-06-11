@@ -8,12 +8,15 @@ import BottomSheet, {
   BottomSheetFlatList,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import { Spinner } from "@nghinv/react-native-loading";
+import parkingSlotApi from "@src/api/parkingSlotApi";
 import { Colors, Spacing } from "@src/constants";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
 import { selectBooking, selectTimeFrames } from "@src/store/selectors";
 import { timeFrameActions } from "@src/store/slices/timeFrameSlice";
+import dayjs from "dayjs";
 import * as Linking from "expo-linking";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ActionButton from "../ActionButton";
 import TimeItem from "../TimeItem";
@@ -33,7 +36,7 @@ const DetailModal = (props: Props) => {
   const { isShow, onClose, navigateBooking } = props;
   const ref = React.useRef<BottomSheet>(null);
   const selectedParking = useAppSelector(selectBooking).parkingLot;
-  const timeFrames = useAppSelector(selectTimeFrames);
+  const [numOfAvailableSlots, setNumOfAvailableSlots] = useState<number>(0);
   const dispatch = useAppDispatch();
 
   const onOpenBottomSheetHandler = (index: number) => {
@@ -53,6 +56,28 @@ const DetailModal = (props: Props) => {
 
   useEffect(() => {
     dispatch(timeFrameActions.getTimeFrames(selectedParking?.idParkingLot));
+  }, [selectedParking]);
+
+  useEffect(() => {
+    const getNumOfSlots = async () => {
+      const time = dayjs().get("hour") + ":" + dayjs().get("minute");
+      Spinner.show();
+      const numOfSlots = await parkingSlotApi.getAvailableSlots(
+        time,
+        time,
+        dayjs().format("YYYY-MM-DD"),
+        selectedParking?.idParkingLot,
+      );
+      var num = 0;
+      numOfSlots.data.data.forEach((element: any) => {
+        num += element.ParkingSlots?.length;
+      });
+      setNumOfAvailableSlots(num);
+      Spinner.hide();
+    };
+    if (selectedParking) {
+      getNumOfSlots();
+    }
   }, [selectedParking]);
 
   return (
@@ -170,7 +195,7 @@ const DetailModal = (props: Props) => {
                   marginHorizontal: Spacing.s,
                   color: Colors.light.heading,
                 }}>
-                20 spots
+                {numOfAvailableSlots} slots available
               </Text>
             </View>
             <View

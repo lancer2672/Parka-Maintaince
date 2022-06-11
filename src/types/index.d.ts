@@ -39,6 +39,7 @@ type Block = {
   description: string;
   isFull: boolean;
   numOfSlot: number;
+  ParkingSlots: ParkingSlot[];
 };
 
 type TimeFrame = {

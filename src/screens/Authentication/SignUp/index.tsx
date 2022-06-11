@@ -224,16 +224,11 @@ const SignUp = (props: Props) => {
                     )}
                   </View>
                   <AppButton
-                    title="Next"
                     style={styles.btnNext}
-                    color="white"
-                    backgroundColor={
-                      isLoading ? "#A498ED" : Colors.light.primary
-                    }
                     isLoading={isLoading}
-                    textStyle={{ fontSize: 22, fontWeight: "600" }}
-                    onPress={handleSubmit}
-                  />
+                    onPress={handleSubmit}>
+                    <Text>Next</Text>
+                  </AppButton>
                 </>
               )}
             </Formik>

@@ -97,14 +97,11 @@ const ResetPassword = (props: Props) => {
                 )}
               </View>
               <AppButton
-                title="Send"
                 style={styles.btnSend}
-                backgroundColor={isLoading ? "#A498ED" : Colors.light.primary}
                 isLoading={isLoading}
-                color="white"
-                textStyle={{ fontSize: 22, fontWeight: "600" }}
-                onPress={handleSubmit}
-              />
+                onPress={handleSubmit}>
+                <Text>Send</Text>
+              </AppButton>
             </>
           )}
         </Formik>

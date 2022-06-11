@@ -1,20 +1,22 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ScheduleBookingItem from "@src/components/BookingHistory/ScheduleBookingItem";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import { selectUser } from "@src/store/selectors";
+import { selectReservationsScheduled, selectUser } from "@src/store/selectors";
 import { reservationActions } from "@src/store/slices/reservationSlice";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FlatList, View } from "react-native";
 
 type Props = {
-  reservations: Reservation[];
   navigation: any;
 };
 
-const ScheduledBookingScreen = ({ reservations, navigation }: Props) => {
+const ScheduledBookingScreen = ({ navigation }: Props) => {
   const [isRefreshing, setRefreshing] = useState<boolean>(false);
   const userState = useAppSelector(selectUser);
-
+  const reservationsScheduledState = useAppSelector(
+    selectReservationsScheduled,
+  );
+  const [scheduleBooking, setScheduleBooking] = useState<Reservation[]>();
   const dispatch = useAppDispatch();
 
   const onRefresh = () => {
@@ -25,7 +27,9 @@ const ScheduledBookingScreen = ({ reservations, navigation }: Props) => {
       }
       setRefreshing(true);
       dispatch(
-        reservationActions.getReservations(userState?.idUser || idUser),
+        reservationActions.getReservationsScheduled(
+          userState?.idUser || idUser,
+        ),
       ).finally(() => setRefreshing(false));
     })();
   };
@@ -33,11 +37,43 @@ const ScheduledBookingScreen = ({ reservations, navigation }: Props) => {
   const navigationTicket = (item: any) => {
     navigation.navigate("BookingTicketScreen", item);
   };
+  useEffect(() => {
+    dispatch(reservationActions.getReservationsScheduled(userState?.idUser));
+  }, []);
+
+  useEffect(() => {
+    const schedule: Reservation[] = [];
+
+    // const isAfter = (date: any, endTime: any) => {
+    //   if (dayjs(date).isBefore(dayjs())) {
+    //     return true;
+    //   } else if (dayjs(date).isSame(dayjs())) {
+    //     const hour = endTime.substring(0, 2);
+    //     const mins = endTime.substring(3, 5);
+    //     const endDate = dayjs().set({ hour: hour, mins: mins });
+
+    //     if (endDate.isBefore(dayjs())) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   } else {
+    //     return false;
+    //   }
+    // };
+
+    if (reservationsScheduledState.length > 0) {
+      reservationsScheduledState.map((reservation: Reservation) => {
+        schedule.push(reservation);
+      });
+    }
+    setScheduleBooking(schedule);
+  }, [reservationsScheduledState]);
   return (
     <View style={{ flex: 1 }}>
       <FlatList
         style={{ flex: 1 }}
-        data={reservations}
+        data={scheduleBooking}
         refreshing={isRefreshing}
         onRefresh={onRefresh}
         keyExtractor={(item) => item.idParkingReservation}

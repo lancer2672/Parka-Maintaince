@@ -41,20 +41,23 @@ const AppNavigator = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
     };
 
     const getUser = async () => {
-      if (!userState) {
-        const idUser = await AsyncStorage.getItem("idUser");
-        if (idUser) {
-          dispatch(userActions.getUser(JSON.parse(idUser)))
-            .unwrap()
-            .then(() => {
-              setIsLogged(true);
-            });
-        }
+      const idUser = await AsyncStorage.getItem("idUser");
+      if (idUser) {
+        dispatch(userActions.getUser(idUser))
+          .unwrap()
+          .then(() => {
+            setIsLogged(true);
+          })
+          .catch(() => {
+            setIsLogged(false);
+          });
+      } else {
+        setIsLogged(false);
       }
     };
 
     checkFirstLaunched();
-    // getUser();
+    getUser();
   }, []);
   return (
     <NavigationContainer

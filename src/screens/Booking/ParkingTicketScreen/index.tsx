@@ -83,7 +83,10 @@ const ParkingTicketScreen = ({ navigation }: any) => {
             <Text style={styles.note}>
               Scan this when you are in the parking lot
             </Text>
-            <AppQRCode size={180} content={bookingState.idParkingReservation} />
+            <AppQRCode
+              size={180}
+              content={"parka" + bookingState.idParkingReservation}
+            />
           </View>
           <DashedLine
             dashLength={10}

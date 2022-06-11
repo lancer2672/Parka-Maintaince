@@ -1,6 +1,13 @@
 import parkingLotApi from "@src/api/parkingLotApi";
 import React, { useEffect, useState } from "react";
-import { Dimensions, Image, StyleSheet, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  View,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import SearchAutocomplete from "../Search";
@@ -131,7 +138,7 @@ const Map = (props: Props) => {
 const styles = StyleSheet.create({
   map: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 100,
+    height: Dimensions.get("window").height - 130,
     marginTop: -10,
   },
   marker: {
