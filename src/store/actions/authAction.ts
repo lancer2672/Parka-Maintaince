@@ -33,4 +33,21 @@ const verifyToken = createAsyncThunk(
   },
 );
 
-export { login, verifyToken };
+const updateCompany = createAsyncThunk(
+  "auth/update",
+  async ({ idCompany, data }: { idCompany: any; data: any }, { rejectWithValue }) => {
+    try {
+      const res = await authApi.update(idCompany, data);
+      return res.data;
+    } catch (error: any) {
+      if (!error.response) {
+        throw error;
+      }
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response.data);
+      }
+    }
+  },
+);
+
+export { login, verifyToken, updateCompany };

@@ -28,20 +28,20 @@ const MainLayout = () => {
         contentWidth="Fluid"
         layout="side"
         headerTitleRender={(logo, title) => (
-          <Link to="/" onClick={() => setPathname("/")}>
+          <Link to="/lots" onClick={() => setPathname("/lots")}>
             {logo}
             {title}
           </Link>
         )}
         onMenuHeaderClick={() => {
-          navigate("/");
-          setPathname("/");
+          navigate("/lots");
+          setPathname("/lots");
         }}
         menuItemRender={(item, dom) => (
           <NavLink
             to={`${item.path}`}
             onClick={() => {
-              setPathname(item.path || "/");
+              setPathname(item.path || "/lots");
             }}>
             {dom}
           </NavLink>
