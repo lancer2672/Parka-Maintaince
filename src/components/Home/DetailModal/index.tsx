@@ -4,32 +4,19 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import BottomSheet, {
-  BottomSheetFlatList,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Spinner } from "@nghinv/react-native-loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import parkingSlotApi from "@src/api/parkingSlotApi";
 import { Colors, Spacing } from "@src/constants";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import {
-  selectBooking,
-  selectFavorites,
-  selectTimeFrames,
-} from "@src/store/selectors";
+import { selectBooking, selectFavorites } from "@src/store/selectors";
 import { favoriteActions } from "@src/store/slices/favoriteSlice";
 import { timeFrameActions } from "@src/store/slices/timeFrameSlice";
 import dayjs from "dayjs";
 import * as Linking from "expo-linking";
 import React, { useEffect, useState } from "react";
-import {
-  AsyncStorage,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ActionButton from "../ActionButton";
 import TimeItem from "../TimeItem";
 
@@ -49,7 +36,6 @@ const DetailModal = (props: Props) => {
   const ref = React.useRef<BottomSheet>(null);
   const selectedParking = useAppSelector(selectBooking).parkingLot;
   const [numOfAvailableSlots, setNumOfAvailableSlots] = useState<number>(0);
-  const timeFrames = useAppSelector(selectTimeFrames);
   const favoriteState = useAppSelector(selectFavorites);
   const [isFavorite, setFavorite] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -100,7 +86,7 @@ const DetailModal = (props: Props) => {
         dayjs().format("YYYY-MM-DD"),
         selectedParking?.idParkingLot,
       );
-      var num = 0;
+      let num = 0;
       numOfSlots.data.data.forEach((element: any) => {
         num += element.ParkingSlots?.length;
       });
