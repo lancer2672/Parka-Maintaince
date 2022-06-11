@@ -15,6 +15,13 @@ const initialState: VehicleState = {
   entities: [],
 };
 
+const actions = [
+  createVehicleAction,
+  deleteVehicleAction,
+  getVehicleAction,
+  updateVehicleAction,
+];
+
 export const vehicleSlice = createSlice({
   name: "vehicles",
   initialState,
@@ -53,6 +60,16 @@ export const vehicleSlice = createSlice({
         state.entities = newState;
         Spinner.hide();
       },
+    );
+    actions.forEach((thunk) =>
+      builder.addCase(thunk.pending, () => {
+        Spinner.show();
+      }),
+    );
+    actions.forEach((thunk) =>
+      builder.addCase(thunk.rejected, () => {
+        Spinner.hide();
+      }),
     );
   },
 });

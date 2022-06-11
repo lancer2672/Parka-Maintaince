@@ -83,6 +83,7 @@ const ResetPassword = (props: Props) => {
                   <Feather name="phone" size={22} />
                   <TextInput
                     placeholder="Phone number"
+                    placeholderTextColor="#CBD5E1"
                     onChangeText={handleChange("phoneNumber")}
                     value={values.phoneNumber}
                     autoFocus
@@ -97,14 +98,11 @@ const ResetPassword = (props: Props) => {
                 )}
               </View>
               <AppButton
-                title="Send"
                 style={styles.btnSend}
-                backgroundColor={isLoading ? "#A498ED" : Colors.light.primary}
                 isLoading={isLoading}
-                color="white"
-                textStyle={{ fontSize: 22, fontWeight: "600" }}
-                onPress={handleSubmit}
-              />
+                onPress={handleSubmit}>
+                <Text>Send</Text>
+              </AppButton>
             </>
           )}
         </Formik>

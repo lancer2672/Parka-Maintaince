@@ -17,37 +17,108 @@ import SignUp from "@src/screens/Authentication/SignUp";
 import ResetPassword from "@src/screens/Authentication/ResetPassword";
 import Verification from "@src/screens/Authentication/Verification";
 import ChangePassword from "@src/screens/Authentication/ChangePassword";
+import { useAppDispatch, useAppSelector } from "@src/store/hooks";
+import { selectUser } from "@src/store/selectors";
+import { userActions } from "@src/store/slices/userSlice";
+import { Colors } from "@src/constants";
 
 const Stack = createNativeStackNavigator<AppStackParams>();
 
+const headerOption = {
+  headerShown: false,
+};
 const AppNavigator = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
   const [isFirstLaunched, setIsFirstLaunched] = useState<boolean>(null);
+  const [isLogged, setIsLogged] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    async () => {
-      const data = await AsyncStorage.getItem("isFirstLaunched");
-      if (data == null) {
+    const checkFirstLaunched = async () => {
+      const isFirst = await AsyncStorage.getItem("isFirstLaunched");
+      if (isFirst == null) {
         setIsFirstLaunched(true);
         AsyncStorage.setItem("isFirstLaunched", "false");
       } else {
         setIsFirstLaunched(false);
       }
     };
+
+    const getUser = async () => {
+      const idUser = await AsyncStorage.getItem("idUser");
+      if (idUser) {
+        dispatch(userActions.getUser(idUser))
+          .unwrap()
+          .then(() => {
+            setIsLogged(true);
+          })
+          .catch(() => {
+            setIsLogged(false);
+          });
+      } else {
+        setIsLogged(false);
+      }
+    };
+
+    checkFirstLaunched();
+    getUser();
   }, []);
   return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {isFirstLaunched && (
-          <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
-        )}
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="ResetPassword" component={ResetPassword} />
-        <Stack.Screen name="Verification" component={Verification} />
-        <Stack.Screen name="ChangePassword" component={ChangePassword} />
-        <Stack.Screen name="App" component={AppTabNavigator} />
+    <NavigationContainer linking={LinkingConfiguration} theme={DefaultTheme}>
+      <Stack.Navigator>
+        {/* {isFirstLaunched && ( */}
+        <Stack.Screen
+          name="OnboardingScreen"
+          component={OnboardingScreen}
+          options={headerOption}
+        />
+        {/* )} */}
+        {/* {!isLogged && (
+          <Stack.Group> */}
+        <Stack.Screen name="SignIn" component={SignIn} options={headerOption} />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{
+            title: "Sign up",
+            headerStyle: {
+              backgroundColor: Colors.light.background,
+            },
+            headerTitleStyle: {
+              color: Colors.light.primary,
+              fontSize: 20,
+              fontWeight: "700",
+            },
+            headerBackTitleVisible: false,
+            headerShadowVisible: false,
+            headerTintColor: Colors.light.primary,
+            headerTitleAlign: "left",
+            contentStyle: {
+              backgroundColor: Colors.light.background,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPassword}
+          options={headerOption}
+        />
+        <Stack.Screen
+          name="Verification"
+          component={Verification}
+          options={headerOption}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangePassword}
+          options={headerOption}
+        />
+        {/* </Stack.Group>
+        )} */}
+        <Stack.Screen
+          name="App"
+          component={AppTabNavigator}
+          options={headerOption}
+        />
         <Stack.Screen
           name="NotFound"
           component={NotFoundScreen}

@@ -4,9 +4,9 @@ import AppButton from "@src/components/common/AppButton";
 import { FacebookLoginButton } from "@src/components/Login/FacebookLoginButton";
 import GoogleLoginButton from "@src/components/Login/GoogleLoginButton";
 import { Colors } from "@src/constants";
-import { loginAction } from "@src/store/actions/userAction";
-import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import { loginWithOauth } from "@src/store/slices/userSlice";
+import { useAppDispatch } from "@src/store/hooks";
+import { userActions } from "@src/store/slices/userSlice";
+import { StatusBar } from "expo-status-bar";
 import { Formik, FormikProps } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -55,7 +55,7 @@ const SignIn = (props: Props) => {
     try {
       setIsLoading(true);
       const result = await dispatch(
-        loginAction({
+        userActions.login({
           username: values.phoneNumber,
           password: values.password,
         }),
@@ -69,9 +69,11 @@ const SignIn = (props: Props) => {
       if (isRemember) {
         await AsyncStorage.setItem("phoneNumber", values.phoneNumber);
         await AsyncStorage.setItem("password", values.password);
+        await AsyncStorage.setItem("idUser", result.idUser);
       } else {
         await AsyncStorage.removeItem("phoneNumber");
         await AsyncStorage.removeItem("password");
+        await AsyncStorage.removeItem("idUser");
       }
       props.navigation.navigate("App");
     } catch (error: any) {
@@ -81,7 +83,7 @@ const SignIn = (props: Props) => {
   };
 
   const handleLoginWithOauth = (newUser: User) => {
-    dispatch(loginWithOauth(newUser));
+    dispatch(userActions.loginWithOauth(newUser));
     props.navigation.navigate("App");
   };
 
@@ -99,6 +101,7 @@ const SignIn = (props: Props) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView style={styles.container}>
+        <StatusBar style="light" />
         <View style={{ height: "20%", justifyContent: "center" }}>
           <Text style={styles.title}>Sign in</Text>
         </View>
@@ -117,7 +120,8 @@ const SignIn = (props: Props) => {
                     color={Colors.light.text}
                   />
                   <TextInput
-                    placeholder="0326089954"
+                    placeholder="Phone number"
+                    placeholderTextColor="#CBD5E1"
                     onChangeText={handleChange("phoneNumber")}
                     value={values.phoneNumber}
                     keyboardType="number-pad"
@@ -137,14 +141,16 @@ const SignIn = (props: Props) => {
                     color={Colors.light.text}
                   />
                   <TextInput
-                    placeholder="Mật khẩu"
+                    placeholder="Password"
+                    placeholderTextColor="#CBD5E1"
+                    placeholderTextColor="#CBD5E1"
                     onChangeText={handleChange("password")}
                     value={values.password}
                     style={styles.input}
                     secureTextEntry={hidePassword}
                   />
                   <Octicons
-                    name={hidePassword ? "eye-closed" : "eye"}
+                    name={hidePassword ? "eye" : "eye-closed"}
                     size={22}
                     color={Colors.light.text}
                     onPress={() => setHidePassword(!hidePassword)}
@@ -198,8 +204,7 @@ const SignIn = (props: Props) => {
               <AppButton
                 style={styles.btnSignIn}
                 isLoading={isLoading}
-                onPress={handleSubmit}
-                backgroundColor={isLoading ? "#A498ED" : Colors.light.primary}>
+                onPress={handleSubmit}>
                 <Text
                   style={{ fontSize: 22, fontWeight: "600", color: "white" }}>
                   Sign in
@@ -211,7 +216,7 @@ const SignIn = (props: Props) => {
                     textAlign: "center",
                     fontSize: 16,
                     color: "#90A3BC",
-                    marginBottom: 5,
+                    marginBottom: 12,
                     fontWeight: "600",
                   }}>
                   OR
@@ -219,9 +224,9 @@ const SignIn = (props: Props) => {
                 <View style={{ marginBottom: 10 }}>
                   <GoogleLoginButton handleLogin={handleLoginWithOauth} />
                 </View>
-                <View>
+                {/* <View>
                   <FacebookLoginButton handleLogin={handleLoginWithOauth} />
-                </View>
+                </View> */}
                 <View
                   style={{
                     display: "flex",

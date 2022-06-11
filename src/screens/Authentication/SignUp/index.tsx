@@ -11,6 +11,7 @@ import { Colors } from "@src/constants";
 import { app, auth } from "@src/firebase";
 import { useAppDispatch } from "@src/store/hooks";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import { StatusBar } from "expo-status-bar";
 import { PhoneAuthProvider } from "firebase/auth";
 import { Formik } from "formik";
 import React, { useRef, useState } from "react";
@@ -36,7 +37,6 @@ const SignUp = (props: Props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const recaptchaVerifier = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useAppDispatch();
 
   //validate
   const SignupSchema = Yup.object().shape({
@@ -88,19 +88,12 @@ const SignUp = (props: Props) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView>
+        <StatusBar style="dark" />
         <View style={styles.container}>
           <FirebaseRecaptchaVerifierModal
             ref={recaptchaVerifier}
             firebaseConfig={app.options}
           />
-          <AntDesign
-            name="arrowleft"
-            size={24}
-            color="black"
-            onPress={() => props.navigation.goBack()}
-          />
-
-          <Text style={styles.title}>Sign up</Text>
           <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
             <Formik
               initialValues={{
@@ -130,7 +123,8 @@ const SignUp = (props: Props) => {
                       />
                       <TextInput
                         onChangeText={handleChange("name")}
-                        placeholder="Họ và tên"
+                        placeholder="Enter name"
+                        placeholderTextColor="#CBD5E1"
                         value={values.name}
                         style={styles.input}
                       />
@@ -148,6 +142,7 @@ const SignUp = (props: Props) => {
                       <TextInput
                         onChangeText={handleChange("email")}
                         placeholder="parka@gmail.com"
+                        placeholderTextColor="#CBD5E1"
                         value={values.email}
                         style={styles.input}
                         keyboardType="email-address"
@@ -160,7 +155,8 @@ const SignUp = (props: Props) => {
                       <Feather name="phone" size={24} style={styles.icon} />
                       <TextInput
                         onChangeText={handleChange("phoneNumber")}
-                        placeholder="Số điện thoại"
+                        placeholder="Phone number"
+                        placeholderTextColor="#CBD5E1"
                         value={values.phoneNumber}
                         style={styles.input}
                         maxLength={10}
@@ -180,13 +176,14 @@ const SignUp = (props: Props) => {
                       />
                       <TextInput
                         onChangeText={handleChange("password")}
-                        placeholder="Mật khẩu"
+                        placeholder="Enter password"
+                        placeholderTextColor="#CBD5E1"
                         secureTextEntry={secureTextEntry}
                         value={values.password}
                         style={styles.input}
                       />
                       <Octicons
-                        name="eye-closed"
+                        name={secureTextEntry ? "eye" : "eye-closed"}
                         size={22}
                         style={styles.icon}
                         onPress={() => setSecureTextEntry(!secureTextEntry)}
@@ -205,13 +202,14 @@ const SignUp = (props: Props) => {
                       />
                       <TextInput
                         onChangeText={handleChange("passwordConfirm")}
-                        placeholder="Nhập lại mật khẩu"
+                        placeholder="Re-enter password"
+                        placeholderTextColor="#CBD5E1"
                         value={values.passwordConfirm}
                         style={styles.input}
                         secureTextEntry={secureTextEntry}
                       />
                       <Octicons
-                        name="eye-closed"
+                        name={secureTextEntry ? "eye" : "eye-closed"}
                         size={22}
                         style={styles.icon}
                         onPress={() => setSecureTextEntry(!secureTextEntry)}
@@ -224,16 +222,18 @@ const SignUp = (props: Props) => {
                     )}
                   </View>
                   <AppButton
-                    title="Next"
                     style={styles.btnNext}
-                    color="white"
-                    backgroundColor={
-                      isLoading ? "#A498ED" : Colors.light.primary
-                    }
                     isLoading={isLoading}
-                    textStyle={{ fontSize: 22, fontWeight: "600" }}
-                    onPress={handleSubmit}
-                  />
+                    onPress={handleSubmit}>
+                    <Text
+                      style={{
+                        fontSize: 22,
+                        fontWeight: "600",
+                        color: "white",
+                      }}>
+                      Next
+                    </Text>
+                  </AppButton>
                 </>
               )}
             </Formik>
@@ -248,7 +248,7 @@ export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
-    margin: 30,
+    margin: 20,
   },
   title: {
     fontSize: 28,
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     marginTop: 16,
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: 8,
     borderColor: "#90A3BC",
   },
   input: {

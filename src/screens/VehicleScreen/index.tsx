@@ -1,4 +1,6 @@
 import { Spinner } from "@nghinv/react-native-loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Images } from "@src/assets";
 import AppButton from "@src/components/common/AppButton";
 import VehicleItem from "@src/components/Vehicle/VehicleItem";
 import { Colors } from "@src/constants";
@@ -7,13 +9,12 @@ import {
   getVehicleAction,
 } from "@src/store/actions/vehicleAction";
 import { useAppDispatch, useAppSelector } from "@src/store/hooks";
-import { selectUser, selectVehicles } from "@src/store/selectors";
+import { selectVehicles } from "@src/store/selectors";
 import React, { useEffect } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 
 const VehicleScreen = ({ navigation }: any) => {
   const vehicleState = useAppSelector(selectVehicles);
-  const userState = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
 
   const navigateToAdd = () => {
@@ -30,26 +31,39 @@ const VehicleScreen = ({ navigation }: any) => {
   };
 
   useEffect(() => {
-    Spinner.show();
-    dispatch(getVehicleAction(userState.idUser));
+    const getVehicle = async () => {
+      Spinner.show();
+      const idUser = await AsyncStorage.getItem("idUser");
+      dispatch(getVehicleAction(idUser));
+    };
+
+    getVehicle();
   }, []);
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={vehicleState}
-        renderItem={({ item }) => (
-          <VehicleItem
-            item={item}
-            onEdit={() => navigateToEdit(item)}
-            onDelete={() => handleDelete(item.idVehicle)}
-          />
-        )}
-        keyExtractor={(item) => item.idVehicle}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingVertical: 20 }}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
+    <View style={{ flex: 1 }}>
+      {vehicleState.length == 0 ? (
+        <View
+          style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+          <Image source={Images.EmptyBox} style={styles.image} />
+          <Text style={styles.text}>No data</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={vehicleState}
+          renderItem={({ item }) => (
+            <VehicleItem
+              item={item}
+              onEdit={() => navigateToEdit(item)}
+              onDelete={() => handleDelete(item.idVehicle)}
+            />
+          )}
+          keyExtractor={(item) => item.idVehicle}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ padding: 20 }}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+        />
+      )}
       <AppButton onPress={navigateToAdd} style={styles.button}>
         <Text style={styles.buttonText}>Add a vehicle</Text>
       </AppButton>
@@ -60,12 +74,9 @@ const VehicleScreen = ({ navigation }: any) => {
 export default VehicleScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
   button: {
     marginBottom: 20,
+    marginHorizontal: 20,
   },
   buttonText: {
     color: Colors.light.background,
@@ -74,5 +85,13 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 12,
+  },
+  image: { width: 160, height: 160 },
+  text: {
+    textAlign: "center",
+    marginTop: 12,
+    fontSize: 18,
+    fontWeight: "600",
+    color: Colors.light.subtitle,
   },
 });

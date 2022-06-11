@@ -1,6 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Colors } from "@src/constants";
+import ChangePasswordScreen from "@src/screens/ProfileScreen/ChangePasswordScreen";
 import ProfileScreen from "@src/screens/ProfileScreen";
+import FavoriteScreen from "@src/screens/ProfileScreen/FavoriteScreen";
 import PersonalScreen from "@src/screens/ProfileScreen/PersonalScreen";
 import VehicleScreen from "@src/screens/VehicleScreen";
 import AddVehicleScreen from "@src/screens/VehicleScreen/AddVehicleScreen";
@@ -15,19 +17,22 @@ const ProfileStack = () => {
       screenOptions={{
         headerBackTitleVisible: false,
         headerShadowVisible: false,
-        headerTintColor: Colors.light.background,
+        headerTintColor: Colors.light.primary,
+        contentStyle: {
+          backgroundColor: Colors.light.background,
+        },
+        headerStyle: {
+          backgroundColor: Colors.light.background,
+        },
+        headerTitleStyle: {
+          color: Colors.light.primary,
+        },
       }}>
       <Stack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
         options={{
           title: "Profile",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
         }}
       />
       <Stack.Screen
@@ -35,12 +40,6 @@ const ProfileStack = () => {
         component={PersonalScreen}
         options={{
           title: "Personal information",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
         }}
       />
       <Stack.Screen
@@ -48,12 +47,6 @@ const ProfileStack = () => {
         component={VehicleScreen}
         options={{
           title: "My vehicles",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
         }}
       />
       <Stack.Screen
@@ -61,12 +54,20 @@ const ProfileStack = () => {
         component={AddVehicleScreen}
         options={{
           title: "Add a vehicle",
-          headerStyle: {
-            backgroundColor: Colors.light.primary,
-          },
-          headerTitleStyle: {
-            color: Colors.light.background,
-          },
+        }}
+      />
+      <Stack.Screen
+        name="FavoriteScreen"
+        component={FavoriteScreen}
+        options={{
+          title: "Favorite parking lots",
+        }}
+      />
+      <Stack.Screen
+        name="ChangePasswordScreen"
+        component={ChangePasswordScreen}
+        options={{
+          title: "Change your password",
         }}
       />
     </Stack.Navigator>

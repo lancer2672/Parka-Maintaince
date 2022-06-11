@@ -1,38 +1,43 @@
 import DetailModal from "@src/components/Home/DetailModal";
 import Map from "@src/components/Home/Map";
+import { useAppDispatch } from "@src/store/hooks";
+import { bookingActions } from "@src/store/slices/bookingSlice";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import {
-  Keyboard,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Keyboard, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { View } from "react-native";
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }: any) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
-  const [seletedParking, setSelectedParking] = useState<ParkingLot>();
   const [distance, setDistance] = useState(0);
+  const dispatch = useAppDispatch();
 
+  const navigateBooking = () => {
+    navigation.navigate("ParkingDetailsScreen");
+  };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <StatusBar style="dark" />
         <Map
           onSelectedMarker={(parking: ParkingLot) => {
+            dispatch(
+              bookingActions.update({
+                field: "parkingLot",
+                value: parking,
+              }),
+            );
             setIsShowDetail(true);
-            setSelectedParking(parking);
           }}
           setDistance={setDistance}
         />
-        <View style={{ flex: 1 }}>
-          <DetailModal
-            distance={distance}
-            isShow={isShowDetail}
-            onClose={() => setIsShowDetail(false)}
-            data={seletedParking}
-          />
-        </View>
-      </SafeAreaView>
+        <DetailModal
+          distance={distance}
+          isShow={isShowDetail}
+          onClose={() => setIsShowDetail(false)}
+          navigateBooking={navigateBooking}
+        />
+      </View>
     </TouchableWithoutFeedback>
   );
 };
@@ -40,7 +45,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 10,
-    height: "100%",
+    // marginTop: 10,
+    flex: 1,
   },
 });

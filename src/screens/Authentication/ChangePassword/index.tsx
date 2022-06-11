@@ -57,7 +57,7 @@ const ChangePassword = (props: Props) => {
           await AsyncStorage.setItem("password", values.password);
         }
         props.navigation.navigate("SignIn");
-        Alert.alert(`You have successfully changed password!`);
+        Alert.alert("You have successfully changed password!");
       } else {
         Alert.alert("Failed");
       }
@@ -92,6 +92,7 @@ const ChangePassword = (props: Props) => {
                     />
                     <TextInput
                       placeholder="New password"
+                      placeholderTextColor="#CBD5E1"
                       onChangeText={handleChange("password")}
                       value={values.password}
                       autoFocus
@@ -118,6 +119,7 @@ const ChangePassword = (props: Props) => {
                     />
                     <TextInput
                       placeholder="Re-enter password"
+                      placeholderTextColor="#CBD5E1"
                       onChangeText={handleChange("passwordConfirm")}
                       value={values.passwordConfirm}
                       style={styles.input}
@@ -137,14 +139,11 @@ const ChangePassword = (props: Props) => {
                   )}
                 </View>
                 <AppButton
-                  title="Change"
                   style={styles.btnSend}
-                  backgroundColor={isLoading ? "#A498ED" : Colors.light.primary}
                   isLoading={isLoading}
-                  color="white"
-                  textStyle={{ fontSize: 22, fontWeight: "600" }}
-                  onPress={handleSubmit}
-                />
+                  onPress={handleSubmit}>
+                  <Text>Change</Text>
+                </AppButton>
               </>
             )}
           </Formik>
