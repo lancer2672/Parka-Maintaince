@@ -52,7 +52,7 @@ const DetailModal = (props: Props) => {
       dispatch(
         favoriteActions.createFavorite({
           idParkingLot: selectedParking?.idParkingLot,
-          idUser: JSON.parse(idUser),
+          idUser: idUser,
         }),
       );
       setFavorite(true);

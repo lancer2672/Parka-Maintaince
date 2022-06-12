@@ -142,7 +142,14 @@ const ChangePassword = (props: Props) => {
                   style={styles.btnSend}
                   isLoading={isLoading}
                   onPress={handleSubmit}>
-                  <Text>Change</Text>
+                  <Text
+                    style={{
+                      fontSize: 22,
+                      fontWeight: "600",
+                      color: "white",
+                    }}>
+                    Change
+                  </Text>
                 </AppButton>
               </>
             )}

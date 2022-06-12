@@ -101,7 +101,14 @@ const ResetPassword = (props: Props) => {
                 style={styles.btnSend}
                 isLoading={isLoading}
                 onPress={handleSubmit}>
-                <Text>Send</Text>
+                <Text
+                  style={{
+                    fontSize: 22,
+                    fontWeight: "600",
+                    color: "white",
+                  }}>
+                  Send
+                </Text>
               </AppButton>
             </>
           )}

@@ -222,7 +222,14 @@ const Verification = (props: Props) => {
             style={styles.btnContinue}
             isLoading={isLoading}
             onPress={() => handleVerification()}>
-            <Text>Continue</Text>
+            <Text
+              style={{
+                fontSize: 22,
+                fontWeight: "600",
+                color: "white",
+              }}>
+              Next
+            </Text>
           </AppButton>
           {timerCount > 0 && (
             <View style={styles.resend}>
