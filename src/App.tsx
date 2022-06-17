@@ -39,7 +39,7 @@ export default function App() {
           <Route key={route.path} path={route.path} element={route.page} />
         ))}
       </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/lots" replace />} />
     </Routes>
   );
 }

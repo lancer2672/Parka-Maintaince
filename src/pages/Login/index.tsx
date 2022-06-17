@@ -19,7 +19,7 @@ const Login = () => {
   };
 
   if (authState.auth) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/lots" replace />;
   }
 
   const goToSignUpPage = () => {

@@ -1,8 +1,8 @@
 import AboutPage from "@/pages/AboutPage";
 import Bookings from "@/pages/Bookings";
-import Dashboard from "@/pages/Dashboard";
 import ParkingLots from "@/pages/ParkingLots";
 import ParkingLotDetails from "@/pages/ParkingLots/ParkingLotDetails";
+import Setting from "@/pages/Setting";
 
 interface IRoute {
   path: string;
@@ -10,10 +10,10 @@ interface IRoute {
 }
 
 const MerchantRoutes: IRoute[] = [
-  {
-    path: "/",
-    page: <Dashboard />,
-  },
+  // {
+  //   path: "/",
+  //   page: <Dashboard />,
+  // },
   {
     path: "/about",
     page: <AboutPage />,
@@ -29,6 +29,10 @@ const MerchantRoutes: IRoute[] = [
   {
     path: "/bookings",
     page: <Bookings />,
+  },
+  {
+    path: "/setting",
+    page: <Setting />,
   },
 ];
 

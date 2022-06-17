@@ -6,7 +6,6 @@ import { selectAuth, selectParkingLot } from "@/store/selectors";
 import { Card, Checkbox, Col, Empty, Row, Select, Spin } from "antd";
 import { useEffect, useState } from "react";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
-import dayjs from "dayjs";
 
 const { Option } = Select;
 

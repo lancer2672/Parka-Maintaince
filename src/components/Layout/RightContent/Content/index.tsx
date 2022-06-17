@@ -15,7 +15,7 @@ const Content = () => {
   };
 
   const editProfile = () => {
-    navigate("/profile");
+    navigate("/setting");
   };
 
   const contents = [
@@ -38,11 +38,7 @@ const Content = () => {
     );
   });
 
-  return (
-    <Menu className="w-" style={{ width: 140 }}>
-      {renderMenu}
-    </Menu>
-  );
+  return <Menu style={{ width: 140 }}>{renderMenu}</Menu>;
 };
 
 export default Content;
