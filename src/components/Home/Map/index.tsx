@@ -114,7 +114,7 @@ const Map = (props: Props) => {
           <MapViewDirections
             origin={currentLocation}
             destination={destination}
-            apikey="AIzaSyBF_-xGpB4Wt3S8nnRkwfGGVz1yngAp2Uw"
+            apikey="AIzaSyDDshYtcCaO_wP7yN6mm4gYdhqLZw8hHAc"
             strokeWidth={4}
             strokeColor={Colors.light.primary}
             optimizeWaypoints={true}

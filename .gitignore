@@ -14,3 +14,6 @@ web-build/
 .DS_Store
 
 yarn-error.log
+yarn.lock
+package-lock.json
+*.env
