@@ -78,6 +78,7 @@
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "redux": "^4.2.0",
     "uuid": "^8.3.2",
+    "yarn": "^1.22.19",
     "yup": "^0.32.11"
   },
   "devDependencies": {

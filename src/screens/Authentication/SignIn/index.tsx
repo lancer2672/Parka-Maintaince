@@ -143,7 +143,6 @@ const SignIn = (props: Props) => {
                   <TextInput
                     placeholder="Password"
                     placeholderTextColor="#CBD5E1"
-                    placeholderTextColor="#CBD5E1"
                     onChangeText={handleChange("password")}
                     value={values.password}
                     style={styles.input}
