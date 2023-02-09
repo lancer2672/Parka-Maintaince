@@ -27,13 +27,13 @@ interface IProps {
 }
 
 const ParkingReservationDetail = (props: IProps) => {
-  const [reservation, setReservation] = useState(null);
+  const [reservation, setReservation] = useState<Ticket>(null);
   const routeData = props.route.params;
-  const checkIn = async (idParkingReservation: string) => {
+  const checkIn = async (idTicket: string) => {
     try {
-      const res = await procedureApi.checkIn(idParkingReservation);
-      if (res.data.data.status) {
-        Alert.alert("Check in successfully!!!");
+      const res = await procedureApi.procedure(idTicket, "check_in");
+      if (res.data.data) {
+        Alert.alert("Check in successfully!");
         props.navigation.navigate("App");
       } else {
         Alert.alert(`${res.data.message}`);
@@ -45,35 +45,21 @@ const ParkingReservationDetail = (props: IProps) => {
     }
   };
 
-  const checkOut = async (idParkingReservation: string) => {
+  const checkOut = async (idTicket: string) => {
     try {
-      const result = await parkingSlipApi.getByIdParkingReservation(
-        idParkingReservation,
-      );
-      if (result.data.data) {
-        const parkingSlip: ParkingSlip = result.data.data;
-        const data = {
-          idParkingReservation,
-          idParkingSlip: parkingSlip.idParkingSlip,
-          exitTime: dayjs(Date.now()).format("HH:mm:ss"),
-          total: reservation.total,
-          isPaid: true,
-        };
-        const endTime = dayjs(reservation.bookingDate)
-          .set("hour", reservation.endTime.slice(0, 2))
-          .set("minute", reservation.endTime.slice(3, 5));
-        const lateTime = dayjs().diff(endTime, "hour");
-        const isCheckOut = await procedureApi.checkOut(data);
-        if (lateTime > 0 && isCheckOut.data.data.status) {
-          Alert.alert("You are 10 minutes late!");
-        }
-        if (isCheckOut.data.data.status) {
-          Alert.alert("Successfully!!!");
-          props.navigation.navigate("App");
-        } else {
-          Alert.alert(isCheckOut.data.message);
-          props.navigation.goBack();
-        }
+      const lateTime = dayjs(reservation.endTime)
+        .add(10, "minute")
+        .isBefore(new Date());
+      const isCheckOut = await procedureApi.procedure(idTicket, "check_out");
+      if (lateTime && isCheckOut.data.data) {
+        Alert.alert("You are late!");
+      }
+      if (isCheckOut.data.data) {
+        Alert.alert("Check out successfully!");
+        props.navigation.navigate("App");
+      } else {
+        Alert.alert("Error!");
+        props.navigation.goBack();
       }
     } catch (error) {
       Alert.alert("Fail");
@@ -82,26 +68,29 @@ const ParkingReservationDetail = (props: IProps) => {
   };
 
   const procedure = () => {
-    if (reservation.status == "scheduled") {
-      checkIn(reservation.idParkingReservation);
+    if (reservation.state == "new") {
+      checkIn(reservation.id);
+    } else if ((reservation.state = "ongoing")) {
+      checkOut(reservation.id);
     } else {
-      checkOut(reservation.idParkingReservation);
+      Alert.alert("Ticket is expired");
     }
   };
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await parkingReservationApi.getById(
-          routeData.idParkingReservation,
-        );
+        const res = await parkingReservationApi.getById(routeData.idTicket);
         if (res.data.data) {
           setReservation(res.data.data);
         } else {
           Alert.alert(`${res.data.message}`);
           props.navigation.goBack();
         }
-        if (res.data.data.status == "end") {
+        if (
+          res.data.data.state == "completed" ||
+          res.data.data.state == "cancel"
+        ) {
           Alert.alert("QR code expired!");
           Spinner.hide();
           props.navigation.goBack();
@@ -127,46 +116,40 @@ const ParkingReservationDetail = (props: IProps) => {
             <View style={styles.card}>
               <Item
                 title={"Parking area"}
-                value={reservation?.ParkingSlot.Block.ParkingLot.name}
+                value={reservation?.parkingLot.name}
               />
-              <Item
-                title={"Address"}
-                value={reservation?.ParkingSlot.Block.ParkingLot.address}
-              />
+              <Item title={"Address"} value={reservation?.parkingLot.address} />
               <Item
                 title={"Vehicle"}
-                value={`${reservation?.Vehicle?.name} (${reservation?.Vehicle?.number})`}
+                value={`${reservation?.vehicle?.name} (${reservation?.vehicle?.number})`}
               />
               <Item
                 title={"Parking spot"}
-                value={`${reservation?.ParkingSlot.Block.blockCode} - ${reservation?.ParkingSlot?.slotNumber}`}
+                value={`${reservation?.parkingSlot.block.code} - ${reservation?.parkingSlot?.name}`}
               />
               <Item
                 title={"Date"}
-                value={DateTimeHelper.formatDate(reservation?.bookingDate)}
+                value={DateTimeHelper.formatDate(reservation?.startTime)}
               />
               <Item
                 title={"Duration"}
                 value={DateTimeHelper.convertToHour(
-                  reservation?.TimeFrame?.duration,
+                  reservation?.timeFrame?.duration,
                 )}
               />
               <Item
                 title={"Hours"}
                 value={
-                  reservation?.startTime.slice(
-                    0,
-                    reservation?.startTime.length - 3,
-                  ) +
+                  dayjs(reservation?.startTime).format("HH:mm") +
                   " - " +
-                  reservation?.endTime.slice(0, reservation?.endTime.length - 3)
+                  dayjs(reservation?.endTime).format("HH:mm")
                 }
               />
             </View>
             <View style={styles.card}>
               <Item
                 title={"Amount"}
-                value={CurrencyHelper.formatVND(reservation?.TimeFrame?.cost)}
+                value={CurrencyHelper.formatVND(reservation?.timeFrame?.cost)}
               />
               <Text style={styles.dash} ellipsizeMode="clip" numberOfLines={1}>
                 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -174,7 +157,7 @@ const ParkingReservationDetail = (props: IProps) => {
               </Text>
               <Item
                 title={"Total"}
-                value={CurrencyHelper.formatVND(reservation?.TimeFrame?.cost)}
+                value={CurrencyHelper.formatVND(reservation?.timeFrame?.cost)}
               />
             </View>
             <View
@@ -193,9 +176,9 @@ const ParkingReservationDetail = (props: IProps) => {
           </ScrollView>
           <AppButton style={styles.continueButton} onPress={procedure}>
             <Text style={styles.countinueText}>
-              {reservation?.status == "scheduled"
+              {reservation?.state == "new"
                 ? "Check in"
-                : reservation?.status == "ongoing"
+                : reservation?.state == "ongoing"
                 ? "Check out"
                 : ""}
             </Text>

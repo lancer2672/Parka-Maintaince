@@ -1,8 +1,7 @@
 import axiosClient from "./axiosClient";
-const url = "/reservation";
 const parkingReservationApi = {
-  getById: async (idParkingReservation: string) => {
-    return await axiosClient.get(`${url}/${idParkingReservation}`)
+  getById: async (idTicket: string) => {
+    return await axiosClient.get("/api/v1/ticket/get-one-with-extend/" + idTicket)
   }
 };
 export default parkingReservationApi;
