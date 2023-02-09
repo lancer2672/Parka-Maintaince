@@ -14,7 +14,7 @@ const MenuItems = {
     //   ),
     // },
     {
-      path: "/lots",
+      path: "/parking-lot",
       name: "Parking lots",
       icon: (
         <span role="img" className="anticon">

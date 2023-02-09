@@ -25,18 +25,30 @@ const DescriptionItem = (props: IProps) => (
 const ParkingLotDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState<ParkingLot>();
-  const parkingLotState = useAppSelector(selectParkingLot);
 
   useEffect(() => {
-    const parkingLot = parkingLotState.parkingLots.find((e) => e.idParkingLot == id);
-    if (parkingLot) {
-      setData(parkingLot);
-    } else {
-      parkingLotApi
-        .getOne(id)
-        .then((res) => setData(res.data.data))
-        .catch((err) => console.log(err));
-    }
+    fetch(`http://localhost:8088/api/merchant/parking-lot/get-one/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data);
+        // setIsSuccess(true);
+        // setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        // setIsLoading(false);
+      });
   }, [id]);
 
   return (

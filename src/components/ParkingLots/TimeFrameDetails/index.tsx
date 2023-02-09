@@ -1,6 +1,5 @@
-import { timeFrameApi } from "@/api";
 import { parseThousand } from "@/utils/stringHelper";
-import { Card, Col, message, Row, Table } from "antd";
+import { Card, Col, Row, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 interface IProps {
@@ -25,21 +24,35 @@ const TimeFrameDetails = (props: IProps) => {
   ];
 
   useEffect(() => {
-    (async () => {
-      try {
-        setIsLoading(true);
-        const res = await timeFrameApi.getAll(props.idParkingLot);
-        setData(res.data.data);
+    fetch(
+      `http://localhost:8088/api/merchant/time-frame/get-list?parkingLotId=${props.idParkingLot}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((res) => {
+        console.log(res.data?.data);
+        setData(res.data?.data);
         setIsLoading(false);
-      } catch (error) {
-        message.error(`${error}`);
-      }
-    })();
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
   }, []);
   return (
     <Row gutter={[20, 20]}>
       <Col span={24}>
-        <h3 className=" text-xl">TimeFrames</h3>
+        <h3 className=" text-xl">Time frames</h3>
         <Col flex="auto" />
         <Card>
           <Table<TimeFrame>
@@ -47,7 +60,7 @@ const TimeFrameDetails = (props: IProps) => {
             loading={isLoading}
             columns={columns}
             dataSource={data}
-            rowKey={(row) => row.idParkingLot}
+            rowKey={(row) => row.id}
             pagination={{ pageSize: 5 }}
           />
         </Card>

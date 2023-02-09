@@ -29,18 +29,16 @@ const BookingItem = ({ reservation }: Props) => {
   return (
     <div className="border border-slate-300 rounded-lg border-solid p-4">
       <div className="flex flex-row justify-between items-start">
-        <h5 className="font-semibold text-base">
-          {reservation?.ParkingSlot?.Block?.ParkingLot?.name}
-        </h5>
+        <h5 className="font-semibold text-base">{reservation?.parkingLot?.name}</h5>
         {renderTag(reservation.status)}
       </div>
       <Item
         title="Slot:"
-        value={`${reservation?.ParkingSlot?.Block?.blockCode} - ${reservation?.ParkingSlot?.slotNumber}`}
+        value={`${reservation?.parkingSlot?.block?.code} - ${reservation?.parkingSlot?.name}`}
       />
       <Item title="Date:" value={dayjs(reservation.bookingDate).format("DD/MM/YYYY")} />
-      <Item title="Start time:" value={reservation.startTime} />
-      <Item title="End time:" value={reservation.endTime} />
+      <Item title="Start time:" value={dayjs(reservation.startTime).format("HH:mm")} />
+      <Item title="End time:" value={dayjs(reservation.endTime).format("HH:mm")} />
       <Item title="Total:" value={CurrencyHelper.formatVND(reservation.total)} />
     </div>
   );

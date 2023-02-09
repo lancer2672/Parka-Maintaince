@@ -1,13 +1,9 @@
-import { authApi } from "@/api";
-import { useAppSelector } from "@/store/hooks";
-import { selectAuth } from "@/store/selectors";
 import { Button, Col, Form, Input, notification, Row } from "antd";
 import { useState } from "react";
 
 const ChangePassword = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const authState = useAppSelector(selectAuth).auth;
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -29,20 +25,33 @@ const ChangePassword = () => {
       setLoading(false);
       return;
     }
-    authApi
-      .updatePassword(authState?.idCompany, currentPassword, newPassword)
-      .then(() =>
+
+    let idCompany = localStorage.getItem("COMPANY_ID");
+    fetch(`http://localhost:8088/api/merchant/company/update-password/${idCompany}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ old: currentPassword, new: newPassword }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((res) => {
+        console.log(res.data);
         notification["success"]({
           message: "Successfully",
           description: `Updated successfully `,
-        }),
-      )
-      .catch((err) => {
-        notification["error"]({
-          message: "Error",
-          description: err,
         });
+        form.resetFields();
+      })
+      .catch((error) => {
+        console.log(error);
       });
+
     setLoading(false);
   };
   return (

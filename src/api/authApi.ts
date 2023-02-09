@@ -6,7 +6,7 @@ const authApi = {
     return axiosClient.post(url, { email, password });
   },
   signup: ({ email, password, companyName, phoneNumber }: any) => {
-    const url = `/auth/signup`;
+    const url = `/company/create`;
     return axiosClient.post(url, { email, password, companyName, phoneNumber });
   },
   verify: (accessToken: any) => {

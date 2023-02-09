@@ -19,11 +19,11 @@ const MerchantRoutes: IRoute[] = [
     page: <AboutPage />,
   },
   {
-    path: "/lots",
+    path: "/parking-lot",
     page: <ParkingLots />,
   },
   {
-    path: "/lots/:id",
+    path: "/parking-lot/:id",
     page: <ParkingLotDetails />,
   },
   {

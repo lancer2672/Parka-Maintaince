@@ -1,5 +1,4 @@
-import { blockApi } from "@/api";
-import { Card, Col, message, Row, Table, Tag } from "antd";
+import { Card, Col, Row, Table, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 interface IProps {
@@ -11,33 +10,41 @@ const BlockDetails = (props: IProps) => {
   const columns: ColumnsType<Block> = [
     {
       title: "Block code",
-      dataIndex: "blockCode",
+      dataIndex: "code",
       align: "center",
     },
     {
       title: "Number of slots",
-      dataIndex: "numOfSlot",
-      align: "center",
-    },
-    {
-      title: "Status",
-      dataIndex: "isFull",
-      render: () => <Tag color={"blue"}>isFull</Tag>,
+      dataIndex: "slot",
       align: "center",
     },
   ];
 
   useEffect(() => {
-    (async () => {
-      try {
-        setIsLoading(true);
-        const res = await blockApi.getAll(props.idParkingLot);
-        setData(res.data.data);
+    fetch(
+      `http://localhost:8088/api/merchant/block/get-list?parking_lot_id=${props.idParkingLot}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data);
         setIsLoading(false);
-      } catch (error) {
-        message.error(`${error}`);
-      }
-    })();
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
   }, []);
   return (
     <Row gutter={[20, 20]}>
@@ -50,7 +57,7 @@ const BlockDetails = (props: IProps) => {
             columns={columns}
             dataSource={data}
             loading={isLoading}
-            rowKey={(row) => row.idBlock}
+            rowKey={(row) => row.id}
             pagination={{ pageSize: 5 }}
           />
         </Card>

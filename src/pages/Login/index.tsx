@@ -1,26 +1,50 @@
 import logo from "@/assets/images/logo.png";
-import { login } from "@/store/actions/authAction";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { selectAuth } from "@/store/selectors";
 import { LockTwoTone, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, Row } from "antd";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Button, Card, Col, Form, Input, Row, notification } from "antd";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./index.module.less";
 
 const Login = () => {
   const [form] = Form.useForm();
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const authState = useAppSelector(selectAuth);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = () => {
+    setIsLoading(true);
     const { email, password } = form.getFieldsValue();
-    dispatch(login({ email, password }));
+    fetch("http://localhost:8088/api/merchant/company/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((res) => {
+        localStorage.setItem("COMPANY_ID", res.data?.id);
+        console.log(res.data);
+        setIsSuccess(true);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        notification.error({ message: "Fail!" });
+        setIsLoading(false);
+      });
   };
 
-  if (authState.auth) {
-    return <Navigate to="/lots" replace />;
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/parking-lot");
+    }
+  }, [isSuccess]);
 
   const goToSignUpPage = () => {
     navigate("/sign-up");
@@ -44,7 +68,6 @@ const Login = () => {
                       form={form}
                       layout="vertical"
                       onFinish={handleLogin}
-                      // onFinishFailed={noticeFailed}
                       initialValues={{
                         remember: true,
                       }}>
@@ -82,7 +105,7 @@ const Login = () => {
                           type="primary"
                           block
                           htmlType="submit"
-                          loading={authState.loading}>
+                          loading={isLoading}>
                           Login
                         </Button>
                       </Form.Item>

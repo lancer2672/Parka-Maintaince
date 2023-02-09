@@ -1,53 +1,69 @@
-import { updateCompany } from "@/store/actions/authAction";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { selectAuth } from "@/store/selectors";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { Button, Col, Form, Input, message, notification, Row, Select } from "antd";
-import { useState } from "react";
-
-const { TextArea } = Input;
-const { Option } = Select;
+import { useAppDispatch } from "@/store/hooks";
+import { Button, Col, Form, Input, Row, notification } from "antd";
+import { useEffect, useState } from "react";
 
 const EditProfile = () => {
   const [form] = Form.useForm();
-  const companyState = useAppSelector(selectAuth).auth;
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const defaultFormValue = {
-    companyName: companyState?.companyName,
-    email: companyState?.email,
-    phoneNumber: companyState?.phoneNumber,
-  };
+  useEffect(() => {
+    let idCompany = localStorage.getItem("COMPANY_ID");
+    fetch(`http://localhost:8088/api/merchant/company/get-one/${idCompany}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((res) => {
+        console.log(res.data);
+        form.setFieldsValue({
+          companyName: res.data?.name,
+          email: res.data?.email,
+          phoneNumber: res.data?.phoneNumber,
+        });
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
+  }, []);
 
   const handleSubmit = () => {
-    setIsLoading(true);
-    const formData = form.getFieldsValue();
-    dispatch(updateCompany({ idCompany: companyState?.idCompany, data: formData }))
-      .then(unwrapResult)
-      .then(() => {
-        notification.success({
-          message: "Successfully",
-          description: `Updated successfully `,
-        });
+    let idCompany = localStorage.getItem("COMPANY_ID");
+    let { companyName, email, phoneNumber } = form.getFieldsValue();
+    fetch(`http://localhost:8088/api/merchant/company/update/${idCompany}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ companyName, email, phoneNumber }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
       })
-      .catch((err) => {
-        notification.error({
-          message: "Error",
-          description: err,
-        });
+      .then((res) => {
+        console.log(res.data);
+        notification.success({ message: "Successfully!" });
+        setIsLoading(false);
       })
-      .finally(() => {
+      .catch((error) => {
+        console.log(error);
         setIsLoading(false);
       });
   };
   return (
-    <Form
-      form={form}
-      layout="vertical"
-      labelAlign="left"
-      onFinish={handleSubmit}
-      initialValues={defaultFormValue}>
+    <Form form={form} layout="vertical" labelAlign="left" onFinish={handleSubmit}>
       <Row gutter={[20, 0]}>
         <Col span={14}>
           <Form.Item name="companyName" label="Company name" rules={[{ required: true }]}>

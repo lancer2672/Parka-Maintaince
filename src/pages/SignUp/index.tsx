@@ -1,32 +1,51 @@
 import logo from "@/assets/images/logo.png";
-import { signup } from "@/store/actions/authAction";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { selectAuth } from "@/store/selectors";
 import { LockTwoTone, MailOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Form, Input, notification, Row } from "antd";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./index.module.less";
+import { useEffect, useState } from "react";
 
 const SignUp = () => {
   const [form] = Form.useForm();
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const authState = useAppSelector(selectAuth);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignUp = async () => {
+  const handleSignUp = () => {
+    setIsLoading(true);
     const { email, password, companyName, phoneNumber } = form.getFieldsValue();
-    const res = await dispatch(signup({ email, password, companyName, phoneNumber })).unwrap();
-    if (res) {
-      notification.success({ message: "Sign up successfully!!" });
-    } else {
-      notification.error({ message: "Fail!" });
-      navigate(-1);
-    }
+    fetch("http://localhost:8088/api/merchant/company/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password, companyName, phoneNumber }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((res) => {
+        localStorage.setItem("COMPANY_ID", res.data?.id);
+        console.log(res.data);
+        notification.success({ message: "Sign up successfully!!" });
+        setIsSuccess(true);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        notification.error({ message: "Fail!" });
+        setIsLoading(false);
+      });
   };
 
-  if (authState.auth) {
-    return <Navigate to="/" replace />;
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/");
+    }
+  }, [isSuccess]);
 
   return (
     <div className={styles.content}>
@@ -98,7 +117,7 @@ const SignUp = () => {
                           type="primary"
                           block
                           htmlType="submit"
-                          loading={authState.loading}>
+                          loading={isLoading}>
                           Sign up
                         </Button>
                       </Form.Item>

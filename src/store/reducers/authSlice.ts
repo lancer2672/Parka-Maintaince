@@ -19,7 +19,6 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: () => {
-      localStorage.removeItem("accessToken");
       return initialState;
     },
   },
@@ -31,7 +30,6 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.auth = payload.data;
-        localStorage.setItem("accessToken", payload.accessToken);
       })
       .addCase(login.rejected, (state, { payload }) => {
         state.loading = false;
@@ -42,8 +40,6 @@ const authSlice = createSlice({
       })
       .addCase(signup.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.auth = payload.data;
-        localStorage.setItem("accessToken", payload.accessToken);
       })
       .addCase(signup.rejected, (state, { payload }) => {
         state.loading = false;

@@ -16,29 +16,35 @@ const checkboxOptions = [
 ];
 
 const Bookings = () => {
-  const parkingLotState = useAppSelector(selectParkingLot).parkingLots;
-  const authState = useAppSelector(selectAuth).auth;
-  const dispatch = useAppDispatch();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [dataSoure, setDataSource] = useState<Reservation[]>([]);
   const [isLoading, setLoading] = useState<boolean>(false);
-
-  const handleChange = async (value: string) => {
-    try {
-      setLoading(true);
-      setReservations([]);
-      const res = await reservationApi.getByParkingLot(value);
-      setReservations(res.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
+  const [parkingLotState, setparkingLotState] = useState<ParkingLot[]>([]);
+  const handleChange = async (id: string) => {
+    fetch(`http://localhost:8088/api/merchant/ticket/get-all?parking_lot_id=${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((res) => {
+        console.log(res.data);
+        setDataSource(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleCheckboxChange = (checkedValues: CheckboxValueType[]) => {
     const filterData = reservations.filter((reservation) =>
-      checkedValues.includes(reservation.status),
+      checkedValues.includes(reservation.state),
     );
     setDataSource(filterData);
   };
@@ -57,14 +63,33 @@ const Bookings = () => {
   //   setDataSource(sortedData);
   // };
 
-  useEffect(() => {
-    setDataSource(reservations);
-  }, [reservations]);
+  //   useEffect(() => {
+  //     setDataSource(reservations);
+  //   }, [reservations]);
 
   useEffect(() => {
-    const idCompany = authState?.idCompany;
-    dispatch(parkingLotActions.getAllParkingLots(idCompany));
+    let idCompany = localStorage.getItem("COMPANY_ID");
+    fetch(`http://localhost:8088/api/merchant/parking-lot/get-list?company_id=${idCompany}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((res) => {
+        console.log(res.data);
+        setparkingLotState(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
+
   return (
     <div>
       <h1>Booking</h1>
@@ -73,7 +98,7 @@ const Bookings = () => {
           <Col span={12}>
             <Select placeholder="Select parking lot" className="w-full" onChange={handleChange}>
               {parkingLotState.map((parkingLot) => (
-                <Option value={parkingLot.idParkingLot} key={parkingLot.idParkingLot}>
+                <Option value={parkingLot.id} key={parkingLot.id}>
                   {parkingLot.name}
                 </Option>
               ))}
@@ -85,13 +110,13 @@ const Bookings = () => {
               <Option value="earliest">Earliest date</Option>
             </Select> */}
           </Col>
-          <Col span={12}>
+          {/* <Col span={12}>
             <Checkbox.Group
               defaultValue={["scheduled", "ongoing", "end"]}
               options={checkboxOptions}
               onChange={handleCheckboxChange}
             />
-          </Col>
+          </Col> */}
         </Row>
       </Card>
       <Card>
@@ -99,7 +124,7 @@ const Bookings = () => {
         <Row gutter={[20, 20]}>
           {dataSoure.length > 0 ? (
             dataSoure?.map((reservation: Reservation) => (
-              <Col span={8} key={reservation.idParkingReservation}>
+              <Col span={8} key={reservation.id}>
                 <BookingItem reservation={reservation} />
               </Col>
             ))

@@ -1,5 +1,6 @@
 import AddParkingLot from "@/components/ParkingLots/AddParkingLot";
-import { deleteParkingLot, getAllParkingLots } from "@/store/actions/parkingLotActions";
+import ParkingLotsForm from "@/components/ParkingLots/AddParkingLot/AddParkingLotsForm";
+import { deleteParkingLot } from "@/store/actions/parkingLotActions";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { parkingLotActions } from "@/store/reducers/parkingLotSlice";
 import { selectAuth, selectParkingLot } from "@/store/selectors";
@@ -14,10 +15,11 @@ const ParkingLots: FC = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<Array<ParkingLot>>();
-  const [editData, setEditData] = useState<ParkingLot>();
+  const [idParkingLot, setIdParkingLot] = useState<string>();
   const dispatch = useAppDispatch();
   const parkingLotState = useAppSelector(selectParkingLot);
-  const authState = useAppSelector(selectAuth);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const columns: ColumnsType<ParkingLot> = [
     {
@@ -38,10 +40,10 @@ const ParkingLots: FC = () => {
     },
     {
       title: "",
-      dataIndex: "idParkingLot",
+      dataIndex: "id",
       align: "center",
       width: "10%",
-      render: (idParkingLot: string, parkingLot) => {
+      render: (id: string, parkingLot) => {
         return (
           <div className="flex gap-2.5 justify-start flex-col md:flex-row">
             <Tooltip title="View details">
@@ -49,14 +51,17 @@ const ParkingLots: FC = () => {
                 type="primary"
                 ghost
                 icon={<EyeOutlined />}
-                onClick={() => navigate(`/lots/${idParkingLot}`, { state: parkingLot })}
+                onClick={() => navigate(`/parking-lot/${id}`, { state: parkingLot })}
               />
             </Tooltip>
             <Tooltip title="Edit">
               <Button
                 type="default"
                 icon={<EditOutlined />}
-                onClick={() => handleEdit(parkingLot)}
+                onClick={() => {
+                  setIsVisible(true);
+                  setIdParkingLot(id);
+                }}
               />
             </Tooltip>
             {parkingLot.isDeleted ? null : (
@@ -65,7 +70,8 @@ const ParkingLots: FC = () => {
                   okText="Yes"
                   cancelText="No"
                   title="Are you sure to delete this parking lot?"
-                  onConfirm={() => handleDelete(idParkingLot)}>
+                  //   onConfirm={() => handleDelete(id)}
+                >
                   <Button danger icon={<DeleteOutlined />} />
                 </Popconfirm>
               </Tooltip>
@@ -76,40 +82,60 @@ const ParkingLots: FC = () => {
     },
   ];
 
-  const handleDelete = (id: string) => {
-    dispatch(deleteParkingLot(id));
-  };
+  //   const handleDelete = (id: string) => {
+  //     dispatch(deleteParkingLot(id));
+  //   };
 
-  const handleEdit = (parkingLot: ParkingLot) => {
-    setIsVisible(true);
-    setEditData(parkingLot);
-  };
+  //   const handleEdit = (parkingLot: ParkingLot) => {
+  //     setIsVisible(true);
+  //     setEditData(parkingLot);
+  //   };
 
-  const handleSearch = (value: string) => {
-    if (value) {
-      const tmp = parkingLotState.parkingLots.filter(
-        (e) => e.name.toLowerCase().search(value.toLowerCase()) >= 0,
-      );
-      setDataSource(tmp);
-    } else {
-      setDataSource(parkingLotState.parkingLots);
-    }
-  };
+  //   const handleSearch = (value: string) => {
+  //     if (value) {
+  //       const tmp = parkingLotState.parkingLots.filter(
+  //         (e) => e.name.toLowerCase().search(value.toLowerCase()) >= 0,
+  //       );
+  //       setDataSource(tmp);
+  //     } else {
+  //       setDataSource(parkingLotState.parkingLots);
+  //     }
+  //   };
+
+  //   useEffect(() => {
+  //     const idCompany = authState.auth?.idCompany;
+  //     dispatch(parkingLotActions.getAllParkingLots(idCompany));
+  //   }, [dispatch]);
+
+  //   useEffect(() => {
+  //     setDataSource(parkingLotState.parkingLots);
+  //   }, [parkingLotState.parkingLots]);
 
   useEffect(() => {
-    const idCompany = authState.auth?.idCompany;
-    dispatch(parkingLotActions.getAllParkingLots(idCompany));
-  }, [dispatch]);
-
-  useEffect(() => {
-    setDataSource(parkingLotState.parkingLots);
-  }, [parkingLotState.parkingLots]);
-
-  useEffect(() => {
-    if (!isVisible) {
-      setEditData(undefined);
-    }
-  }, [isVisible]);
+    let idCompany = localStorage.getItem("COMPANY_ID");
+    fetch(`http://localhost:8088/api/merchant/parking-lot/get-list?company_id=${idCompany}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((res) => {
+        console.log(res.data);
+        setDataSource(res.data);
+        setIsSuccess(true);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
+  }, []);
 
   return (
     <div>
@@ -123,7 +149,7 @@ const ParkingLots: FC = () => {
               placeholder="Search"
               allowClear
               enterButton
-              onSearch={(e) => handleSearch(e)}
+              //   onSearch={(e) => handleSearch(e)}
             />
           </Col>
           <Col flex="auto" />
@@ -134,6 +160,7 @@ const ParkingLots: FC = () => {
               block
               onClick={() => {
                 setIsVisible(true);
+                setIdParkingLot(undefined);
               }}>
               Add
             </Button>
@@ -143,17 +170,22 @@ const ParkingLots: FC = () => {
               bordered
               dataSource={dataSource}
               columns={columns}
-              loading={parkingLotState.loading}
-              rowKey={(row) => row.idParkingLot}
+              loading={isLoading}
+              rowKey={(row) => row.id}
             />
           </Col>
         </Row>
       </Card>
-      <AddParkingLot
-        editData={editData}
-        isVisible={isVisible}
-        onCancel={() => setIsVisible(false)}
-      />
+      <Modal
+        title={idParkingLot ? "Update paring lot" : "Add parking lot"}
+        centered
+        closable
+        width={800}
+        visible={isVisible}
+        footer={null}
+        onCancel={() => setIsVisible(false)}>
+        <ParkingLotsForm id={idParkingLot} />
+      </Modal>
     </div>
   );
 };
