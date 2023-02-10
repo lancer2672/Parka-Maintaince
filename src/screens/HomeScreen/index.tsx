@@ -1,5 +1,6 @@
 import AppButton from "@src/components/common/AppButton";
 import { Text } from "@src/components/Themed";
+import { Colors } from "@src/constants";
 import React, { useState } from "react";
 import { Keyboard, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,7 +21,9 @@ const HomeScreen = (props: IProps) => {
         <AppButton
           style={styles.btnQRCode}
           onPress={() => props.navigation.navigate("QRCode")}>
-          <Text>QR Code</Text>
+          <Text style={{ color: "#CCCCCC", fontSize: 20, fontWeight: "600" }}>
+            QR Code
+          </Text>
         </AppButton>
       </SafeAreaView>
     </TouchableWithoutFeedback>
@@ -38,6 +41,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btnQRCode: {
-    width: "50%",
+    padding: 8,
+    width: "45%",
+    backgroundColor: Colors.light.primary,
+    color: Colors.light.text,
   },
 });
