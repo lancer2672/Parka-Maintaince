@@ -11,7 +11,7 @@ const HomeScreen = ({ navigation }: any) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [distance, setDistance] = useState(0);
   const dispatch = useAppDispatch();
-
+  console.log("isShowDetail (parking marker)",isShowDetail);
   const navigateBooking = () => {
     navigation.navigate("ParkingDetailsScreen");
   };
@@ -21,6 +21,7 @@ const HomeScreen = ({ navigation }: any) => {
         <StatusBar style="dark" />
         <Map
           onSelectedMarker={(parking: ParkingLot) => {
+            console.log("onSelectedMarker parking = ",parking);
             dispatch(
               bookingActions.update({
                 field: "parkingLot",

@@ -1,5 +1,6 @@
 {
   "expo": {
+    "sdkVersion": "47.0.0",
     "name": "parka",
     "slug": "parka-app",
     "version": "1.0.0",

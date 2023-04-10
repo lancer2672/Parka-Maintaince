@@ -5,6 +5,8 @@ import userApi from "@src/api/userApi";
 
 const createUser = createAsyncThunk("user/create", async (user: User) => {
   try {
+    console.log("userAPI",userApi);
+    console.log("user",user);
     const res = await userApi.createUser(user);
     if (res.data.data) {
       return res.data.data;
@@ -22,16 +24,23 @@ const login = createAsyncThunk(
         params.username,
         params.password,
       );
+        console.log("data reveived from server - LOGIN", data);
+  
       if (data.data) {
         await AsyncStorage.setItem(
           "accessToken",
-          JSON.stringify(data.accessToken),
+          JSON.stringify(data.data.accessToken),
         );
+
+
         await AsyncStorage.setItem(
           "refreshToken",
-          JSON.stringify(data.refreshToken),
+          JSON.stringify(data.data.refreshToken),
         );
-        await AsyncStorage.setItem("idUser", JSON.stringify(data.data.idUser));
+      
+
+        // chuyển từ idUser -> id
+        await AsyncStorage.setItem("idUser", JSON.stringify(data.data.id));
         return data.data;
       } else {
         return { errorMessage: "Incorrect username or password!" };

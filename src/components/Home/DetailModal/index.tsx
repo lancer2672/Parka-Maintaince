@@ -35,6 +35,7 @@ const DetailModal = (props: Props) => {
   const { isShow, onClose, navigateBooking } = props;
   const ref = React.useRef<BottomSheet>(null);
   const selectedParking = useAppSelector(selectBooking).parkingLot;
+  console.log("Detail parking modal parkingLot = ", selectedParking);
   const [numOfAvailableSlots, setNumOfAvailableSlots] = useState<number>(0);
   const favoriteState = useAppSelector(selectFavorites);
   const [isFavorite, setFavorite] = useState<boolean>(false);
@@ -77,6 +78,7 @@ const DetailModal = (props: Props) => {
   }, [selectedParking]);
 
   useEffect(() => {
+
     const getNumOfSlots = async () => {
       const time = dayjs().get("hour") + ":" + dayjs().get("minute");
       Spinner.show();

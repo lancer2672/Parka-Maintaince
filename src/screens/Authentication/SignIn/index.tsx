@@ -60,16 +60,18 @@ const SignIn = (props: Props) => {
           password: values.password,
         }),
       ).unwrap();
+      console.log("result ", result );
 
       setIsLoading(false);
       if (result.errorMessage) {
         Alert.alert("Error: " + result.errorMessage);
         return;
       }
+      console.log("values ", values );
       if (isRemember) {
         await AsyncStorage.setItem("phoneNumber", values.phoneNumber);
         await AsyncStorage.setItem("password", values.password);
-        await AsyncStorage.setItem("idUser", result.idUser);
+        await AsyncStorage.setItem("idUser", result.id);
       } else {
         await AsyncStorage.removeItem("phoneNumber");
         await AsyncStorage.removeItem("password");

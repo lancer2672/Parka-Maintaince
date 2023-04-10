@@ -52,19 +52,23 @@ const SignUp = (props: Props) => {
 
   //handle sign up
   const handleSignUp = async (values: any) => {
+   
     try {
       setIsLoading(true);
       const isExist = await userApi.checkDuplicatePhone(values.phoneNumber);
-      if (isExist) {
+      console.log("isExist",isExist);
+      if (isExist.data) {
         Alert.alert("Failed! PhoneNumber is already in use");
         setIsLoading(false);
         return;
       }
+      console.log("phone number checked");
       if (values.password !== values.passwordConfirm) {
         Alert.alert("Failed! Password does not match! ");
         setIsLoading(false);
         return;
       }
+      console.log("password checked");
       const phoneProvider = new PhoneAuthProvider(auth);
       const phoneNumber = `+84${values.phoneNumber.slice(
         1,
@@ -74,12 +78,14 @@ const SignUp = (props: Props) => {
         phoneNumber,
         recaptchaVerifier.current,
       );
+      console.log("navigate");
       props.navigation.navigate("Verification", {
         user: values,
         type: "SignUp",
         verificationId,
       });
     } catch (error: any) {
+      console.log("err",error);
       Alert.alert(`Error: ${error.message}`);
     } finally {
       setIsLoading(false);

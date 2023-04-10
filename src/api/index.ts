@@ -10,7 +10,7 @@ export {
   userApi,
   vehicleApi,
   parkingLotApi,
-  timeFrameApi,
+  timeFrameApi, 
   parkingReservationApi,
   parkingSlotApi,
   favoriteApi,

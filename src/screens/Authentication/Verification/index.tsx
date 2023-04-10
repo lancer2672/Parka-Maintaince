@@ -55,10 +55,13 @@ const Verification = (props: Props) => {
         verificationCode,
       );
       await signInWithCredential(auth, credential);
+      console.log("called await signInWIthCredential");
       if (routeData.type === "SignUp") {
         const res = await dispatch(
           userActions.createUser(routeData.user),
         ).unwrap();
+      console.log("dispatched create user - res",res);
+
         setIsLoading(false);
         if (res.errorMessage) {
           Alert.alert("Error: " + res.errorMessage);

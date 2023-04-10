@@ -17,6 +17,7 @@ import {
 } from "react-native";
 
 const ParkingDetailsScreen = ({ navigation }: any) => {
+  console.log("ParkingDetailScreen rendered");
   const parkingLot: ParkingLot = useAppSelector(selectBooking).parkingLot;
   const timeFrames = useAppSelector(selectTimeFrames);
   const dispatch = useAppDispatch();
