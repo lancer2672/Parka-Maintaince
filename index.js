@@ -1,19 +1,16 @@
 const express = require("express");
-const dotenv = require("dotenv");
-const pool = require("./db");
+require("dotenv").config();
 const router = require("./routes");
 const app = express();
 
-dotenv.config();
+app.use(express.json());
+app.use("/", router);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.use("/", router);
-
-const port = process.env.PORT || 3001;
-
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
