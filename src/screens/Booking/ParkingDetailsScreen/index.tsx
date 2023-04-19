@@ -15,7 +15,7 @@ import {
   Text,
   View,
 } from "react-native";
-
+ 
 const ParkingDetailsScreen = ({ navigation }: any) => {
   console.log("ParkingDetailScreen rendered");
   const parkingLot: ParkingLot = useAppSelector(selectBooking).parkingLot;
@@ -27,7 +27,7 @@ const ParkingDetailsScreen = ({ navigation }: any) => {
   };
 
   useEffect(() => {
-    dispatch(timeFrameActions.getTimeFrames(parkingLot?.idParkingLot));
+    dispatch(timeFrameActions.getTimeFrames(parkingLot?.id));
   }, [parkingLot]);
   return (
     <View style={{ flex: 1 }}>

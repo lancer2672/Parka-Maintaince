@@ -25,7 +25,7 @@ const login = createAsyncThunk(
         params.password,
       );
         console.log("data reveived from server - LOGIN", data);
-  
+        
       if (data.data) {
         await AsyncStorage.setItem(
           "accessToken",

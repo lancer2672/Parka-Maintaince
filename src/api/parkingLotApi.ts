@@ -22,9 +22,10 @@ const parkingLotApi = {
     return res;
 
   },
-  getOne: async (idParkingLot: string) => {
-    console.log("Api - parkingLotApi - getOne");
-    const res =  await axiosClient.get(`${url}/${idParkingLot}`);
+  getOne: async (id: string) => {
+    console.log("Api - parkingLotApi - getOne- paringLot -id ",id);
+    // const res =  await axiosClient.get(`${url}/${id}`);
+    const res =  await axiosClient.get(`${url}/get-one/${id}`);
     console.log("Api - parkingLotApi - getOne",res);
     return res;
 

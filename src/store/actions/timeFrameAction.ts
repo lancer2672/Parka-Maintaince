@@ -3,8 +3,8 @@ import { timeFrameApi } from "@src/api";
 
 const getTimeFrames = createAsyncThunk(
   "timeFrame/get",
-  async (idParkingLot: string) => {
-    const res = await timeFrameApi.getAll(idParkingLot);
+  async (id: string) => {
+    const res = await timeFrameApi.getAll(id);
     return res.data.data;
   },
 );

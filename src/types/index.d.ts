@@ -8,7 +8,7 @@ type User = {
 };
 
 type ParkingLot = {
-  idParkingLot: string;
+  id: string;
   name: string;
   description: string;
   address: string;
@@ -34,7 +34,7 @@ type ParkingSlot = {
 
 type Block = {
   idBlock: string;
-  idParkingLot: string;
+  id: string;
   blockCode: string;
   description: string;
   isFull: boolean;
@@ -44,7 +44,7 @@ type Block = {
 
 type TimeFrame = {
   idTimeFrame: string;
-  idParkingLot: string;
+  id: string;
   duration: number;
   cost: number;
 };
@@ -77,5 +77,5 @@ type Reservation = {
 type Favorite = {
   idFavorite: string;
   idUser: string;
-  idParkingLot: string;
+  id: string;
 };

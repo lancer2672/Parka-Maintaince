@@ -12,8 +12,8 @@ const FavoriteScreen = () => {
   const favoriteState = useAppSelector(selectFavorites);
   const dispatch = useAppDispatch();
 
-  const handleDelete = (idParkingLot: string) => {
-    dispatch(favoriteActions.deleteFavorite(idParkingLot))
+  const handleDelete = (id: string) => {
+    dispatch(favoriteActions.deleteFavorite(id))
       .then(() => Alert.alert("Deleted successfully!"))
       .catch(() => Alert.alert("Error!"));
   };
@@ -39,12 +39,12 @@ const FavoriteScreen = () => {
         <FlatList
           style={{ padding: 20 }}
           data={favoriteState}
-          keyExtractor={(item) => item.idParkingLot}
+          keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <FavoriteItem
               favorite={item}
-              onDelete={() => handleDelete(item.idParkingLot)}
+              onDelete={() => handleDelete(item.id)}
             />
           )}
         />

@@ -35,7 +35,7 @@ const DetailModal = (props: Props) => {
   const { isShow, onClose, navigateBooking } = props;
   const ref = React.useRef<BottomSheet>(null);
   const selectedParking = useAppSelector(selectBooking).parkingLot;
-  console.log("Detail parking modal parkingLot = ", selectedParking);
+  console.log("Detail parking modal parkingLot  isShow= ", isShow);
   const [numOfAvailableSlots, setNumOfAvailableSlots] = useState<number>(0);
   const favoriteState = useAppSelector(selectFavorites);
   const [isFavorite, setFavorite] = useState<boolean>(false);
@@ -52,7 +52,8 @@ const DetailModal = (props: Props) => {
       const idUser = await AsyncStorage.getItem("idUser");
       dispatch(
         favoriteActions.createFavorite({
-          idParkingLot: selectedParking?.idParkingLot,
+          // id: selectedParking?.id,
+          id: selectedParking?.id,
           idUser: idUser,
         }),
       );
@@ -69,10 +70,10 @@ const DetailModal = (props: Props) => {
   }, [isShow, selectedParking]);
 
   useEffect(() => {
-    dispatch(timeFrameActions.getTimeFrames(selectedParking?.idParkingLot));
+    dispatch(timeFrameActions.getTimeFrames(selectedParking?.id));
     let isFav = false;
     favoriteState.forEach((favorite) => {
-      if (favorite.idParkingLot == selectedParking.idParkingLot) isFav = true;
+      if (favorite.id == selectedParking.id) isFav = true;
     });
     setFavorite(isFav);
   }, [selectedParking]);
@@ -80,20 +81,44 @@ const DetailModal = (props: Props) => {
   useEffect(() => {
 
     const getNumOfSlots = async () => {
+      //?????
+      // const time = dayjs().get("hour") + ":" + dayjs().get("minute");
+      // Spinner.show();
+      // const numOfSlots = await parkingSlotApi.getAvailableSlots(
+      //   time,
+      //   time,
+      //   dayjs().format("YYYY-MM-DD"),
+      //   selectedParking?.id,
+      // );
       const time = dayjs().get("hour") + ":" + dayjs().get("minute");
       Spinner.show();
       const numOfSlots = await parkingSlotApi.getAvailableSlots(
-        time,
-        time,
-        dayjs().format("YYYY-MM-DD"),
-        selectedParking?.idParkingLot,
+        dayjs().format(),
+        dayjs().format(),
+        dayjs().format(),
+        selectedParking?.id,
       );
       let num = 0;
-      numOfSlots.data.data.forEach((element: any) => {
-        num += element.ParkingSlots?.length;
-      });
+      //Đoạn code cũ bị lỗi khi numOfSlots.data.data = null
+      // numOfSlots.data.data.forEach((element: any) => {
+      //   num += element.ParkingSlots?.length;
+      // });
+      
+      //Code sau khi thêm câu lệnh điều kiện
+      if(numOfSlots.data.data)
+      {
+        console.log("num of slot",numOfSlots.data.data);
+        numOfSlots.data.data.forEach((element: any) => {
+          console.log("???",element);
+          num += element.ParkingSlots?.length;
+        });
+      }
+
+      console.log("lap cai d gi z ");
       setNumOfAvailableSlots(num);
       Spinner.hide();
+      console.log("hidedd");
+
     };
     if (selectedParking) {
       getNumOfSlots();

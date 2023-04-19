@@ -47,7 +47,7 @@ const FavoriteItem = ({ favorite, onDelete }: Props) => {
     <TouchableOpacity style={styles.container}>
       <Swipeable
         ref={swipeRef}
-        key={favorite.idParkingLot}
+        key={favorite.id}
         onSwipeableRightOpen={() =>
           AlertHelper.confirm(onDelete, closeSwipable)
         }

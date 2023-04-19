@@ -13,10 +13,13 @@ const createVehicleAction = createAsyncThunk(
   "vehicles/create",
   async (vehicle: Vehicle) => {
     try {
+      console.log("create vehicle action");
+
       const res = await vehicleApi.create(vehicle);
       if (res.data.data) {
         return res.data.data;
       }
+      console.log("create vehicle action response",res);
     } catch (error: any) {
       return { errorMessage: error.message };
     }

@@ -92,7 +92,7 @@ const SearchAutocomplete = (props: Props) => {
         )}
       </View>
       <FlatList
-        keyExtractor={(item) => item.idParkingLot}
+        keyExtractor={(item) => item.id}
         data={data}
         style={{ marginHorizontal: 10, marginTop: 10 }}
         renderItem={({ item }) => (

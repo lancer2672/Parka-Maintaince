@@ -1,12 +1,19 @@
 import axiosClient from "./axiosClient";
 const userApi = {
   getAll: async () => {
+    console.log("Api - userApi - getAll");
     const res = await axiosClient.get("/users");
+    console.log("Api - userApi - getAll",res);
+
     return res;
   },
   getUserById: async (id: string) => {
     // const res = await axiosClient.get(`/users/${id}`);
+    console.log("Api - userApi - getUserById");
     const res = await axiosClient.get(`/user/${id}`);
+
+    console.log("Api - userApi - getUserById",res);
+
     return res;
   },
   checkDuplicatePhone: async (phoneNumber: any) => {

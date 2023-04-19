@@ -24,7 +24,7 @@ const SelectParkingSlotScreen = ({ navigation }: any) => {
         start: dayjs(bookingState.startTime).format("HH:mm"),
         end: dayjs(bookingState.endTime).format("HH:mm"),
         date: dayjs(bookingState.bookingDate).format("YYYY-MM-DD"),
-        idParkingLot: bookingState.parkingLot.idParkingLot,
+        id: bookingState.parkingLot.id,
       };
       dispatch(availableSlotsActions.getAvailableSlots(data));
     };

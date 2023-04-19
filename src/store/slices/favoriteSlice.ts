@@ -49,7 +49,7 @@ export const favoriteSlice = createSlice({
       deleteFavorite.fulfilled,
       (state, { payload }: PayloadAction<string>) => {
         state.entities = state.entities.filter(
-          (favorite) => favorite.idParkingLot !== payload,
+          (favorite) => favorite.id !== payload,
         );
         Spinner.hide();
       },

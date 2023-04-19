@@ -28,7 +28,6 @@ const ReserveParkingScreen = ({ navigation }: any) => {
   const dispatch = useAppDispatch();
   const bookingState = useAppSelector(selectBooking);
   const timeFrames = useAppSelector(selectTimeFrames);
-
   const handleConfirmDate = (date: Date) => {
     dispatch(bookingActions.update({ field: "bookingDate", value: date }));
     setDateVisible(false);
@@ -40,6 +39,11 @@ const ReserveParkingScreen = ({ navigation }: any) => {
   };
 
   const navigateNext = () => {
+    console.log("bookingState",bookingState);
+    console.log("timeFrames",timeFrames);
+    console.log("selectedTimeFrame",timFrameSelected);
+
+
     if (
       bookingState.bookingDate &&
       bookingState.startTime &&
@@ -65,6 +69,8 @@ const ReserveParkingScreen = ({ navigation }: any) => {
     setTimeFrameSelected(timeFrame);
     dispatch(bookingActions.update({ field: "endTime", value: endTime }));
     dispatch(bookingActions.update({ field: "timeFrame", value: timeFrame }));
+        //Đoạn này tự thêm :) ???
+    dispatch(bookingActions.update({ field: "timeFrame", value: timFrameSelected }));
   };
 
   return (

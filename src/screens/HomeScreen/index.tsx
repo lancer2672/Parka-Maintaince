@@ -15,6 +15,7 @@ const HomeScreen = ({ navigation }: any) => {
   const navigateBooking = () => {
     navigation.navigate("ParkingDetailsScreen");
   };
+  console.log("Isshow detail modal ",isShowDetail);
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>

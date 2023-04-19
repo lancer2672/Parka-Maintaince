@@ -42,6 +42,7 @@ const VehicleSchema = Yup.object().shape({
 
 const AddVehicleScreen = ({ route, navigation }: any) => {
   const editData: Vehicle = route.params;
+  console.log("AddVehicleScreen.editData",editData);
   const userState = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikProps<VehicleFormProps>>();
@@ -123,14 +124,18 @@ const AddVehicleScreen = ({ route, navigation }: any) => {
 
   const handleAdd = async (values: VehicleFormProps) => {
     const idUser = await AsyncStorage.getItem("idUser");
+    console.log("handleAdd.userId",idUser);
 
     const vehicle: Vehicle = {
       idVehicle: "",
-      idUser: userState?.idUser || JSON.parse(idUser),
+      // idUser: userState?.idUser || JSON.parse(idUser),
+      idUser,
       name: values.name,
       number: values.number,
       type: values.type,
     };
+    console.log("AddVehicleSCreen.handleAdd",vehicle);
+
     dispatch(createVehicleAction(vehicle));
   };
 
