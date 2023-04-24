@@ -32,5 +32,7 @@ router.post(
   body("email").exists().withMessage("email is missing"),
   UserController.UpdateUserById
 );
+
 router.get("/update", UserController.GetUserById);
+
 module.exports = router;

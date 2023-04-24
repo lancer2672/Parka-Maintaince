@@ -126,7 +126,6 @@ exports.UpdateUserById = async (req, res) => {
 
 exports.GetUserById = async (req, res) => {
   const userId = req.params.id;
-
   try {
     const result = await pool.query("SELECT * FROM users WHERE id = $1", [
       userId,
@@ -150,8 +149,8 @@ exports.HandleLogin = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  const { username, password } = req.body;
 
+  const { username, password } = req.body;
   try {
     const result = await pool.query(
       "SELECT * FROM users WHERE phone_number=$1",
