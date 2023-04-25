@@ -33,6 +33,13 @@ router.post(
   UserController.UpdateUserById
 );
 
+router.post(
+  "/reset-password",
+  body("password").exists().withMessage("password is missing"),
+  body("username").exists().withMessage("username is missing"),
+  UserController.ResetPassword
+);
+
 router.get("/update", UserController.GetUserById);
 
 module.exports = router;
