@@ -21,6 +21,11 @@ router.put(
   CompanyController.UpdateCompany
 )
 
-
+router.put(
+  "/update-password/:id",
+  body("old").exists().withMessage("old password is missing"),
+  body("new1").exists().withMessage("new password is missing"),
+  CompanyController.UpdateCompanyPassword
+)
 
 module.exports = router;
