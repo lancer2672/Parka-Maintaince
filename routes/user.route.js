@@ -6,7 +6,6 @@ router.post(
   "/create",
   body("phoneNumber").exists().withMessage("phoneNumber is missing"),
   body("password").exists().withMessage("password is missing"),
-  body("email").exists().withMessage("email is missing"),
   UserController.CreateUser
 );
 
@@ -23,16 +22,9 @@ router.post(
   UserController.CheckDuplicatePhoneNumber
 );
 
-router.post(
-  "/update",
-  body("password").exists().withMessage("password is missing"),
-  body("username").exists().withMessage("username is missing"),
-  body("imageUrl").exists().withMessage("imageUrl is missing"),
-  body("phoneNumber").exists().withMessage("phoneNumber is missing"),
-  body("email").exists().withMessage("email is missing"),
-  UserController.UpdateUserById
-);
+router.put("/update/:id", UserController.UpdateUserById);
 
-router.get("/update", UserController.GetUserById);
+router.get("/:id", UserController.GetUserById);
+router.delete("/:id", UserController.DeleteUserById);
 
 module.exports = router;
