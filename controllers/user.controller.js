@@ -226,7 +226,6 @@ exports.HandleLogin = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
 exports.DeleteUserById = async (req, res) => {
   const userId = req.params.id;
   const deletedAt = new Date();
@@ -255,7 +254,6 @@ exports.DeleteUserById = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-=======
 exports.ResetPassword= async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -291,4 +289,3 @@ exports.ResetPassword= async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
->>>>>>> bea0c6489f76bdc6f2d9aca9e4d068f88c16e4cc
