@@ -20,25 +20,26 @@ const checkPhoneDuplicate = async (phoneNumber) => {
   }
 };
 const checkEmailDuplicate = async (email) => {
-  console.log("email", email);
   try {
     const res = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
-    console.log("res.row", res.rowCount);
-    if (res.rowCount == 0) {
+    if (res.rowCount === 0) {
       return false;
+    } else {
+      return true;
     }
-    return true;
   } catch (err) {
+    console.error(err);
     throw err;
   }
 };
 
 exports.CreateUser = async (req, res) => {
   let isUserExisted = false;
-  const { phoneNumber, password, email } = req.body;
-
+  let { phoneNumber, password, email, displayName } = req.body;
+  if (email == null) email = "";
+  if (displayName == null) displayName = "";
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -50,13 +51,15 @@ exports.CreateUser = async (req, res) => {
   try {
     isUserExisted = await checkPhoneDuplicate(phoneNumber);
     if (isUserExisted) {
-      return res.status(400).json({ message: "User already exists" });
+      return res
+        .status(400)
+        .json({ error: { detail: "Số điện thoại đã tồn tại" }, code: "" });
     } else {
       const harshedPassword = await bcrypt.hash(password, 10);
-      console.log("harhsed password", harshedPassword);
+
       const result = await pool.query(
-        "INSERT INTO users(phone_number, password, email) VALUES ($1, $2, $3) RETURNING *",
-        [phoneNumber, harshedPassword, email]
+        "INSERT INTO users(phone_number, password, email,display_name,social_id,image_url) VALUES ($1, $2, $3, $4,'','') RETURNING *",
+        [phoneNumber, harshedPassword, email, displayName]
       );
 
       if (result.rowCount !== 0) {
@@ -90,31 +93,56 @@ exports.CheckDuplicatePhoneNumber = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 exports.UpdateUserById = async (req, res) => {
   const userId = req.params.id;
-  const { phoneNumber, password, email } = req.body;
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  if (checkEmailDuplicate(email)) {
-    return res.status(400).json({ message: "email has already been used" });
-  }
-
+  console.log("req.body", req.body);
+  const { phoneNumber, password, email, displayName, ImageUrl } = req.body;
   try {
-    const harshedPassword = await bcrypt.hash(password, 12);
-    const result = await pool.query(
-      "UPDATE users SET phone_number = $1, password = $2, email = $3 WHERE id = $4 RETURNING *",
-      [phoneNumber, harshedPassword, email, userId]
-    );
+    let updateValues = {};
+    if (phoneNumber != null) {
+      updateValues.phone_number = phoneNumber;
+    }
+    if (password != null) {
+      updateValues.password = await bcrypt.hash(password, 12);
+    }
+    if (email != null) {
+      if (await checkEmailDuplicate(email, userId)) {
+        return res.status(400).json({ message: "email has already been used" });
+      } else {
+        updateValues.email = email;
+      }
+    }
+    if (displayName != null) {
+      updateValues.display_name = displayName;
+    }
+    if (ImageUrl != null) {
+      updateValues.image_url = ImageUrl;
+    }
+    if (Object.keys(updateValues).length === 0) {
+      // nếu không có giá trị nào được cập nhật
+      return res.status(400).json({ message: "No values to update" });
+    }
+
+    const values = Object.values(updateValues);
+    const setClause = Object.keys(updateValues)
+      .map((key, index) => {
+        return `${key} = $${index + 1}`;
+      })
+      .join(", ");
+
+    const query = {
+      text: `UPDATE users SET ${setClause} WHERE id = $${
+        values.length + 1
+      } RETURNING *`,
+      values: [...values, userId],
+    };
+
+    const result = await pool.query(query);
 
     if (result.rowCount !== 0) {
       return res.json({
         message: "Update user successfully",
-        user: result.rows[0],
+        data: result.rows[0],
       });
     } else {
       return res.status(404).json({ message: "User not found" });
@@ -127,6 +155,14 @@ exports.UpdateUserById = async (req, res) => {
 
 exports.GetUserById = async (req, res) => {
   const userId = req.params.id;
+  if (!userId) {
+    return res.status(400).json({
+      error: {
+        detail: "Bắt buộc phải có id user",
+      },
+      code: "",
+    });
+  }
   try {
     const result = await pool.query("SELECT * FROM users WHERE id = $1", [
       userId,
@@ -134,10 +170,15 @@ exports.GetUserById = async (req, res) => {
 
     if (result.rowCount !== 0) {
       return res.json({
-        user: result.rows[0],
+        data: result.rows[0],
       });
     } else {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({
+        error: {
+          detail: "Not found user",
+        },
+        code: "",
+      });
     }
   } catch (err) {
     console.error(err);
@@ -185,6 +226,36 @@ exports.HandleLogin = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
+exports.DeleteUserById = async (req, res) => {
+  const userId = req.params.id;
+  const deletedAt = new Date();
+
+  try {
+    const result = await pool.query(
+      "UPDATE users SET deleted_at = $1 WHERE id = $2",
+      [deletedAt, userId]
+    );
+
+    if (result.rowCount !== 0) {
+      console.log(`User with id ${userId} has been deleted`);
+    } else {
+      res.status(400).json({
+        error: {
+          detail: "Wrong id",
+        },
+        code: "",
+      });
+      console.log(`User with id ${userId} not found`);
+    }
+
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+=======
 exports.ResetPassword= async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -220,3 +291,4 @@ exports.ResetPassword= async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+>>>>>>> bea0c6489f76bdc6f2d9aca9e4d068f88c16e4cc
