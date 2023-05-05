@@ -24,10 +24,8 @@ router.post(
 
 router.put("/update/:id", UserController.UpdateUserById);
 
-<<<<<<< HEAD
 router.get("/:id", UserController.GetUserById);
 router.delete("/:id", UserController.DeleteUserById);
-=======
 router.post(
   "/reset-password",
   body("password").exists().withMessage("password is missing"),
@@ -36,6 +34,5 @@ router.post(
 );
 
 router.get("/update", UserController.GetUserById);
->>>>>>> bea0c6489f76bdc6f2d9aca9e4d068f88c16e4cc
 
 module.exports = router;
