@@ -2,6 +2,7 @@ const pool = require("../db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
+const { use } = require("../routes");
 
 const checkPhoneDuplicate = async (phoneNumber) => {
   console.log("phoneNumber", phoneNumber);
@@ -213,6 +214,7 @@ exports.HandleLogin = async (req, res) => {
         accessToken: token,
         refreshToken: token,
         phoneNumber: user.phone_number,
+        displayName: user.display_name,
         id: user.id,
         email: user.email,
         imageUrl: user.image_url,
@@ -224,6 +226,7 @@ exports.HandleLogin = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 exports.DeleteUserById = async (req, res) => {
   const userId = req.params.id;
   const deletedAt = new Date();
@@ -252,3 +255,40 @@ exports.DeleteUserById = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+=======
+exports.ResetPassword= async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { username, password } = req.body;
+  try {
+    const result = await pool.query(
+      "SELECT * FROM users WHERE phone_number=$1",
+      [username]
+    );
+    const user = result.rows[0];
+    if (!user) {
+      return res.status(401).json({ message: "User does not exists" });
+    }
+
+    const harshedPassword = await bcrypt.hash(password, 10);
+    console.log("harhsed password", harshedPassword);
+      const result2 = await pool.query(
+        "Update users set password=$1 where phone_number=$2", [harshedPassword, username]
+      );
+
+      if (result2.rowCount !== 0) {
+        return res.json({
+          message: "Reset password successfully.",
+          user: result2.rows[0],
+        });
+      } else return res.status(500).json({ message: "Failed to reset password" });
+
+  }catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+>>>>>>> bea0c6489f76bdc6f2d9aca9e4d068f88c16e4cc
