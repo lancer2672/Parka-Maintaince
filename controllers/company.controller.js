@@ -10,7 +10,12 @@ exports.CreateCompany = async (req, res) => {
   console.log(email, companyName, phoneNumber, password);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array()});
+    return res.status(400).json({ 
+      "error": {
+        "detail": errors.array().map((err) => err.msg).join(" "),
+      },
+      "code": ""
+    });
   }
 
   try {
