@@ -95,7 +95,6 @@ exports.CheckDuplicatePhoneNumber = async (req, res) => {
 };
 exports.UpdateUserById = async (req, res) => {
   const userId = req.params.id;
-  console.log("req.body", req.body);
   const { phoneNumber, password, email, displayName, ImageUrl } = req.body;
   try {
     let updateValues = {};
@@ -254,7 +253,7 @@ exports.DeleteUserById = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-exports.ResetPassword= async (req, res) => {
+exports.ResetPassword = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -273,18 +272,18 @@ exports.ResetPassword= async (req, res) => {
 
     const harshedPassword = await bcrypt.hash(password, 10);
     console.log("harhsed password", harshedPassword);
-      const result2 = await pool.query(
-        "Update users set password=$1 where phone_number=$2", [harshedPassword, username]
-      );
+    const result2 = await pool.query(
+      "Update users set password=$1 where phone_number=$2",
+      [harshedPassword, username]
+    );
 
-      if (result2.rowCount !== 0) {
-        return res.json({
-          message: "Reset password successfully.",
-          user: result2.rows[0],
-        });
-      } else return res.status(500).json({ message: "Failed to reset password" });
-
-  }catch (err) {
+    if (result2.rowCount !== 0) {
+      return res.json({
+        message: "Reset password successfully.",
+        user: result2.rows[0],
+      });
+    } else return res.status(500).json({ message: "Failed to reset password" });
+  } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
