@@ -16,6 +16,8 @@
     "express-validator": "^6.15.0",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
     "nodemon": "^2.0.22",
     "pg": "^8.10.0"
   }
