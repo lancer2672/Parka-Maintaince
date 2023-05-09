@@ -14,7 +14,7 @@ exports.CreateParkingSlot = async (req, res) => {
         "code": ""
       });
     }
-    
+
     if (name == null) {
         return res.status(400).json({
             error: {
@@ -46,6 +46,47 @@ exports.CreateParkingSlot = async (req, res) => {
         console.error(err);
         return res.status(500).json({message: "Internal server error"});
     }
+};
 
+exports.GetOneParkingSlot = async (req, res) => {
+    const parkingSlotID = req.params.id;
 
+    if(parkingSlotID == null){
+        return res.status(400).json({
+          "error": {
+            "detail": "Parking slot id is required",
+          },
+          "code": ""
+        });
+    }
+    try {
+        const result = await pool.query(
+            "SELECT * FROM parking_slot WHERE id = $1 AND deleted_at IS NULL",
+            [parkingSlotID]
+        );
+        if (result.rowCount !== 0){
+            const parkingSlot = result.rows[0];
+            return res.json({
+                data: {
+                    id: parkingSlot.id,
+                    created_at: parkingSlot.created_at,
+                    updated_at: parkingSlot.updated_at,
+                    name: parkingSlot.name,
+                    description: parkingSlot.description,
+                    blockID: parkingSlot.block_id
+                }
+            });
+        }
+        else {
+            return res.status(404).json({
+                error: {
+                  detail: "Record not found",
+                },
+                code: "NOT_FOUND",
+              });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({message: "Internal server error"});
+    }
 };
