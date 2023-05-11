@@ -1,5 +1,7 @@
 const pool = require("../db");
 const { validationResult } = require("express-validator");
+const moment  = require('moment-timezone');
+const moment_string = require('moment');
 
 exports.CreateParkingSlot = async (req, res) => {
     const {name, description, blockID} = req.body;
@@ -129,6 +131,45 @@ exports.UpdateParkingSlot = async (req, res) => {
                     description: parkingSlot.description,
                     blockID: parkingSlot.block_id
                 }
+            });
+        }
+        else {
+            return res.status(404).json({
+                error: {
+                  detail: "Record not found",
+                },
+                code: "NOT_FOUND",
+              });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({message: "Internal server error"});
+    }
+};
+
+exports.DeleteParkingSlot = async (req, res) => {
+    const parkingSlotID = req.params.id;
+    let time = moment().tz('7').format('YYYY-MM-DD HH:mm:ss.SSS');
+
+    if(parkingSlotID == null){
+        return res.status(400).json({
+          "error": {
+            "detail": "Parking slot id is required",
+          },
+          "code": ""
+        });
+    }
+    try {
+        let entryTime = moment_string(time).toISOString();
+        const result = await pool.query(
+            "UPDATE parking_slot SET deleted_at = $1 WHERE id = $2 AND deleted_at IS NULL RETURNING *",
+            [entryTime, parkingSlotID]
+        );
+        if (result.rowCount !== 0){
+            const parkingSlot = result.rows[0];
+            return res.json({
+                data:  "Xóa bản ghi thành công"
+                
             });
         }
         else {
