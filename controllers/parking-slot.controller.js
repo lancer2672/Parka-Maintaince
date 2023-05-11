@@ -162,7 +162,7 @@ exports.DeleteParkingSlot = async (req, res) => {
     try {
         let entryTime = moment_string(time).toISOString();
         const result = await pool.query(
-            "UPDATE parking_slot SET deleted_at = $1 WHERE id = $2 AND deleted_at IS NULL RETURNING *",
+            "UPDATE parking_slot SET deleted_at = $1 WHERE id = $2 RETURNING *",
             [entryTime, parkingSlotID]
         );
         if (result.rowCount !== 0){
@@ -184,4 +184,46 @@ exports.DeleteParkingSlot = async (req, res) => {
         console.error(err);
         return res.status(500).json({message: "Internal server error"});
     }
+};
+
+
+exports.GetListParkingSlot = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 30;
+        const offset = (page - 1) * pageSize;
+        const result = await pool.query(
+          "SELECT * FROM parking_slot WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT $1 OFFSET $2",
+          [pageSize, offset]
+        );
+    
+        const totalRows = result.rowCount;
+    
+        const totalPages = Math.ceil(totalRows / pageSize);
+    
+        const meta = {
+          page: page,
+          page_size: pageSize,
+          total_pages: totalPages,
+          total_rows: totalRows,
+        };
+        const modifiedResult = result.rows.map((row, i) => {
+          return {
+            id: row.id,
+            created_at: row.created_at,
+            updated_at: row.updated_at,
+            name: row.name,
+            description: row.description,
+            blockID: row.block_id
+          };
+        });
+        return res.json({
+          data: modifiedResult,
+          meta: meta,
+        });
+      } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+    
 };
