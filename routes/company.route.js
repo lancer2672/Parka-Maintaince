@@ -11,7 +11,7 @@ router.post(
   CompanyController.CreateCompany
 );
 
-router.get("/get-one/:id",CompanyController.GetCompanyById);
+router.get("/get-one/:id", CompanyController.GetCompanyById);
 
 router.put(
   "/update/:id",

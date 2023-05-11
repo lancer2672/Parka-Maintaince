@@ -153,8 +153,8 @@ exports.UpdateUserById = async (req, res) => {
 };
 
 exports.GetUserById = async (req, res) => {
-  const userId = req.params.id;
-  if (!userId) {
+
+  if (!req.params.id) {
     return res.status(400).json({
       error: {
         detail: "Bắt buộc phải có id user",
@@ -162,6 +162,7 @@ exports.GetUserById = async (req, res) => {
       code: "",
     });
   }
+  const userId = req.params.id;
   try {
     const result = await pool.query("SELECT * FROM users WHERE id = $1", [
       userId,
