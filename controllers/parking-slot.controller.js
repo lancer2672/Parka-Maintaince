@@ -30,10 +30,9 @@ exports.CreateParkingSlot = async (req, res) => {
         const result = await pool.query(
             "INSERT INTO parking_slot (name, description, block_id) VALUES ($1, $2, $3) RETURNING *",
             [name, description, blockID]
-        );
-
-        const parkingSlot = result.rows[0];
-        return res.json({
+        );      
+          const parkingSlot = result.rows[0];
+          return res.json({
             data: {
                 id: parkingSlot.id,
                 created_at: parkingSlot.created_at,
@@ -42,7 +41,7 @@ exports.CreateParkingSlot = async (req, res) => {
                 description: parkingSlot.description,
                 blockID: parkingSlot.block_id,
             }
-        })
+        });
     }
     catch (err) {
         console.error(err);
@@ -66,18 +65,25 @@ exports.GetOneParkingSlot = async (req, res) => {
             "SELECT * FROM parking_slot WHERE id = $1 AND deleted_at IS NULL",
             [parkingSlotID]
         );
-        if (result.rowCount !== 0){
-            const parkingSlot = result.rows[0];
-            return res.json({
-                data: {
-                    id: parkingSlot.id,
-                    created_at: parkingSlot.created_at,
-                    updated_at: parkingSlot.updated_at,
-                    name: parkingSlot.name,
-                    description: parkingSlot.description,
-                    blockID: parkingSlot.block_id
-                }
-            });
+        if (result.rowCount !== 0){          
+
+          const parkingSlot = result.rows[0];
+          if (result.rows[0].description == null){
+            parkingSlot.description = "";
+          }
+          if (result.rows[0].block_id == null){
+            parkingSlot.block_id = "00000000-0000-0000-0000-000000000000";
+          }
+          return res.json({
+            data: {
+              id: parkingSlot.id,
+              created_at: parkingSlot.created_at,
+              updated_at: parkingSlot.updated_at,
+              name: parkingSlot.name,
+              description: parkingSlot.description,
+              blockID: parkingSlot.block_id,
+            }
+          });
         }
         else {
             return res.status(404).json({
@@ -208,6 +214,13 @@ exports.GetListParkingSlot = async (req, res) => {
           total_rows: totalRows,
         };
         const modifiedResult = result.rows.map((row, i) => {
+          if (result.rows[i].description == null){
+            row.description = "";
+          }
+          if (result.rows[i].block_id == null){
+            row.block_id = "00000000-0000-0000-0000-000000000000";
+          }
+
           return {
             id: row.id,
             created_at: row.created_at,
