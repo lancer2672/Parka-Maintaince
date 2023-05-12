@@ -60,9 +60,14 @@ const GetParkingSlot = async (parkingSlotId) => {
     if (res.rowCount !== 0) {
       if(res.rows[0].description == null){
         description = "";
+      } else {
+        description = res.rows[0].description;
       }
+
       if(res.rows[0].block_id == null){
         blockID = "00000000-0000-0000-0000-000000000000";
+      } else {
+        blockID = res.rows[0].block_id;
       }
       const parkingLot = {
         id: res.rows[0].id,

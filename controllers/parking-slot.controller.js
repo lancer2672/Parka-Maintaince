@@ -3,6 +3,42 @@ const { validationResult } = require("express-validator");
 const moment  = require('moment-timezone');
 const moment_string = require('moment');
 
+
+const GetParkingSlot = async (parkingSlotId) => {
+  console.log("parking_slot_id", parkingSlotId);
+  try {
+    const res = await pool.query(
+      "SELECT * FROM parking_slot WHERE id = $1",
+      [parkingSlotId]
+    );
+    if (res.rowCount !== 0) {
+      if(res.rows[0].description == null){
+        description = "";
+      } else {
+        description = res.rows[0].description;
+      }
+
+      if(res.rows[0].block_id == null){
+        blockID = "00000000-0000-0000-0000-000000000000";
+      } else {
+        blockID = res.rows[0].block_id;
+      }
+      const parkingLot = {
+        id: res.rows[0].id,
+        created_at: res.rows[0].created_at,
+        updated_at: res.rows[0].updated_at,
+        name: res.rows[0].name,
+        description: description,
+        blockID: blockID
+      };
+      return parkingLot;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
+
 exports.CreateParkingSlot = async (req, res) => {
     const {name, description, blockID} = req.body;
 
@@ -239,4 +275,58 @@ exports.GetListParkingSlot = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
       }
     
+};
+
+exports.GetAvailableParkingSlot = async (req, res) => {
+  const {parkingLotId, start, end} = req.query;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ 
+      "error": {
+        "detail": errors.array().map((err) => err.msg).join(" "),
+      },
+      "code": ""
+    });
+  }
+
+  try {
+    const result = await pool.query(
+      "SELECT * FROM block WHERE parking_lot_id = $1 AND deleted_at IS NULL",
+      [parkingLotId]
+    );
+    if (result.rowCount !== 0){
+      let blocks = [];
+      for (let i = 0; i < result.rowCount; i++){
+        const result2 = await pool.query(
+          "SELECT * FROM parking_slot WHERE block_id = $1 AND deleted_at IS NULL",
+          [result.rows[i].id]
+        );
+
+        let parkingSlots = [];
+        for (let j = 0; j < result2.rowCount; j++){
+          let parkingSlot = await GetParkingSlot(result2.rows[j].id);
+          parkingSlots.push(parkingSlot);
+        }
+        
+
+          let block = {
+            id : result.rows[i].id,
+            created_at: result.rows[i].created_at,
+            updated_at: result.rows[i].updated_at,
+            code : "Block",
+            description: result.rows[i].description,
+            slot : parseInt(result.rows[i].slot),
+            parkingLotId : result.rows[i].parking_lot_id,
+            parkingSlots : parkingSlots
+          }
+          blocks.push(block);
+        }
+      
+      return res.json({data: blocks});
+    }
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
