@@ -168,8 +168,8 @@ exports.updateOne = async (req, res) => {
 exports.create = async (req, res) => {
   const {
     name,
-    description,
-    address,
+    description = "",
+    address = "",
     startTime,
     endTime,
     lat,
