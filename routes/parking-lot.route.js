@@ -8,5 +8,6 @@ router.get("/get-list", ParkingLotController.getListParkingLot);
 router.delete("/delete/:id", ParkingLotController.deleteOne);
 router.put("/update/:id", ParkingLotController.updateOne);
 router.post("/create/", ParkingLotController.create);
+router.get("/get-list-company", ParkingLotController.GetListParkingLotCompany);
 
 module.exports = router;

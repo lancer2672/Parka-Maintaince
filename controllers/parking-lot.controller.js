@@ -206,3 +206,54 @@ exports.create = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.GetListParkingLotCompany = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 30;
+    const offset = (page - 1) * pageSize;
+    const result = await pool.query(
+      "SELECT * FROM parking_lot WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT $1 OFFSET $2",
+      [pageSize, offset]
+    );
+
+    const totalRows = result.rowCount;
+
+    const totalPages = Math.ceil(totalRows / pageSize);
+
+    const meta = {
+      page: page,
+      page_size: pageSize,
+      total_pages: totalPages,
+      total_rows: totalRows,
+    };
+    const modifiedResult = result.rows.map((row, i) => {
+      if (result.rows[i].description == null){
+        row.description = "";
+      }
+      if (result.rows[i].address == null){
+        row.address = "";
+      }
+      return {
+        id: row.id,
+        created_at: row.created_at,
+        updated_at: row.updated_at,
+        name: row.name,
+        description: row.description,
+        address: row.address,
+        startTime: row.start_time,
+        endTime: row.end_time,
+        lat: parseFloat(row.lat),
+        long: parseFloat(row.long),
+        companyID: row.company_id,
+      };
+    });
+    return res.json({
+      data: modifiedResult,
+      meta: meta,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
