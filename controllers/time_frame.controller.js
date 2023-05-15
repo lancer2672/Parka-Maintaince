@@ -1,4 +1,5 @@
 const pool = require("../db");
+const { validationResult } = require("express-validator");
 
 exports.getOneTimeFrame = async (req, res) => {
   const parkingLotId = req.params.id;
@@ -212,3 +213,46 @@ exports.deleteOneTimeFrame = async (req, res) => {
 //       });
 //     }
 //   };
+
+
+exports.GetAllTimeFrame = async (req, res) => {
+  const {parkingLotId} = req.query;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ 
+      "error": {
+        "detail": errors.array().map((err) => err.msg).join(" "),
+      },
+      "code": ""
+    });
+  }
+
+  try {
+    const result = await pool.query(
+      "SELECT * FROM time_frame WHERE parking_lot_id = $1 AND deleted_at IS NULL",
+      [parkingLotId]
+    );
+    console.log(result);
+
+    if (result.rowCount !== 0) {
+      let timeFrameList = [];
+      for (let i = 0; i < result.rowCount; i++) {
+        let timeFrame = {
+          id: result.rows[i].id,
+          created_at: result.rows[i].created_at,
+          updated_at: result.rows[i].updated_at,
+          duration: parseInt(result.rows[i].duration),
+          cost: parseFloat(result.rows[i].cost),
+          parkingLotId: result.rows[i].parking_lot_id,
+        };
+        timeFrameList.push(timeFrame);
+      }
+
+      return res.json({data: {data: timeFrameList}});
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
