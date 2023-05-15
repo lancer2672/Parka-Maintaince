@@ -30,6 +30,10 @@ exports.create = async (req, res) => {
             [code, description, slot, parking_lot_id]
         );
         const block = result.rows[0];
+        const result2 = await pool.query(
+          "UPDATE block set creator_id= $1, updater_id= $2 where id=$3 RETURNING *",
+          [block.id, block.id, block.id]
+      );
         return res.json({
             data: {
                 id: block.id,
@@ -152,13 +156,15 @@ exports.GetBlockById = async (req, res) => {
           description = COALESCE($2, description),
           slot = COALESCE($3, slot),
           parking_lot_id = COALESCE($4, parking_lot_id)
-          WHERE id = $5`,
+          updater_id = COALESCE($5, updater_id)
+          WHERE id = $6`,
         [
           code,
           description,
           slot,
           parking_lot_id,
           blockId,
+          blockId
         ]
       );
   
