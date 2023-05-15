@@ -9,6 +9,7 @@ const blockRouter = require("./block.route");
 const parkingSlotRouter = require("./parking-slot.route");
 const vehicleRouter = require("./vehicle.route");
 const timeFrameRouter = require("./time-frame.route");
+const favoriteRouter = require("./favorite.route")
 
 router.use("/auth", authRouter);
 router.use("/user", userRouter);
@@ -19,4 +20,6 @@ router.use("/block", blockRouter);
 router.use("/parking-slot", parkingSlotRouter);
 router.use("/vehicle", vehicleRouter);
 router.use("/time-frame/", timeFrameRouter);
+router.use("/favorite", favoriteRouter)
+
 module.exports = router;
