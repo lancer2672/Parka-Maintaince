@@ -30,7 +30,21 @@ const SummaryScreen = ({ navigation }: any) => {
 
   const confirmBooking = async () => {
     const idUser = await AsyncStorage.getItem("idUser");
-
+    console.log("USERID", userState?.idUser);
+    console.log("USERID STORED", idUser);
+    const data = {
+      idVehicle: bookingState.vehicle?.idVehicle,
+      idUser: userState?.idUser || idUser,
+      idParkingSlot: bookingState.parkingSlot?.idParkingSlot,
+      idTimeFrame: bookingState.timeFrame?.idTimeFrame,
+      startTime: dayjs(bookingState.startTime).format("HH:mm:ss"),
+      endTime: dayjs(bookingState.endTime).format("HH:mm:ss"),
+      bookingDate: bookingState.bookingDate,
+      duration: bookingState.timeFrame.duration,
+      total: bookingState.timeFrame?.cost,
+    };
+    console.log("Confirm booking clicked, List data = ", data);
+    console.log("Confirm booking bookingState", bookingState);
     dispatch(
       reservationActions.createReservation({
         idVehicle: bookingState.vehicle?.idVehicle,
@@ -46,6 +60,7 @@ const SummaryScreen = ({ navigation }: any) => {
     )
       .unwrap()
       .then((res) => {
+        console.log("create reservation succeeded", res);
         setSuccess(true);
         dispatch(
           bookingActions.update({

@@ -21,6 +21,8 @@ const SelectVehicleScreen = ({ navigation }: any) => {
   };
 
   const navigateToAdd = () => {
+    console.log("SelectVehicleScreen Navigate to Add Vehicle");
+
     navigation.navigate("AddVehicleScreen");
   };
 

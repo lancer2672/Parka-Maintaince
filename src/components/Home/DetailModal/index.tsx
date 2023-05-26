@@ -79,7 +79,6 @@ const DetailModal = (props: Props) => {
   }, [selectedParking]);
 
   useEffect(() => {
-
     const getNumOfSlots = async () => {
       //?????
       // const time = dayjs().get("hour") + ":" + dayjs().get("minute");
@@ -103,22 +102,20 @@ const DetailModal = (props: Props) => {
       // numOfSlots.data.data.forEach((element: any) => {
       //   num += element.ParkingSlots?.length;
       // });
-      
+
       //Code sau khi thêm câu lệnh điều kiện
-      if(numOfSlots.data.data)
-      {
-        console.log("num of slot",numOfSlots.data.data);
+      if (numOfSlots.data.data) {
+        console.log("num of slot", numOfSlots.data.data);
         numOfSlots.data.data.forEach((element: any) => {
-          console.log("???",element);
+          console.log("???", element);
           num += element.ParkingSlots?.length;
         });
       }
 
       console.log("lap cai d gi z ");
-      setNumOfAvailableSlots(num);
+      setNumOfAvailableSlots(10);
       Spinner.hide();
-      console.log("hidedd");
-
+      console.log("hide");
     };
     if (selectedParking) {
       getNumOfSlots();

@@ -42,7 +42,7 @@ const VehicleSchema = Yup.object().shape({
 
 const AddVehicleScreen = ({ route, navigation }: any) => {
   const editData: Vehicle = route.params;
-  console.log("AddVehicleScreen.editData",editData);
+  console.log("AddVehicleScreen.editData", editData);
   const userState = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikProps<VehicleFormProps>>();
@@ -124,7 +124,7 @@ const AddVehicleScreen = ({ route, navigation }: any) => {
 
   const handleAdd = async (values: VehicleFormProps) => {
     const idUser = await AsyncStorage.getItem("idUser");
-    console.log("handleAdd.userId",idUser);
+    console.log("handleAdd.userId", idUser);
 
     const vehicle: Vehicle = {
       idVehicle: "",
@@ -134,10 +134,11 @@ const AddVehicleScreen = ({ route, navigation }: any) => {
       number: values.number,
       type: values.type,
     };
-    console.log("AddVehicleSCreen.handleAdd",vehicle);
+    console.log("AddVehicleSCreen.handleAdd", vehicle);
 
     dispatch(createVehicleAction(vehicle));
   };
+  console.log("AddVehicleScreen1", editData);
 
   return (
     <KeyboardAwareScrollView style={{ flex: 1 }}>
@@ -163,6 +164,8 @@ const AddVehicleScreen = ({ route, navigation }: any) => {
             onSubmit={(values) => handleSubmit(values)}>
             {({ handleChange, handleSubmit, values, errors, touched }) => {
               type InputKey = keyof typeof values;
+              console.log("AddVehicleScreen2", editData);
+
               return (
                 <View style={{ flex: 1 }}>
                   {inputs.map((input) => (
@@ -179,7 +182,8 @@ const AddVehicleScreen = ({ route, navigation }: any) => {
                       {errors[input.field as InputKey] &&
                         touched[input.field as InputKey] && (
                           <Text style={styles.validateError}>
-                            * {errors[input.field as InputKey]}
+                            {/* * {errors[input.field as InputKey]} */}
+                            {errors[input.field as InputKey]}
                           </Text>
                         )}
                     </View>
@@ -196,6 +200,7 @@ const AddVehicleScreen = ({ route, navigation }: any) => {
               );
             }}
           </Formik>
+          {console.log("AddVehicleScreen3")}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAwareScrollView>

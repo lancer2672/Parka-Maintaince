@@ -3,7 +3,7 @@ const userApi = {
   getAll: async () => {
     console.log("Api - userApi - getAll");
     const res = await axiosClient.get("/users");
-    console.log("Api - userApi - getAll",res);
+    console.log("Api - userApi - getAll", res);
 
     return res;
   },
@@ -11,27 +11,31 @@ const userApi = {
     // const res = await axiosClient.get(`/users/${id}`);
     console.log("Api - userApi - getUserById");
     const res = await axiosClient.get(`/user/${id}`);
-
-    console.log("Api - userApi - getUserById",res);
+    console.log("Api - userApi - getUserById", res);
 
     return res;
   },
   checkDuplicatePhone: async (phoneNumber: any) => {
-    const res = await axiosClient.post("/user/check-phone", { "phone_number":phoneNumber });
-    console.log("requested",res);
+    const res = await axiosClient.post("/user/check-phone", {
+      phone_number: phoneNumber,
+    });
+    console.log("requested", res);
     return res.data;
   },
   createUser: async (user: any) => {
     // const res = await axiosClient.post("/users", user);
     console.log("service - create User", user);
     const res = await axiosClient.post("/user/create", user);
-    console.log("response",res);
+    console.log("response", res);
     return res;
   },
 
   updateUser: async (updatedUser: User) => {
     // return await axiosClient.patch(`/users/${updatedUser.idUser}`, updatedUser);
-    return await axiosClient.patch(`/user/update/${updatedUser.idUser}`, updatedUser);
+    return await axiosClient.patch(
+      `/user/update/${updatedUser.idUser}`,
+      updatedUser,
+    );
   },
 
   deleteUser: async (id: string) => {
