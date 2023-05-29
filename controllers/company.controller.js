@@ -1,5 +1,6 @@
 const pool = require("../db");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 
 exports.CreateCompany = async (req, res) => {
@@ -8,14 +9,16 @@ exports.CreateCompany = async (req, res) => {
   console.log(email, companyName, phoneNumber, password);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ 
-      "error": {
-        "detail": errors.array().map((err) => err.msg).join(" "),
+    return res.status(400).json({
+      error: {
+        detail: errors
+          .array()
+          .map((err) => err.msg)
+          .join(" "),
       },
-      "code": ""
+      code: "",
     });
   }
-
   try {
     const passwordHash = await bcrypt.hash(password, 10);
     const result = await pool.query(
@@ -43,11 +46,12 @@ exports.CreateCompany = async (req, res) => {
 exports.GetCompanyById = async (req, res) => {
   const companyId = req.params.id;
   try {
-    const result = await pool.query("SELECT * FROM company WHERE id = $1 and deleted_at is NULL", [
-      companyId,
-    ]);
+    const result = await pool.query(
+      "SELECT * FROM company WHERE id = $1 and deleted_at is NULL",
+      [companyId]
+    );
     console.log(companyId);
-    if (result.rowCount !== 0 & result.rowCount<=1) {
+    if ((result.rowCount !== 0) & (result.rowCount <= 1)) {
       const company = result.rows[0];
       return res.json({
         data: {
@@ -60,18 +64,17 @@ exports.GetCompanyById = async (req, res) => {
           password: company.password,
         },
       });
-    } 
-    else {
+    } else {
       return res.status(404).json({
         error: {
           route: "Wrong id",
         },
-        code: ""
+        code: "",
       });
     }
   } catch (err) {
     console.error(err);
-     res.status(500).json({ message: "Internal server error" })
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -172,6 +175,47 @@ exports.UpdateCompanyPassword = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
       }
     }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.Login = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { email, password } = req.body;
+  try {
+    const result = await pool.query("SELECT * FROM company WHERE email=$1", [
+      email,
+    ]);
+    const company = result.rows[0];
+    if (!company) {
+      return res.status(401).json({ message: "Company does not exists" });
+    }
+
+    const isValidPassword = await bcrypt.compare(password, company.password);
+    if (!isValidPassword) {
+      return res.status(401).json({ message: "Authentication failed" });
+    }
+
+    const token = jwt.sign({ companyId: company.id }, process.env.JWT_SECRET);
+    return res.json({
+      data: {
+        accessToken: token,
+        refreshToken: token,
+        created_at: company.created_at,
+        updated_at: company.updated_at,
+        phoneNumber: company.phone_number,
+        name: company.name,
+        id: company.id,
+        email: company.email,
+        password: company.password,
+      },
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });

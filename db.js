@@ -11,7 +11,7 @@ const connectionString = `postgres://${user}:${password}@${host}/${database}?ssl
 const pool = new Pool({ connectionString });
 
 pool.query("SELECT NOW()", (err, res) => {
-  console.log(err, res);
+  // console.log(err, res);
   // pool.end();
 });
 
