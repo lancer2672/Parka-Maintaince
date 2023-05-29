@@ -94,6 +94,7 @@ exports.GetBlockById = async (req, res) => {
           created_at: block.created_at,
           updated_at: block.updated_at,
           code: block.code,
+          blockCode: block.code,
           description: block.description,
           slot: parseInt(block.slot),
           parkingLotId: block.parking_lot_id,

@@ -65,18 +65,51 @@ exports.getAllByIdUser = async (req, res) => {
       "SELECT * FROM reservation WHERE id_user = $1 AND status = $2",
       [idUser, status]
     );
-
     if (result.rowCount !== 0) {
       const reservations = result.rows;
-      const modifiedReservation = reservations.map((reservation) => {
-        return {
-          ...reservation,
-          bookingDate: reservation.booking_date,
-          endTime: reservation.end_time,
-          startTime: reservation.start_time,
-        };
-      });
-      return res.json({ data: modifiedReservation });
+      const modifiedReservationPromises = reservations.map(
+        async (reservation) => {
+          const getVehicleResult = await pool.query(
+            "SELECT * FROM vehicle WHERE id = $1 AND deleted_at IS NULL",
+            [reservation.id_vehicle]
+          );
+          const getParkingSlot = await pool.query(
+            "SELECT * FROM parking_slot WHERE id = $1 AND deleted_at IS NULL",
+            [reservation.id_parking_slot]
+          );
+          const getBlock = await pool.query(
+            "SELECT * FROM block WHERE id = $1 AND deleted_at IS NULL",
+            [getParkingSlot.rows[0].block_id]
+          );
+          const getParkingLot = await pool.query(
+            "SELECT * FROM parking_lot WHERE id = $1 AND deleted_at IS NULL",
+            [getBlock.rows[0].parking_lot_id]
+          );
+
+          return {
+            ...reservation,
+            bookingDate: reservation.booking_date,
+            endTime: reservation.end_time,
+            startTime: reservation.start_time,
+            Vehicle: getVehicleResult.rows[0],
+            ParkingSlot: {
+              ...getParkingSlot.rows[0],
+              slotNumber: getParkingSlot.rows[0].slot_number,
+              Block: {
+                ...getBlock.rows[0],
+                blockCode: getBlock.rows[0].code,
+                ParkingLot: getParkingLot.rows[0],
+              },
+            },
+          };
+        }
+      );
+
+      const modifiedReservations = await Promise.all(
+        modifiedReservationPromises
+      );
+
+      return res.json({ data: modifiedReservations });
     } else {
       return res
         .status(404)
