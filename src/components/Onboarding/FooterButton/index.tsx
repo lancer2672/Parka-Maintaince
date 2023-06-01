@@ -28,7 +28,7 @@ const FooterButton = (props) => {
             style={styles.nextBtn}
             activeOpacity={0.8}>
             <Text style={styles.text}>Next</Text>
-            <AntDesign name="arrowright" style={styles.icon} />
+            <AntDesign name="arrowright" size={16} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}

@@ -18,8 +18,8 @@ const getReservationsCompleted = createAsyncThunk(
 const createReservation = createAsyncThunk(
   "reservation/create",
   async (data: any) => {
-    console.log("action create ");
     const res = await parkingReservationApi.create(data);
+    console.log("action create reservatioin - response ", res.data);
     return res.data;
   },
 );

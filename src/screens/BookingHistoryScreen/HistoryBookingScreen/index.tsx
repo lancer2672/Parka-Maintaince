@@ -25,14 +25,12 @@ const HistoryBookingScreen = ({ navigation }: Props) => {
   const onRefresh = () => {
     (async () => {
       let idUser;
-      if (userState?.idUser) {
+      if (userState?.id) {
         idUser = await AsyncStorage.getItem("idUser");
       }
       setRefreshing(true);
       dispatch(
-        reservationActions.getReservationsCompleted(
-          userState?.idUser || idUser,
-        ),
+        reservationActions.getReservationsCompleted(userState?.id || idUser),
       ).finally(() => setRefreshing(false));
     })();
   };
@@ -43,7 +41,7 @@ const HistoryBookingScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (status) {
-      dispatch(reservationActions.getReservationsCompleted(userState?.idUser));
+      dispatch(reservationActions.getReservationsCompleted(userState?.id));
     }
   }, [status]);
 

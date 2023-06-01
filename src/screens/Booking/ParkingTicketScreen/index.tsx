@@ -41,7 +41,7 @@ const ParkingTicketScreen = ({ navigation }: any) => {
   const dispatch = useAppDispatch();
   const userState = useAppSelector(selectUser);
   const bookingState = useAppSelector(selectBooking);
-
+  console.log("ParkingTicketScreen - bookingState", bookingState);
   const onCapture = useCallback(() => {
     ref?.current.capture().then((uri: any) => {
       setUri(uri);
@@ -85,7 +85,8 @@ const ParkingTicketScreen = ({ navigation }: any) => {
             </Text>
             <AppQRCode
               size={180}
-              content={"parka" + bookingState.idParkingReservation}
+              // content={"parka" + bookingState.idParkingReservation}
+              content={"parkar" + bookingState.idTicket}
             />
           </View>
           <DashedLine

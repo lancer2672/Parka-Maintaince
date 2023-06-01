@@ -7,6 +7,7 @@ export type BookingState = Partial<{
 
 const initialState: BookingState = {
   entities: {
+    idTicket: null,
     idParkingReservation: null,
     parkingLot: null,
     vehicle: null,

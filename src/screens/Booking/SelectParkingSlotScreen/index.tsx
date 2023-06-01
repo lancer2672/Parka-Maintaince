@@ -17,6 +17,7 @@ const SelectParkingSlotScreen = ({ navigation }: any) => {
   const navigateNext = () => {
     navigation.navigate("SelectPaymentScreen");
   };
+  console.log("avaiableSlotState", availableSlotState);
 
   useEffect(() => {
     const getSlots = async () => {
@@ -37,10 +38,15 @@ const SelectParkingSlotScreen = ({ navigation }: any) => {
         data={availableSlotState.blocks}
         keyExtractor={(block) => block.idBlock}
         renderItem={({ item }) => (
+          // <ParkingSlotItem
+          //   key={item.idBlock}
+          //   block={item}
+          //   slots={item.ParkingSlots}
+          // />
           <ParkingSlotItem
-            key={item.idBlock}
+            key={item.id}
             block={item}
-            slots={item.ParkingSlots}
+            slots={item.parkingSlots}
           />
         )}
       />

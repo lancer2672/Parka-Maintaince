@@ -14,6 +14,10 @@ type Props = {
 const ScheduleBookingItem = ({ item, onViewTicket }: Props) => {
   const parkingSlot = item?.ParkingSlot;
   const parkingLot = parkingSlot?.Block?.ParkingLot;
+  console.log("SCheduleBookingItem - props", {
+    parkingSlot: parkingSlot,
+    parkingLot: parkingLot,
+  });
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onViewTicket}>

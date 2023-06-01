@@ -19,19 +19,20 @@ const ScheduledBookingScreen = ({ navigation }: Props) => {
     selectReservationsScheduled,
   );
   const [scheduleBooking, setScheduleBooking] = useState<Reservation[]>();
-  const dispatch = useAppDispatch();
+  console.log("scheduleBooking", scheduleBooking);
+  console.log("reservationsScheduledState", reservationsScheduledState);
 
+  const dispatch = useAppDispatch();
+  console.log("user State", userState);
   const onRefresh = () => {
     (async () => {
       let idUser;
-      if (userState?.idUser) {
+      if (userState?.id) {
         idUser = await AsyncStorage.getItem("idUser");
       }
       setRefreshing(true);
       dispatch(
-        reservationActions.getReservationsScheduled(
-          userState?.idUser || idUser,
-        ),
+        reservationActions.getReservationsScheduled(userState?.id || idUser),
       ).finally(() => setRefreshing(false));
     })();
   };
@@ -39,13 +40,13 @@ const ScheduledBookingScreen = ({ navigation }: Props) => {
   const navigationTicket = (item: any) => {
     navigation.navigate("BookingTicketScreen", item);
   };
+
   useEffect(() => {
-    dispatch(reservationActions.getReservationsScheduled(userState?.idUser));
+    dispatch(reservationActions.getReservationsScheduled(userState?.id));
   }, []);
 
   useEffect(() => {
     const schedule: Reservation[] = [];
-
     const isAfter = (date: any, endTime: any) => {
       if (dayjs(date).isBefore(dayjs(), "date")) {
         return true;
@@ -53,7 +54,6 @@ const ScheduledBookingScreen = ({ navigation }: Props) => {
         const hour = endTime.substring(0, 2);
         const mins = endTime.substring(3, 5);
         const endDate = dayjs().set("hour", hour).set("minute", mins);
-
         if (endDate.isBefore(dayjs())) {
           return true;
         } else {
@@ -68,7 +68,8 @@ const ScheduledBookingScreen = ({ navigation }: Props) => {
     if (reservationsScheduledState.length > 0) {
       reservationsScheduledState.map(async (reservation: Reservation) => {
         if (isAfter(reservation.bookingDate, reservation.endTime)) {
-          arrIdParkingReservation.push(reservation.idParkingReservation);
+          // arrIdParkingReservation.push(reservation.idParkingReservation);
+          arrIdParkingReservation.push(reservation.id);
         } else {
           schedule.push(reservation);
         }

@@ -8,7 +8,7 @@ export type AvailableSlotState = Partial<{
 }>;
 
 const initialState: AvailableSlotState = {
-  blocks: []
+  blocks: [],
 };
 
 // type BookingKey = keyof typeof initialState.entities;
@@ -16,25 +16,27 @@ const initialState: AvailableSlotState = {
 export const availableSlotSlice = createSlice({
   name: "availableSlot",
   initialState,
-  reducers: {
-  },
+  reducers: {},
   extraReducers(builder) {
-    builder.addCase(getAvailableSlots.pending,()=> {
+    builder.addCase(getAvailableSlots.pending, () => {
       Spinner.show();
-    } )
-    builder.addCase(getAvailableSlots.rejected,()=> {
+    });
+    builder.addCase(getAvailableSlots.rejected, () => {
       Spinner.hide();
-    } )
-    builder.addCase(getAvailableSlots.fulfilled,(state, { payload }: PayloadAction<Block[]>) => {
-      state.blocks= payload;
-      Spinner.hide();
-    },)
+    });
+    builder.addCase(
+      getAvailableSlots.fulfilled,
+      (state, { payload }: PayloadAction<Block[]>) => {
+        state.blocks = payload;
+        Spinner.hide();
+      },
+    );
   },
 });
 
 export const availableSlotsActions = {
   ...availableSlotSlice.actions,
-  getAvailableSlots
+  getAvailableSlots,
 };
 
 export default availableSlotSlice;

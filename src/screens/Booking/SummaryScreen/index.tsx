@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ticketApi } from "@src/api/ticketApi";
 import { Images } from "@src/assets";
 import AppButton from "@src/components/common/AppButton";
 import AppModalMessage from "@src/components/common/AppModalMessage";
@@ -29,54 +30,83 @@ const SummaryScreen = ({ navigation }: any) => {
   const dispatch = useAppDispatch();
 
   const confirmBooking = async () => {
-    const idUser = await AsyncStorage.getItem("idUser");
-    console.log("USERID", userState?.idUser);
-    console.log("USERID STORED", idUser);
-    const data = {
-      idVehicle: bookingState.vehicle?.idVehicle,
-      idUser: userState?.idUser || idUser,
-      idParkingSlot: bookingState.parkingSlot?.idParkingSlot,
-      idTimeFrame: bookingState.timeFrame?.idTimeFrame,
-      startTime: dayjs(bookingState.startTime).format("HH:mm:ss"),
-      endTime: dayjs(bookingState.endTime).format("HH:mm:ss"),
-      bookingDate: bookingState.bookingDate,
-      duration: bookingState.timeFrame.duration,
-      total: bookingState.timeFrame?.cost,
-    };
-    console.log("Confirm booking clicked, List data = ", data);
-    console.log("Confirm booking bookingState", bookingState);
-    dispatch(
-      reservationActions.createReservation({
-        idVehicle: bookingState.vehicle?.idVehicle,
-        idUser: userState?.idUser || JSON.parse(idUser),
-        idParkingSlot: bookingState.parkingSlot?.idParkingSlot,
-        idTimeFrame: bookingState.timeFrame?.idTimeFrame,
+    try {
+      const idUser = await AsyncStorage.getItem("idUser");
+      console.log("USERID", userState?.id);
+      console.log("USERID STORED", idUser);
+      console.log("USERID STORED PARSED", typeof idUser);
+      // const data = {
+      //   idVehicle: bookingState.vehicle?.idVehicle,
+      //   idUser: userState?.id || idUser,
+      //   idParkingSlot: bookingState.parkingSlot?.idParkingSlot,
+      //   idTimeFrame: bookingState.timeFrame?.idTimeFrame,
+      //   startTime: dayjs(bookingState.startTime).format("HH:mm:ss"),
+      //   endTime: dayjs(bookingState.endTime).format("HH:mm:ss"),
+      //   bookingDate: bookingState.bookingDate,
+      //   duration: bookingState.timeFrame.duration,
+      //   total: bookingState.timeFrame?.cost,
+      // };
+      // console.log("Confirm booking clicked, List data = ", data);
+      console.log("Confirm booking - bookingState", bookingState);
+      const newData = {
+        idVehicle: bookingState.vehicle?.id,
+        idUser: userState?.id || idUser,
+        idParkingSlot: bookingState.parkingSlot?.id,
+        idTimeFrame: bookingState.timeFrame?.id,
         startTime: dayjs(bookingState.startTime).format("HH:mm:ss"),
         endTime: dayjs(bookingState.endTime).format("HH:mm:ss"),
         bookingDate: bookingState.bookingDate,
         duration: bookingState.timeFrame.duration,
         total: bookingState.timeFrame?.cost,
-      }),
-    )
-      .unwrap()
-      .then((res) => {
-        console.log("create reservation succeeded", res);
-        setSuccess(true);
-        dispatch(
-          bookingActions.update({
-            field: "idParkingReservation",
-            value: res.idParkingReservation,
-          }),
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-        setSuccess(false);
-      })
-      .finally(() => {
-        console.log("final");
-        setVisible(true);
-      });
+      };
+      console.log("Confirm booking bookingState data", newData);
+      dispatch(reservationActions.createReservation(newData))
+        .unwrap()
+        .then((res) => {
+          console.log("create reservation succeeded", res);
+          setSuccess(true);
+          dispatch(
+            bookingActions.update({
+              field: "idParkingReservation",
+              value: res.idParkingReservation,
+            }),
+          );
+          return res;
+        })
+        .then((res) => {
+          console.log("create reservation succeeded passed", res);
+          const ticketRes = ticketApi.create({
+            vehicleId: newData.idVehicle,
+            userId: newData.idUser,
+            parkingSlotId: newData.idParkingSlot,
+            parkingLotId: bookingState.parkingLot?.id,
+            reservationId: res.idParkingReservation,
+            timeFrameId: newData.idTimeFrame,
+            endTime: bookingState.endTime,
+            startTime: bookingState.startTime,
+          });
+          return ticketRes;
+        })
+        .then((ticketRes) => {
+          console.log("ticket - response", ticketRes);
+          dispatch(
+            bookingActions.update({
+              field: "idTicket",
+              value: ticketRes.data.data.id,
+            }),
+          );
+        })
+        .catch((err) => {
+          console.log("Create reservation faield", err);
+          setSuccess(false);
+        })
+        .finally(() => {
+          console.log("final");
+          setVisible(true);
+        });
+    } catch (err) {
+      console.log("Error when create reservation", err);
+    }
   };
 
   const navigateNext = (isSuccess: boolean) => {

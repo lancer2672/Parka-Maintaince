@@ -11,22 +11,22 @@ type Props = {
 };
 const SelectableParkingSlot = ({ blockCode, slot, selectedId }: Props) => {
   const dispatch = useAppDispatch();
-
   const onSelect = () => {
     dispatch(bookingActions.update({ field: "blockCode", value: blockCode }));
     dispatch(bookingActions.update({ field: "parkingSlot", value: slot }));
+    console.log(
+      "SelectectableParingSlot onSelect bookingAction =",
+      bookingActions,
+    );
   };
   return (
     <TouchableOpacity
-      style={[
-        styles.container,
-        selectedId == slot.idParkingSlot && styles.selected,
-      ]}
+      style={[styles.container, selectedId == slot.id && styles.selected]}
       onPress={onSelect}>
       <Text
         style={[
           styles.text,
-          selectedId == slot.idParkingSlot && styles.selectedText,
+          selectedId == slot.id && styles.selectedText,
         ]}>{`${blockCode} - ${slot.slotNumber}`}</Text>
     </TouchableOpacity>
   );

@@ -128,7 +128,7 @@ const AddVehicleScreen = ({ route, navigation }: any) => {
 
     const vehicle: Vehicle = {
       idVehicle: "",
-      // idUser: userState?.idUser || JSON.parse(idUser),
+      // idUser: userState?.id || JSON.parse(idUser),
       idUser,
       name: values.name,
       number: values.number,

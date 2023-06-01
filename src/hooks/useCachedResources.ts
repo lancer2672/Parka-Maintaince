@@ -11,7 +11,6 @@ export default function useCachedResources() {
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHideAsync();
-
         // Load fonts
         await Font.loadAsync({
           ...FontAwesome.font,
@@ -19,7 +18,7 @@ export default function useCachedResources() {
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
-        console.warn(e);
+        console.warn("LoadFontAsync", e);
       } finally {
         setLoadingComplete(true);
         SplashScreen.hideAsync();

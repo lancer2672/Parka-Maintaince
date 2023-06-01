@@ -1,4 +1,5 @@
 type User = {
+  id: string;
   idUser: string;
   displayName: string;
   email: string;
@@ -19,6 +20,9 @@ type ParkingLot = {
 };
 
 type Vehicle = {
+  //
+  id: string;
+
   idVehicle: string;
   idUser: string;
   name: string;
@@ -27,6 +31,9 @@ type Vehicle = {
 };
 
 type ParkingSlot = {
+  //
+  id: string;
+
   idParkingSlot: string;
   idBlock: string;
   slotNumber: number;
@@ -40,6 +47,10 @@ type Block = {
   isFull: boolean;
   numOfSlot: number;
   ParkingSlots: ParkingSlot[];
+
+  //
+  code: string;
+  parkingSlots: ParkingSlot[];
 };
 
 type TimeFrame = {
@@ -50,6 +61,9 @@ type TimeFrame = {
 };
 
 type Booking = {
+  //
+  id: string;
+  idTicket: string;
   idParkingReservation: string;
   parkingLot: ParkingLot;
   vehicle: Vehicle;
@@ -62,6 +76,10 @@ type Booking = {
 };
 
 type Reservation = {
+  //
+  id: string;
+  idTicket: string;
+
   idParkingReservation: string;
   idVehicle: string;
   idUser: string;

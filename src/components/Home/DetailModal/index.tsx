@@ -80,7 +80,6 @@ const DetailModal = (props: Props) => {
 
   useEffect(() => {
     const getNumOfSlots = async () => {
-      //?????
       // const time = dayjs().get("hour") + ":" + dayjs().get("minute");
       // Spinner.show();
       // const numOfSlots = await parkingSlotApi.getAvailableSlots(
@@ -97,25 +96,22 @@ const DetailModal = (props: Props) => {
         dayjs().format(),
         selectedParking?.id,
       );
+      console.log("Number of avaiable slot", numOfSlots);
       let num = 0;
-      //Đoạn code cũ bị lỗi khi numOfSlots.data.data = null
+
       // numOfSlots.data.data.forEach((element: any) => {
       //   num += element.ParkingSlots?.length;
       // });
 
       //Code sau khi thêm câu lệnh điều kiện
       if (numOfSlots.data.data) {
-        console.log("num of slot", numOfSlots.data.data);
         numOfSlots.data.data.forEach((element: any) => {
           console.log("???", element);
-          num += element.ParkingSlots?.length;
+          num += element.parkingSlots?.length;
         });
       }
-
-      console.log("lap cai d gi z ");
-      setNumOfAvailableSlots(10);
+      setNumOfAvailableSlots(num);
       Spinner.hide();
-      console.log("hide");
     };
     if (selectedParking) {
       getNumOfSlots();

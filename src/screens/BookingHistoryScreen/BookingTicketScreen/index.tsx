@@ -51,6 +51,7 @@ const BookingTicketScreen = ({ navigation, route }: any) => {
   const userState = useAppSelector(selectUser);
   // const bookingState = useAppSelector(selectBooking);
   const reservation = route.params;
+  console.log("BooktingTicketScreen - route.params", route.params);
   const parkingSlot = reservation?.ParkingSlot;
   const parkingLot = parkingSlot?.Block?.ParkingLot;
   const status = reservation?.status;
@@ -111,10 +112,8 @@ const BookingTicketScreen = ({ navigation, route }: any) => {
                 ? "QR code expired!"
                 : "Scan this when you are in the parking lot"}
             </Text>
-            <AppQRCode
-              size={180}
-              content={"parka" + reservation.idParkingReservation}
-            />
+            {/* <AppQRCode size={180} content={"parkar" + reservation.id} /> */}
+            <AppQRCode size={180} content={"parkar" + reservation.idTicket} />
           </View>
           <DashedLine
             dashLength={10}
@@ -147,7 +146,8 @@ const BookingTicketScreen = ({ navigation, route }: any) => {
                 <Item
                   title={"Duration"}
                   value={DateTimeHelper.convertToHour(
-                    reservation?.TimeFrame?.duration,
+                    // reservation?.TimeFrame?.duration,
+                    reservation?.duration,
                   )}
                 />
                 {status == "cancel" && (
