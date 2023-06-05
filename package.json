@@ -52,6 +52,7 @@
     "react-native": "0.70.8",
     "react-native-dashed-line": "^1.1.0",
     "react-native-date-picker": "^4.2.2",
+    "react-native-expo-geofence": "^0.2.0",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.8.0",
     "react-native-heroicons": "^2.2.0",

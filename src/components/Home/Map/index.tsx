@@ -2,10 +2,12 @@ import parkingLotApi from "@src/api/parkingLotApi";
 import { Colors } from "@src/constants";
 import * as Location from "expo-location";
 import React, { useEffect, useState } from "react";
-import { Dimensions, Image, StyleSheet } from "react-native";
+import { Dimensions, Image, StyleSheet, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import SearchAutocomplete from "../Search";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import Geofence from "react-native-expo-geofence";
 
 type Props = {
   onSelectedMarker: any;
@@ -30,7 +32,7 @@ const Map = (props: Props) => {
   });
   const [destination, setDestination] = useState<Location>();
   const [locations, setLocations] = useState([]);
-
+  const [nearestParkingSpot, setNearsetParkingSpot] = useState<ParkingLot>();
   const [parkings, setParkings] = useState<ParkingLot[]>([]);
 
   const handleSelectedSearchItem = (location: any) => {
@@ -82,9 +84,47 @@ const Map = (props: Props) => {
     getCurrentLocation();
     getParkingLocation();
   }, []);
+
+  const findNearestParkingSpot = () => {
+    const locs = parkings.map((item) => {
+      return {
+        key: item.id,
+        latitude: item.lat,
+        longitude: item.long,
+      };
+    });
+    console.log("locs", locs);
+    const nearestLocation = Geofence.filterByProximity(
+      currentLocation,
+      locs,
+      10,
+    );
+
+    //get the lowest distanceInKm location
+    const a = nearestLocation.reduce(
+      (prev: { distanceInKM: number }, curr: { distanceInKM: number }) =>
+        prev.distanceInKM < curr.distanceInKM ? prev : curr,
+    );
+    const result = parkings.find((parking) => parking.id == a.key);
+    setNearsetParkingSpot(result);
+    props.onSelectedMarker(result);
+  };
   return (
     <>
       <SearchAutocomplete onSelected={handleSelectedSearchItem} />
+      <TouchableOpacity
+        onPress={findNearestParkingSpot}
+        style={{
+          height: 50,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "tomato",
+        }}>
+        <Text
+          style={{ textAlign: "center", color: "white", fontWeight: "bold" }}>
+          FIND NEAREST PARKING SPOT
+        </Text>
+      </TouchableOpacity>
       <MapView
         style={styles.map}
         region={region}
@@ -131,8 +171,7 @@ const Map = (props: Props) => {
 const styles = StyleSheet.create({
   map: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 130,
-    marginTop: -10,
+    height: Dimensions.get("window").height - 180,
   },
   marker: {
     resizeMode: "contain",

@@ -48,6 +48,8 @@ const ScheduledBookingScreen = ({ navigation }: Props) => {
   useEffect(() => {
     const schedule: Reservation[] = [];
     const isAfter = (date: any, endTime: any) => {
+      console.log("DATE", date);
+      console.log("endTime", endTime);
       if (dayjs(date).isBefore(dayjs(), "date")) {
         return true;
       } else if (dayjs(date).isSame(dayjs(), "date")) {
@@ -67,6 +69,7 @@ const ScheduledBookingScreen = ({ navigation }: Props) => {
     var arrIdParkingReservation: string[] = [];
     if (reservationsScheduledState.length > 0) {
       reservationsScheduledState.map(async (reservation: Reservation) => {
+        console.log("RESERVATION", reservation);
         if (isAfter(reservation.bookingDate, reservation.endTime)) {
           // arrIdParkingReservation.push(reservation.idParkingReservation);
           arrIdParkingReservation.push(reservation.id);

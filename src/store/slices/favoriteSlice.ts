@@ -41,6 +41,7 @@ export const favoriteSlice = createSlice({
     builder.addCase(
       getFavorites.fulfilled,
       (state, { payload }: PayloadAction<any>) => {
+        console.log("favourite reducer payload", payload);
         state.entities = payload[0]?.ParkingLots;
         Spinner.hide();
       },

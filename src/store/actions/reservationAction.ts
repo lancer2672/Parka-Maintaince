@@ -11,7 +11,11 @@ const getReservationsScheduled = createAsyncThunk(
 const getReservationsCompleted = createAsyncThunk(
   "reservation/getCompleted",
   async (idUser: string) => {
+    console.log("parkingReservationApi - completed");
+
+    // const res = await parkingReservationApi.getAllByIdUser(idUser, "end");
     const res = await parkingReservationApi.getAllByIdUser(idUser, "end");
+    console.log("parkingReservationApi - completed - res.data", res.data);
     return res.data;
   },
 );

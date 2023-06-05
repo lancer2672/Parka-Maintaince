@@ -19,7 +19,11 @@ const HistoryBookingScreen = ({ navigation }: Props) => {
   const reservationsCompletedState = useAppSelector(
     selectReservationsCompleted,
   );
-
+  console.log(
+    "HistoryScreen ReservationCompleted State",
+    reservationsCompletedState,
+  );
+  console.log("HistoryScreen Status", status);
   const [historyBooking, setHistoryBooking] = useState<Reservation[]>();
 
   const onRefresh = () => {
@@ -28,6 +32,8 @@ const HistoryBookingScreen = ({ navigation }: Props) => {
       if (userState?.id) {
         idUser = await AsyncStorage.getItem("idUser");
       }
+      console.log("isUser", idUser);
+      console.log("userState?.id", userState?.id);
       setRefreshing(true);
       dispatch(
         reservationActions.getReservationsCompleted(userState?.id || idUser),

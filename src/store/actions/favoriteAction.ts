@@ -5,6 +5,7 @@ const getFavorites = createAsyncThunk(
   "favorite/get",
   async (idUser: string) => {
     const res = await favoriteApi.getAll(idUser);
+    console.log("favourite/getall - response", res);
     return res.data;
   },
 );
@@ -12,6 +13,7 @@ const getFavorites = createAsyncThunk(
 const createFavorite = createAsyncThunk(
   "favorite/create",
   async (data: any) => {
+    console.log("favorite/create", data);
     const res = await favoriteApi.create(data);
     return res.data;
   },

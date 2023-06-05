@@ -35,7 +35,10 @@ const DetailModal = (props: Props) => {
   const { isShow, onClose, navigateBooking } = props;
   const ref = React.useRef<BottomSheet>(null);
   const selectedParking = useAppSelector(selectBooking).parkingLot;
-  console.log("Detail parking modal parkingLot  isShow= ", isShow);
+  console.log(
+    "Detail parking modal parkingLot  selectedParking= ",
+    selectedParking,
+  );
   const [numOfAvailableSlots, setNumOfAvailableSlots] = useState<number>(0);
   const favoriteState = useAppSelector(selectFavorites);
   const [isFavorite, setFavorite] = useState<boolean>(false);
@@ -45,11 +48,13 @@ const DetailModal = (props: Props) => {
     ref?.current?.snapToIndex(index);
   };
   const handleCall = () => {
-    Linking.openURL("tel:+84779952304");
+    Linking.openURL("tel:+84978155434");
   };
   const addFavorite = () => {
     (async () => {
       const idUser = await AsyncStorage.getItem("idUser");
+      console.log("addFavourite selectedParking", selectedParking?.id);
+      console.log("addFavourite idUser", idUser);
       dispatch(
         favoriteActions.createFavorite({
           // id: selectedParking?.id,

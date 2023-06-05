@@ -11,8 +11,9 @@ import { Alert, FlatList, Image, StyleSheet, Text, View } from "react-native";
 const FavoriteScreen = () => {
   const favoriteState = useAppSelector(selectFavorites);
   const dispatch = useAppDispatch();
-
+  console.log("FavouriteScreen - favouritestate", favoriteState);
   const handleDelete = (id: string) => {
+    console.log("Favorite handle delete ", { id: id });
     dispatch(favoriteActions.deleteFavorite(id))
       .then(() => Alert.alert("Deleted successfully!"))
       .catch(() => Alert.alert("Error!"));
