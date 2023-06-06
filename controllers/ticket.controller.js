@@ -6,7 +6,7 @@ const { use, get } = require("../routes");
 const moment = require("moment-timezone");
 const moment_string = require("moment");
 const e = require("express");
-
+const sendNotification = require("../notification");
 const GetVehicle = async (vehicleId) => {
   console.log("vehicle_id", vehicleId);
   try {
@@ -512,12 +512,33 @@ exports.ProcedureWithTicket = async (req, res) => {
       "SELECT * FROM ticket WHERE id = $1 AND deleted_at IS NULL",
       [ticketId]
     );
+    let user = await pool.query(
+      "SELECT * FROM users WHERE id = $1 AND deleted_at IS NULL",
+      [ticket.rows[0].user_id]
+    );
     if (ticket.rowCount !== 0) {
       let state = "";
       let time = moment().tz("7").format("YYYY-MM-DD HH:mm:ss.SSS");
       switch (type) {
         case "check_in":
           let entryTime = moment_string(time).toISOString();
+
+          // Calculate the remaining time in minutes until end_time - 10 minutes - entryTime
+          let endTime = moment(ticket.rows[0].end_time);
+          let remainingTime = endTime.diff(entryTime, "minutes") - 10;
+
+          if (remainingTime > 0) {
+            console.log("remainingTime", remainingTime);
+            setTimeout(() => {
+              console.log("Sended");
+
+              sendNotification(
+                user.rows[0].expo_token,
+                `Lưu ý! Còn 15 phút đến giờ check out`
+              );
+            }, remainingTime * 60 * 1000); // Convert remainingTime to milliseconds
+          }
+
           state = "ongoing";
           console.log(entryTime);
           ticket = await pool.query(
@@ -543,8 +564,8 @@ exports.ProcedureWithTicket = async (req, res) => {
           ]);
           break;
       }
-      let sucess = true;
-      return res.json({ data: sucess });
+      let success = true;
+      return res.json({ data: success });
     } else {
       return res.status(404).json({
         error: {

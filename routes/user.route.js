@@ -23,7 +23,7 @@ router.post(
 );
 
 router.put("/update/:id", UserController.UpdateUserById);
-
+router.patch("/update/:id", UserController.AddExpoNotificationToken);
 router.get("/:id", UserController.GetUserById);
 router.delete("/:id", UserController.DeleteUserById);
 router.post(
@@ -32,7 +32,5 @@ router.post(
   body("username").exists().withMessage("username is missing"),
   UserController.ResetPassword
 );
-
-router.get("/update", UserController.GetUserById);
 
 module.exports = router;

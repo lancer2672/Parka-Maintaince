@@ -153,7 +153,6 @@ exports.UpdateUserById = async (req, res) => {
 };
 
 exports.GetUserById = async (req, res) => {
-
   if (!req.params.id) {
     return res.status(400).json({
       error: {
@@ -288,4 +287,18 @@ exports.ResetPassword = async (req, res) => {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
+};
+exports.AddExpoNotificationToken = async (req, res) => {
+  const userId = req.params.id;
+  const { token } = req.body;
+  console.log("data", { userId, token });
+  await pool.query("UPDATE users SET expo_token=$1 WHERE id=$2", [
+    token,
+    userId,
+  ]);
+
+  return res.json({
+    userId,
+    token,
+  });
 };
