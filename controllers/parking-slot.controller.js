@@ -29,6 +29,7 @@ const GetParkingSlot = async (parkingSlotId) => {
         description: description,
         blockID: blockID,
         slotNumber: res.rows[0].slot_number,
+        parkingSlotId: parkingSlotId,
       };
       return parkingSlot;
     }

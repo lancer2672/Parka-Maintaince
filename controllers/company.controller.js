@@ -99,7 +99,6 @@ exports.UpdateCompany = async (req, res) => {
       //   company: result.rows[0],
       // });
 
-      console.log("result", result.rows[0]);
       const company = result.rows[0];
       return res.json({
         data: {
@@ -156,7 +155,6 @@ exports.UpdateCompanyPassword = async (req, res) => {
           //   company: result.rows[0],
           // });
 
-          console.log("result", result.rows[0]);
           const company = result.rows[0];
           return res.json({
             data: {
@@ -188,6 +186,7 @@ exports.Login = async (req, res) => {
   }
 
   const { email, password } = req.body;
+  console.log("login inf", { email: email, password: password });
   try {
     const result = await pool.query("SELECT * FROM company WHERE email=$1", [
       email,

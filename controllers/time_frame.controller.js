@@ -13,6 +13,7 @@ exports.getOneTimeFrame = async (req, res) => {
       const modifiedResult = {
         ...result.rows[0],
         parkingLotId: parkingLotId,
+        idTimeFrame: rows[0].id,
       };
       return res.json({
         data: modifiedResult,
@@ -60,6 +61,7 @@ exports.createOneTimeFrame = async (req, res) => {
       const modifiedResult = {
         ...result.rows[0],
         parkingLotId: parkingLotId,
+        idTimeFrame: rows[0].id,
       };
       return res.json({
         data: modifiedResult,
@@ -214,17 +216,19 @@ exports.deleteOneTimeFrame = async (req, res) => {
 //     }
 //   };
 
-
 exports.GetAllTimeFrame = async (req, res) => {
-  const {parkingLotId} = req.query;
+  const { parkingLotId } = req.query;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ 
-      "error": {
-        "detail": errors.array().map((err) => err.msg).join(" "),
+    return res.status(400).json({
+      error: {
+        detail: errors
+          .array()
+          .map((err) => err.msg)
+          .join(" "),
       },
-      "code": ""
+      code: "",
     });
   }
 
@@ -245,11 +249,12 @@ exports.GetAllTimeFrame = async (req, res) => {
           duration: parseInt(result.rows[i].duration),
           cost: parseFloat(result.rows[i].cost),
           parkingLotId: result.rows[i].parking_lot_id,
+          idTimeFrame: result.rows[i].id,
         };
         timeFrameList.push(timeFrame);
       }
 
-      return res.json({data: {data: timeFrameList}});
+      return res.json({ data: { data: timeFrameList } });
     }
   } catch (err) {
     console.error(err);

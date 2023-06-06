@@ -43,7 +43,10 @@ exports.createReservation = async (req, res) => {
       const createdReservation = result.rows[0];
       return res.json({
         message: "Create reservation successfully",
-        data: createdReservation,
+        data: {
+          ...createdReservation,
+          idParkingReservation: createdReservation.id,
+        },
       });
     } else {
       return res.status(500).json({ message: "Failed to create reservation" });
@@ -65,8 +68,10 @@ exports.getAllByIdUser = async (req, res) => {
       "SELECT * FROM reservation WHERE id_user = $1 AND status = $2",
       [idUser, status]
     );
+    console.log("all reservation = ", result.rows.length);
     if (result.rowCount !== 0) {
       const reservations = result.rows;
+
       const modifiedReservationPromises = reservations.map(
         async (reservation) => {
           const getVehicleResult = await pool.query(
@@ -85,13 +90,17 @@ exports.getAllByIdUser = async (req, res) => {
             "SELECT * FROM parking_lot WHERE id = $1 AND deleted_at IS NULL",
             [getBlock.rows[0].parking_lot_id]
           );
-
+          const getTicket = await pool.query(
+            "SELECT * FROM ticket WHERE parking_reservation_id = $1 AND deleted_at IS NULL",
+            [reservation.id]
+          );
           return {
             ...reservation,
             bookingDate: reservation.booking_date,
             endTime: reservation.end_time,
             startTime: reservation.start_time,
             Vehicle: getVehicleResult.rows[0],
+            idTicket: getTicket.rows[0].id,
             ParkingSlot: {
               ...getParkingSlot.rows[0],
               slotNumber: getParkingSlot.rows[0].slot_number,

@@ -99,6 +99,7 @@ exports.GetBlockById = async (req, res) => {
           slot: parseInt(block.slot),
           parkingLotId: block.parking_lot_id,
           parkingSlot: null,
+          idBlock: block.id,
         },
       });
     } else {
@@ -141,6 +142,7 @@ exports.getListBlock = async (req, res) => {
         startTime: row.start_time,
         endTime: row.end_time,
         companyID: row.company_id,
+        idBlock: row.id,
       };
     });
     return res.json({
