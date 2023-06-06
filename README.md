@@ -5,4 +5,4 @@ Link github đồ án gốc: https://github.com/quangpn24/parkar?fbclid=IwAR1NDu
 
 Nội dung bảo trì:
 - Công nghệ: chuyển back-end từ GoLang -> Framework ExpressJs
-- Nghiệp vụ: 
+- Nghiệp vụ: Tìm bãi đỗ xe gần nhất 
