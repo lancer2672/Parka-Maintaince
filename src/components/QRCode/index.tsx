@@ -20,10 +20,12 @@ const QRCode = (props: IProps) => {
   }, []);
 
   const handleBarCodeScanned = async ({ type, data }: any) => {
+    console.log("Data when scan QR code ", data);
     if (data.slice(0, 6) !== "parkar") {
       Alert.alert("Invalid QR code!");
     } else {
       const idTicket = data.slice(6, data.length);
+      console.log("idTicket", idTicket);
       props.navigation.navigate("ParkingReservationDetail", {
         idTicket,
       });

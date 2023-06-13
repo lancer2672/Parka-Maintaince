@@ -1,5 +1,6 @@
 {
   "expo": {
+    "sdkVersion": "47.0.0",
     "name": "parka-merchant",
     "slug": "parka-merchant-app",
     "version": "1.0.0",

@@ -33,6 +33,7 @@ const SignIn = (props: Props) => {
   const [hidePassword, setHidePassword] = useState(true);
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikProps<LoginValue>>();
+  console.log("FormikRef", formikRef.current);
   const [isLoading, setIsLoading] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -73,6 +74,7 @@ const SignIn = (props: Props) => {
       props.navigation.navigate("App");
     } catch (error: any) {
       setIsLoading(false);
+      console.log("Login er ror", error);
       Alert.alert("Error");
     }
   };
@@ -81,6 +83,7 @@ const SignIn = (props: Props) => {
     const saveIntoAsyncStorage = async () => {
       if (formikRef.current) {
         const email = await AsyncStorage.getItem("email");
+        console.log("Email from storage", email);
         const password = await AsyncStorage.getItem("password");
         formikRef.current.setFieldValue("email", email);
         formikRef.current.setFieldValue("password", password);

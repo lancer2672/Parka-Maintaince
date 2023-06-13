@@ -5,7 +5,7 @@ import axios from "axios";
 const login = createAsyncThunk("auth/login", async (data: any, { rejectWithValue }) => {
   try {
     const res = await authApi.login(data);
-    console.log(res)
+    console.log(res);
     return res.data;
   } catch (error: any) {
     if (!error.response) {

@@ -80,8 +80,13 @@ const ParkingReservationDetail = (props: IProps) => {
   useEffect(() => {
     (async () => {
       try {
+        console.log("routedata.idTicket ", routeData.idTicket);
         const res = await parkingReservationApi.getById(routeData.idTicket);
         if (res.data.data) {
+          console.log(
+            "parking reservation get ticket by id from route data - response.data.data",
+            res.data.data,
+          );
           setReservation(res.data.data);
         } else {
           Alert.alert(`${res.data.message}`);
