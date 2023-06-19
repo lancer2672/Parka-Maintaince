@@ -525,7 +525,7 @@ exports.ProcedureWithTicket = async (req, res) => {
 
           // Calculate the remaining time in minutes until end_time - 10 minutes - entryTime
           let endTime = moment(ticket.rows[0].end_time);
-          let remainingTime = endTime.diff(entryTime, "minutes") - 10;
+          let remainingTime = endTime.diff(entryTime, "minutes") - 15 ;
 
           if (remainingTime > 0) {
             console.log("remainingTime", remainingTime);
