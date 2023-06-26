@@ -17,7 +17,7 @@ const login = createAsyncThunk("auth/login", async (data: any, { rejectWithValue
 });
 
 const signup = createAsyncThunk("auth/signup", async (data: any, { rejectWithValue }) => {
-  fetch("http://localhost:8088/api/merchant/company/create", {
+  fetch("http://localhost:3001/company/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

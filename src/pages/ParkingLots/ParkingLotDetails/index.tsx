@@ -27,7 +27,7 @@ const ParkingLotDetails = () => {
   const [data, setData] = useState<ParkingLot>();
 
   useEffect(() => {
-    fetch(`http://localhost:8088/api/merchant/parking-lot/get-one/${id}`, {
+    fetch(`http://localhost:3001/parking-lot/get-one/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

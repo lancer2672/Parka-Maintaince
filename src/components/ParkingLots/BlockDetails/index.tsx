@@ -21,15 +21,12 @@ const BlockDetails = (props: IProps) => {
   ];
 
   useEffect(() => {
-    fetch(
-      `http://localhost:8088/api/merchant/block/get-list?parking_lot_id=${props.idParkingLot}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    fetch(`http://localhost:3001/block/get-list?parking_lot_id=${props.idParkingLot}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
       },
-    )
+    })
       .then((res) => {
         if (res.ok) {
           return res.json();

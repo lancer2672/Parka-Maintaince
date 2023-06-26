@@ -113,7 +113,7 @@ const ParkingLots: FC = () => {
 
   useEffect(() => {
     let idCompany = localStorage.getItem("COMPANY_ID");
-    fetch(`http://localhost:8088/api/merchant/parking-lot/get-list?company_id=${idCompany}`, {
+    fetch(`http://localhost:3001/parking-lot/get-list?company_id=${idCompany}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

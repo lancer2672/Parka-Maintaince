@@ -14,12 +14,12 @@ const SignUp = () => {
   const handleSignUp = () => {
     setIsLoading(true);
     const { email, password, companyName, phoneNumber } = form.getFieldsValue();
-    fetch("http://localhost:8088/api/merchant/company/create", {
+    fetch("http://localhost:3001/company/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password, companyName, phoneNumber }),
+      body: JSON.stringify({ email, companyName, phoneNumber, password }),
     })
       .then((res) => {
         if (res.ok) {

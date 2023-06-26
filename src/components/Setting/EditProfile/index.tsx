@@ -9,7 +9,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     let idCompany = localStorage.getItem("COMPANY_ID");
-    fetch(`http://localhost:8088/api/merchant/company/get-one/${idCompany}`, {
+    fetch(`http://localhost:3001/company/get-one/${idCompany}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const EditProfile = () => {
   const handleSubmit = () => {
     let idCompany = localStorage.getItem("COMPANY_ID");
     let { companyName, email, phoneNumber } = form.getFieldsValue();
-    fetch(`http://localhost:8088/api/merchant/company/update/${idCompany}`, {
+    fetch(`http://localhost:3001/company/update/${idCompany}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

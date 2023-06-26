@@ -14,7 +14,7 @@ const Login = () => {
   const handleLogin = () => {
     setIsLoading(true);
     const { email, password } = form.getFieldsValue();
-    fetch("http://localhost:8088/api/merchant/company/login", {
+    fetch("http://localhost:3001/company/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

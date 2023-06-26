@@ -21,7 +21,7 @@ const Bookings = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [parkingLotState, setparkingLotState] = useState<ParkingLot[]>([]);
   const handleChange = async (id: string) => {
-    fetch(`http://localhost:8088/api/merchant/ticket/get-all?parking_lot_id=${id}`, {
+    fetch(`http://localhost:3001/ticket/get-all?parking_lot_id=${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const Bookings = () => {
 
   useEffect(() => {
     let idCompany = localStorage.getItem("COMPANY_ID");
-    fetch(`http://localhost:8088/api/merchant/parking-lot/get-list?company_id=${idCompany}`, {
+    fetch(`http://localhost:3001/parking-lot/get-list?company_id=${idCompany}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

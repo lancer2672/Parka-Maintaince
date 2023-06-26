@@ -14,7 +14,7 @@ const ParkingLotsForm = (props: IProps) => {
   useEffect(() => {
     form.resetFields();
     if (props.id) {
-      fetch(`http://localhost:8088/api/merchant/parking-lot/get-one/${props.id}`, {
+      fetch(`http://localhost:3001/parking-lot/get-one/${props.id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +52,7 @@ const ParkingLotsForm = (props: IProps) => {
     endTime = moment(endTime).subtract(20, "hours");
 
     if (props.id) {
-      fetch(`http://localhost:8088/api/v1/parking-lot/update/${props.id}`, {
+      fetch(`http://localhost:3000/parking-lot/update/${props.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

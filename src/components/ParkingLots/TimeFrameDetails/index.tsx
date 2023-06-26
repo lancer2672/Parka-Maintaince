@@ -24,15 +24,12 @@ const TimeFrameDetails = (props: IProps) => {
   ];
 
   useEffect(() => {
-    fetch(
-      `http://localhost:8088/api/merchant/time-frame/get-list?parkingLotId=${props.idParkingLot}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    fetch(`http://localhost:3001/time-frame/get-list?parkingLotId=${props.idParkingLot}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
       },
-    )
+    })
       .then((res) => {
         if (res.ok) {
           return res.json();

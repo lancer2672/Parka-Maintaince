@@ -27,7 +27,7 @@ const ChangePassword = () => {
     }
 
     let idCompany = localStorage.getItem("COMPANY_ID");
-    fetch(`http://localhost:8088/api/merchant/company/update-password/${idCompany}`, {
+    fetch(`http://localhost:3001/company/update-password/${idCompany}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
