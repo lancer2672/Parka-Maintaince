@@ -32,7 +32,7 @@ const ChangePassword = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ old: currentPassword, new: newPassword }),
+      body: JSON.stringify({ old: currentPassword, new1: newPassword }),
     })
       .then((res) => {
         if (res.ok) {
