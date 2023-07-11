@@ -143,7 +143,7 @@ exports.cancelReservation = async (req, res) => {
     });
 
     const canceledReservations = await Promise.all(promises);
-
+    
     if (canceledReservations.length > 0) {
       return res.json({
         success: true,

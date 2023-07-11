@@ -1,14 +1,14 @@
-const express = require("express");
-require("dotenv").config();
-const router = require("./routes");
+const express = require('express');
+require('dotenv').config();
+const router = require('./routes');
 const app = express();
-const cors = require("cors");
+const cors = require('cors');
 app.use(express.json());
 app.use(cors());
-app.use("/", router);
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+app.use('/', router);
+app.set('trust proxy', true);
+app.get('/', (req, res) => {
+  res.send('Hello World!');
 });
 
 const port = process.env.PORT || 3000;
