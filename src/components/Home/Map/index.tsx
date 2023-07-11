@@ -122,7 +122,7 @@ const Map = (props: Props) => {
         }}>
         <Text
           style={{ textAlign: "center", color: "white", fontWeight: "bold" }}>
-          FIND NEAREST PARKING SPOT
+          FIND NEAREST PARKING LOCATION
         </Text>
       </TouchableOpacity>
       <MapView
