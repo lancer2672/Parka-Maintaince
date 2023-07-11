@@ -5,7 +5,6 @@ exports.create = async (req, res) => {
   const { code, description, slot, parking_lot_id } = req.body;
 
   console.log(code, description, slot, parking_lot_id);
-  console.log(typeof slot);
   const errors = validationResult(req);
   if (req.body.isEmpty) {
     return res.status(400).json({
@@ -117,13 +116,16 @@ exports.GetBlockById = async (req, res) => {
 };
 
 exports.getListBlock = async (req, res) => {
+  console.log("req", req.query);
+  const { parking_lot_id } = req.query;
   try {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 30;
     const offset = (page - 1) * pageSize;
     const result = await pool.query(
-      "SELECT * FROM block WHERE deleted_at IS NULL ORDER BY id LIMIT $1 OFFSET $2",
-      [pageSize, offset]
+      "SELECT * FROM block WHERE deleted_at IS NULL AND parking_lot_id = $1 ORDER BY id LIMIT $2 OFFSET $3",
+
+      [parking_lot_id, pageSize, offset]
     );
 
     const totalRows = result.rowCount;

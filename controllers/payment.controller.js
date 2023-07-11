@@ -1,19 +1,21 @@
-const vnpayConfig = require('../vnpay.config');
-const moment = require('moment');
-const querystring = require('qs');
+const vnpayConfig = require("../vnpay.config");
+const moment = require("moment");
+const querystring = require("qs");
 exports.HandleReturn = (req, res) => {
   // Lấy thông tin kết quả giao dịch từ VNPay
   const vnpayData = req.query;
 
   // TODO: Xử lý thông tin kết quả giao dịch từ VNPay
-  console.log('vnpayata', vnpayData);
+  console.log("vnpayata", vnpayData);
   // Trả về kết quả cho VNPay
-  res.status(200).json({RspCode: '00', Message: 'Confirm Success'});
+  res
+    .status(200)
+    .json({ RspCode: vnpayData.vnp_ResponseCode, Message: "Confirm Success" });
 };
 
 exports.CreatePaymentURL = async (req, res) => {
   var ipAddr =
-    req.headers['x-forwarded-for'] ||
+    req.headers["x-forwarded-for"] ||
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
@@ -23,41 +25,41 @@ exports.CreatePaymentURL = async (req, res) => {
   var vnpUrl = vnpayConfig.vnpUrl;
   var returnUrl = vnpayConfig.returnUrl;
   var date = moment();
-  const createDate = date.format('YYYYMMDDHHmmss');
-  const orderId = date.format('HHmmss');
-  var bankCode = 'NCB';
+  const createDate = date.format("YYYYMMDDHHmmss");
+  const orderId = date.format("HHmmss");
+  var bankCode = "NCB";
   var amount = req.body.amount;
-  var orderInfo = 'thanh toan tien giu xe';
+  var orderInfo = "thanh toan tien giu xe";
   var orderType = 100000;
-  var locale = 'vn';
-  var currCode = 'VND';
+  var locale = "vn";
+  var currCode = "VND";
   var vnp_Params = {};
-  vnp_Params['vnp_Version'] = '2.1.0';
-  vnp_Params['vnp_Command'] = 'pay';
-  vnp_Params['vnp_TmnCode'] = tmnCode;
+  vnp_Params["vnp_Version"] = "2.1.0";
+  vnp_Params["vnp_Command"] = "pay";
+  vnp_Params["vnp_TmnCode"] = tmnCode;
   // vnp_Params['vnp_Merchant'] = ''
-  vnp_Params['vnp_Locale'] = locale;
-  vnp_Params['vnp_CurrCode'] = currCode;
-  vnp_Params['vnp_TxnRef'] = orderId;
-  vnp_Params['vnp_OrderInfo'] = orderInfo;
-  vnp_Params['vnp_OrderType'] = orderType;
-  vnp_Params['vnp_Amount'] = amount * 100;
-  vnp_Params['vnp_ReturnUrl'] = returnUrl;
-  vnp_Params['vnp_IpAddr'] = ipAddr;
-  vnp_Params['vnp_CreateDate'] = createDate;
-  if (bankCode !== null && bankCode !== '') {
-    vnp_Params['vnp_BankCode'] = bankCode;
+  vnp_Params["vnp_Locale"] = locale;
+  vnp_Params["vnp_CurrCode"] = currCode;
+  vnp_Params["vnp_TxnRef"] = orderId;
+  vnp_Params["vnp_OrderInfo"] = orderInfo;
+  vnp_Params["vnp_OrderType"] = orderType;
+  vnp_Params["vnp_Amount"] = amount * 100;
+  vnp_Params["vnp_ReturnUrl"] = returnUrl;
+  vnp_Params["vnp_IpAddr"] = ipAddr;
+  vnp_Params["vnp_CreateDate"] = createDate;
+  if (bankCode !== null && bankCode !== "") {
+    vnp_Params["vnp_BankCode"] = bankCode;
   }
   vnp_Params = sortObject(vnp_Params);
 
-  var querystring = require('qs');
-  var signData = querystring.stringify(vnp_Params, {encode: false});
-  var crypto = require('crypto');
-  var hmac = crypto.createHmac('sha512', secretKey);
-  var signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
-  vnp_Params['vnp_SecureHash'] = signed;
-  vnpUrl += '?' + querystring.stringify(vnp_Params, {encode: false});
-  return res.json({vnpUrl});
+  var querystring = require("qs");
+  var signData = querystring.stringify(vnp_Params, { encode: false });
+  var crypto = require("crypto");
+  var hmac = crypto.createHmac("sha512", secretKey);
+  var signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
+  vnp_Params["vnp_SecureHash"] = signed;
+  vnpUrl += "?" + querystring.stringify(vnp_Params, { encode: false });
+  return res.json({ vnpUrl });
   res.redirect(vnpUrl);
 };
 function sortObject(obj) {
@@ -71,7 +73,7 @@ function sortObject(obj) {
   }
   str.sort();
   for (key = 0; key < str.length; key++) {
-    sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, '+');
+    sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, "+");
   }
   return sorted;
 }

@@ -21,7 +21,7 @@ router.use("/parking-lot", parkingLotRoutes);
 router.use("/block", blockRoutes);
 router.use("/parking-slot", parkingSlotRoutes);
 router.use("/vehicle", vehicleRoutes);
-router.use("/time-frame/", timeFrameRoutes);
+router.use("/time-frame", timeFrameRoutes);
 router.use("/favorite", favoriteRoutes);
 router.use("/reservations", reservationRoutes);
 router.use("/payment", paymentRoutes);

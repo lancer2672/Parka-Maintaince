@@ -13,7 +13,7 @@ exports.getOneTimeFrame = async (req, res) => {
       const modifiedResult = {
         ...result.rows[0],
         parkingLotId: parkingLotId,
-        idTimeFrame: rows[0].id,
+        idTimeFrame: result.rows[0].id,
       };
       return res.json({
         data: modifiedResult,
@@ -61,7 +61,7 @@ exports.createOneTimeFrame = async (req, res) => {
       const modifiedResult = {
         ...result.rows[0],
         parkingLotId: parkingLotId,
-        idTimeFrame: rows[0].id,
+        idTimeFrame: result.rows[0].id,
       };
       return res.json({
         data: modifiedResult,
