@@ -12,7 +12,7 @@ interface IProps {
 const SelectablePaymentItem = ({ item, checkedId, handleSelect }: IProps) => {
   return (
     <TouchableOpacity
-      style={[styles.item, checkedId && styles.selectedItem]}
+      style={[styles.item, checkedId === item.id && styles.selectedItem]}
       onPress={handleSelect}>
       <Image source={Images.Money} style={styles.image} />
       <View style={styles.wrapper}>
@@ -21,7 +21,7 @@ const SelectablePaymentItem = ({ item, checkedId, handleSelect }: IProps) => {
         </Text>
       </View>
       <View style={styles.radioWrapper}>
-        {checkedId && <View style={styles.radio} />}
+        {(checkedId === item.id) && <View style={styles.radio} />}
       </View>
     </TouchableOpacity>
   );

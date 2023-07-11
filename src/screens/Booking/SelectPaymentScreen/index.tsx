@@ -4,6 +4,9 @@ import { Colors } from "@src/constants";
 import { ColorHelper } from "@src/utils";
 import React, { useState } from "react";
 import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "@src/store/hooks";
+import { useEffect } from "react";
 
 const SelectPaymentScreen = ({ navigation }: any) => {
   const [selectedId, setSelectedId] = useState<string>(null);
@@ -12,11 +15,23 @@ const SelectPaymentScreen = ({ navigation }: any) => {
       id: "1",
       type: "Cash",
     },
+    {
+      id: "2",
+      type: "VNPay"
+    }
   ];
 
-  const handleSelect = () => {
-    setSelectedId("1");
+  // const handleSelect = (itemId) => {
+  //   setSelectedId(itemId === selectedId ? null : itemId);
+  // };
+
+  const handleSelect = (item) => {
+    setSelectedId(item.id);
   };
+
+  useEffect(() => {
+    console.log("selectedId", selectedId);
+  }, [selectedId]);
 
   const navigateNext = () => {
     if (selectedId) {
@@ -36,7 +51,7 @@ const SelectPaymentScreen = ({ navigation }: any) => {
           <SelectablePaymentItem
             item={item}
             checkedId={selectedId}
-            handleSelect={handleSelect}
+            handleSelect={()=>handleSelect(item)}
           />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
