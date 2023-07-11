@@ -3,7 +3,7 @@ import useCachedResources from "@src/hooks/useCachedResources";
 import useColorScheme from "@src/hooks/useColorScheme";
 import AppNavigator from "@src/navigation/AppNavigator";
 import React from "react";
-import { LogBox } from "react-native";
+import { LogBox, View } from "react-native";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";

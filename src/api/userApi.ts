@@ -11,7 +11,6 @@ const userApi = {
     // const res = await axiosClient.get(`/users/${id}`);
     console.log("Api - userApi - getUserById");
     const res = await axiosClient.get(`/user/${id}`);
-    console.log("Api - userApi - getUserById", res);
 
     return res;
   },
@@ -40,6 +39,12 @@ const userApi = {
 
   deleteUser: async (id: string) => {
     const res = await axiosClient.delete(`/user/${id}`);
+    return res;
+  },
+  addExpoToken: async (id: string, token: string) => {
+    const res = await axiosClient.patch(`/user/update/${id}`, {
+      token,
+    });
     return res;
   },
 };
