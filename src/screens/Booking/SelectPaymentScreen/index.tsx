@@ -17,8 +17,8 @@ const SelectPaymentScreen = ({ navigation }: any) => {
     },
     {
       id: "2",
-      type: "VNPay"
-    }
+      type: "VNPay",
+    },
   ];
 
   // const handleSelect = (itemId) => {
@@ -35,7 +35,7 @@ const SelectPaymentScreen = ({ navigation }: any) => {
 
   const navigateNext = () => {
     if (selectedId) {
-      navigation.navigate("SummaryScreen");
+      navigation.navigate("SummaryScreen", { selectedId });
     } else {
       Alert.alert("You must select payment method!");
     }
@@ -51,7 +51,7 @@ const SelectPaymentScreen = ({ navigation }: any) => {
           <SelectablePaymentItem
             item={item}
             checkedId={selectedId}
-            handleSelect={()=>handleSelect(item)}
+            handleSelect={() => handleSelect(item)}
           />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}

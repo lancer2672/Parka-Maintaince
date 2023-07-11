@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { paymentApi } from "@src/api/paymentApi";
 import { ticketApi } from "@src/api/ticketApi";
 import { Images } from "@src/assets";
 import AppButton from "@src/components/common/AppButton";
@@ -10,8 +11,19 @@ import { bookingActions } from "@src/store/slices/bookingSlice";
 import { reservationActions } from "@src/store/slices/reservationSlice";
 import { CurrencyHelper, DateTimeHelper } from "@src/utils";
 import dayjs from "dayjs";
-import React, { useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useRef, useState } from "react";
+import axios from "axios";
+import {
+  Alert,
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import WebView from "react-native-webview";
+import axiosClient from "@src/api/axiosClient";
 
 const Item = ({ title, value }: { title: string; value: string }) => {
   return (
@@ -22,19 +34,35 @@ const Item = ({ title, value }: { title: string; value: string }) => {
   );
 };
 
-const SummaryScreen = ({ navigation }: any) => {
+const SummaryScreen = ({ navigation, route }: any) => {
   const [isVisible, setVisible] = useState<boolean>(false);
   const [isSuccess, setSuccess] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  // const [paymentUrl, setPaymentUrl] = useState<String>("");
+  // const [isSecondTimeNavigation, setIsSecondTimeNavigation] =
+  //   useState<boolean>(false);
+  const isSecondTimeNavigationRef = useRef(false);
+  const paymentUrlRef = useRef("");
   const bookingState = useAppSelector(selectBooking);
+  //payment method id
+  const { selectedId } = route.params;
   const userState = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
 
+  const handlePaymentByCard = async () => {
+    const data = await paymentApi.create(bookingState.timeFrame?.cost);
+    setModalVisible(() => true);
+    // setPaymentUrl(() => data.vnpUrl);
+    paymentUrlRef.current = data.vnpUrl;
+  };
   const confirmBooking = async () => {
     try {
+      console.log("Selected Payment Method Id", selectedId);
+      if (selectedId == 2) {
+        handlePaymentByCard();
+        return;
+      }
       const idUser = await AsyncStorage.getItem("idUser");
-      console.log("USERID", userState?.id);
-      console.log("USERID STORED", idUser);
-      console.log("USERID STORED PARSED", typeof idUser);
       // const data = {
       //   idVehicle: bookingState.vehicle?.idVehicle,
       //   idUser: userState?.id || idUser,
@@ -117,9 +145,46 @@ const SummaryScreen = ({ navigation }: any) => {
       navigation.navigate("HomeScreen");
     }
   };
-
+  const handleNavigationWebView = async (navState: any) => {
+    console.log("nav uri", navState.url);
+    if (navState.url.includes("http://localhost:3001/payment/return") == false)
+      return;
+    axios
+      .get(navState.url)
+      .then((data: any) => {
+        console.log("data return result vnpay", data);
+        if (data.RspCode === "00") {
+          Alert.alert("SUCCESS");
+        } else {
+          Alert.alert("FAILED");
+        }
+      })
+      .catch((err) => {
+        console.log("error", err);
+      })
+      .finally(() => {
+        setModalVisible(false);
+        // setPaymentUrl("");
+        paymentUrlRef.current = "";
+        isSecondTimeNavigationRef.current = false;
+      });
+  };
   return (
     <View style={{ flex: 1 }}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}>
+        {paymentUrlRef.current != "" && (
+          <WebView
+            source={{ uri: paymentUrlRef.current }}
+            onNavigationStateChange={handleNavigationWebView}></WebView>
+        )}
+      </Modal>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
           <Item title={"Parking area"} value={bookingState.parkingLot?.name} />

@@ -3,10 +3,12 @@ import axiosClient from "./axiosClient";
 const url = "/payment";
 
 export const paymentApi = {
-  create: async (data) => {
-    console.log("create payment-props", { data });
-    const res = await axiosClient.post(`${url}/create/`, data);
+  create: async (cost) => {
+    console.log("create payment-props", { cost });
+    const res = await axiosClient.post(`${url}/create_payment`, {
+      amount: cost,
+    });
     console.log("create payment", res);
-    return res;
+    return res.data;
   },
 };

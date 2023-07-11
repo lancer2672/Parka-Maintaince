@@ -75,16 +75,16 @@
     "react-native-svg": "13.4.0",
     "react-native-tab-view": "^3.1.1",
     "react-native-view-shot": "3.4.0",
+    "react-native-vnpay-merchant": "file:react-native-vnpay-merchant",
     "react-native-web": "~0.18.9",
-    "react-native-webview": "11.23.1",
+    "react-native-webview": "^11.23.1",
     "react-navigation": "^4.4.4",
     "react-redux": "^8.0.1",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "redux": "^4.2.0",
     "uuid": "^8.3.2",
     "yarn": "^1.22.19",
-    "yup": "^0.32.11",
-    "react-native-vnpay-merchant": "file:react-native-vnpay-merchant"
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
