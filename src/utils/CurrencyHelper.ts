@@ -1,3 +1,6 @@
+import 'intl';
+import 'intl/locale-data/jsonp/vi-VN'; // Import locale data for Vietnamese
+
 const CurrencyHelper = {
   formatVND: (value: any) => {
     if (value) {

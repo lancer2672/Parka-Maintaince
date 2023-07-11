@@ -173,7 +173,7 @@ const SummaryScreen = ({ navigation }: any) => {
           <Image source={Images.Money} style={styles.image} />
           <View style={styles.wrapper}>
             <Text style={styles.cash} numberOfLines={2}>
-              Cash
+              VNPay
             </Text>
           </View>
         </View>

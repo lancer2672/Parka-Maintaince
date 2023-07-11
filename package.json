@@ -49,6 +49,7 @@
     "firebase": "9.6.11",
     "formik": "^2.2.9",
     "i18n-js": "^3.9.2",
+    "intl": "^1.2.5",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.8",
@@ -82,7 +83,8 @@
     "redux": "^4.2.0",
     "uuid": "^8.3.2",
     "yarn": "^1.22.19",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "react-native-vnpay-merchant": "file:react-native-vnpay-merchant"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
