@@ -11,7 +11,7 @@ import { bookingActions } from "@src/store/slices/bookingSlice";
 import { reservationActions } from "@src/store/slices/reservationSlice";
 import { CurrencyHelper, DateTimeHelper } from "@src/utils";
 import dayjs from "dayjs";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import {
   Alert,
@@ -51,17 +51,30 @@ const SummaryScreen = ({ navigation, route }: any) => {
 
   const handlePaymentByCard = async () => {
     const data = await paymentApi.create(bookingState.timeFrame?.cost);
+    paymentUrlRef.current = data.vnpUrl;
     setModalVisible(() => true);
     // setPaymentUrl(() => data.vnpUrl);
-    paymentUrlRef.current = data.vnpUrl;
   };
   const confirmBooking = async () => {
+    if (selectedId == 2) {
+      handlePaymentByCard();
+      return;
+    }
+    confirmBookingSuccess();
+  };
+
+  const navigateNext = (isSuccess: boolean) => {
+    setVisible(false);
+    if (isSuccess) {
+      navigation.navigate("ParkingTicketScreen");
+    } else {
+      navigation.navigate("HomeScreen");
+    }
+  };
+  const confirmBookingSuccess = async (isPaid: boolean = false) =>{
     try {
       console.log("Selected Payment Method Id", selectedId);
-      if (selectedId == 2) {
-        handlePaymentByCard();
-        return;
-      }
+
       const idUser = await AsyncStorage.getItem("idUser");
       // const data = {
       //   idVehicle: bookingState.vehicle?.idVehicle,
@@ -112,6 +125,7 @@ const SummaryScreen = ({ navigation, route }: any) => {
             timeFrameId: newData.idTimeFrame,
             endTime: bookingState.endTime,
             startTime: bookingState.startTime,
+            isPaid:isPaid
           });
           return ticketRes;
         })
@@ -135,39 +149,32 @@ const SummaryScreen = ({ navigation, route }: any) => {
     } catch (err) {
       console.log("Error when create reservation", err);
     }
-  };
-
-  const navigateNext = (isSuccess: boolean) => {
-    setVisible(false);
-    if (isSuccess) {
-      navigation.navigate("ParkingTicketScreen");
-    } else {
-      navigation.navigate("HomeScreen");
-    }
-  };
+  }
   const handleNavigationWebView = async (navState: any) => {
     console.log("nav uri", navState.url);
-    if (navState.url.includes("http://localhost:3001/payment/return") == false)
+    if (navState.url.includes("http://192.168.43.213:3001/payment/return") == false)
       return;
-    axios
-      .get(navState.url)
-      .then((data: any) => {
-        console.log("data return result vnpay", data);
-        if (data.RspCode === "00") {
-          Alert.alert("SUCCESS");
-        } else {
-          Alert.alert("FAILED");
-        }
-      })
-      .catch((err) => {
-        console.log("error", err);
-      })
-      .finally(() => {
-        setModalVisible(false);
-        // setPaymentUrl("");
-        paymentUrlRef.current = "";
-        isSecondTimeNavigationRef.current = false;
+    try {
+        const response = await axios.get(navState.url,{
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          "Content-Type": "application/json",
+        },
       });
+      console.log("data return result vnpay", response.data);
+      if (response.data.RspCode === "00") {
+        Alert.alert("SUCCESS");
+        await confirmBookingSuccess(true);
+      } else {
+        Alert.alert("FAILED");
+      }
+    } catch (err) {
+      console.log("error", err);
+    } finally {
+      setModalVisible(false);
+      paymentUrlRef.current = "";
+      isSecondTimeNavigationRef.current = false;
+    }
   };
   return (
     <View style={{ flex: 1 }}>
