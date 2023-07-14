@@ -5,7 +5,7 @@ import { Alert } from "react-native";
 const axiosClient = axios.create({
   // baseURL: process.env.REACT_APP_API_URL || "http:/192.168.9.157:8080/api/merchant",
 
-  baseURL: "http://192.168.94.104:3001/",
+  baseURL: "http://192.168.43.213:3001/",
   headers: {
     "Content-Type": "application/json",
   },

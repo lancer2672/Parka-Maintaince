@@ -81,6 +81,7 @@ type Ticket = {
   state: string;
   isExtend: boolean;
   ticketExtend: Ticket[];
+  is_pre_paid: boolean;
 };
 type Favorite = {
   id: string;

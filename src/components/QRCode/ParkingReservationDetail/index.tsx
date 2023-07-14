@@ -55,7 +55,13 @@ const ParkingReservationDetail = (props: IProps) => {
         Alert.alert("You are late!");
       }
       if (isCheckOut.data.data) {
+        if(reservation.is_pre_paid == true){
+          Alert.alert("Check out successfully!, User is pre-paid");
+        }
+        else
+       { 
         Alert.alert("Check out successfully!");
+      }
         props.navigation.navigate("App");
       } else {
         Alert.alert("Error!");
